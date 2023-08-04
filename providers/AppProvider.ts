@@ -10,6 +10,7 @@ export default class AppProvider {
     /******************************** SERVICES ********************************/
     /**************************************************************************/
     const BusinessService = await import("App/Services/BusinessService");
+    const CollectionAccountService = await import("App/Services/CollectionAccountService");
 
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
@@ -18,9 +19,8 @@ export default class AppProvider {
     /**************************************************************************/
     /******************************** REPOSITORIES ****************************/
     /**************************************************************************/
-    const BusinessRepository = await import(
-      "App/Repositories/BusinessRepository"
-    );
+    const BusinessRepository = await import("App/Repositories/BusinessRepository");
+    const CollectionAccountRepository = await import("App/Repositories/CollectionAccountRepository");
 
     /**************************************************************************/
     /******************************** CORE  ***********************************/
@@ -30,6 +30,12 @@ export default class AppProvider {
       "core.BusinessProvider",
       () => new BusinessService.default(new BusinessRepository.default())
     );
+
+    this.app.container.singleton(
+      "core.CollectionAccountProvider",
+      () => new CollectionAccountService.default(new CollectionAccountRepository.default())
+    );
+
   }
 
   public async boot() {

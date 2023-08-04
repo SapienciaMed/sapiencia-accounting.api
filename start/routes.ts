@@ -28,3 +28,26 @@ Route.group(() => {
   Route.get("/get-by-id/:id", "BusinessController.getBusinessById");
 }).prefix("/api/v1/business");
 // .middleware("auth");
+
+//?Routing para Razones Sociales
+Route.group(() => {
+  Route.get("/get-list", "SocialReasonsController.getSocialReasons");
+}).prefix("/api/v1/social-reasons");
+
+
+//?Routing para Contratos
+Route.group(() => {
+  Route.get("/get-list", "ContractsController.getContracts");
+}).prefix("/api/v1/contracts");
+
+
+//?Routing para Cuentas de Cobro
+Route.group(() => {
+
+  Route.get   ("/get-list"      , "CollectionAccountsController.getCollectionAccounts"     );
+  Route.post  ("/add"           , "CollectionAccountsController.createCollectionAccounts"  );
+  Route.put   ("/update"        , "CollectionAccountsController.updateCollectionAccounts"  );
+  Route.delete("/delete"        , "CollectionAccountsController.deleteCollectionAccounts"  );
+  Route.get   ("/get-by-id/:id" , "CollectionAccountsController.getByIdCollectionAccounts" );
+
+}).prefix("/api/v1/collection-accounts");
