@@ -32,5 +32,9 @@ export interface IFilterCollectionAccounts {
   perPage : number;
 
   //?Aquí irán adicional los filtros ...
+  idAccount?      : number;
+  idContract?     : number;
+  idSocialReason? : number;
+  dateExpired?    : Date;
 
 }

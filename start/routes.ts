@@ -47,7 +47,7 @@ Route.group(() => {
   Route.get   ("/get-list"      , "CollectionAccountsController.getCollectionAccounts"     );
   Route.post  ("/add"           , "CollectionAccountsController.createCollectionAccounts"  );
   Route.put   ("/update"        , "CollectionAccountsController.updateCollectionAccounts"  );
-  Route.delete("/delete"        , "CollectionAccountsController.deleteCollectionAccounts"  );
+  Route.delete("/delete/:id"    , "CollectionAccountsController.deleteCollectionAccounts"  );
   Route.get   ("/get-by-id/:id" , "CollectionAccountsController.getByIdCollectionAccounts" );
 
 }).prefix("/api/v1/collection-accounts");
