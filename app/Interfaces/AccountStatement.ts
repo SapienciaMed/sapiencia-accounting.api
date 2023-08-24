@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 export interface IAccountStatement {
     id?: number; // CTC_CODIGO
     contractCode: number; // CTC_CODCTR_CONTRATO
-    accountNum: string; // CTC_NUMERO
+    accountNum: number; // CTC_NUMERO
     expeditionDate: DateTime; // CTC_FECHA_EXPEDICION
     expirationDate: DateTime; // CTC_FECHA_VENCIMIENTO
     paymentType: string; // CTC_FORMA_PAGO
@@ -13,4 +13,11 @@ export interface IAccountStatement {
     userModified?: string; // CTC_USUARIO_MODIFICO
     createdAt?: DateTime; // CTC_FECHA_CREO
     updatedAt?: DateTime; // CTC_FECHA_MODIFICO
+}
+
+export interface IGetAllAccountStatement {
+    accountNum?: string;
+    contractCode?: number;
+    nit?: number;
+    expirationDate?: DateTime;
 }

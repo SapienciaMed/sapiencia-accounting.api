@@ -27,11 +27,11 @@ Route.get("/", async () => {
 Route.group(() => {
   // Cuentas de Cobro
   Route.group(() => {
-    Route.get("/get-list", "CollectionAccountsController.getCollectionAccounts");
+    Route.get("/get-filtered", "AccountStatementController.getFiltered");
     Route.post("/create", "AccountStatementController.create");
-    Route.put("/update", "CollectionAccountsController.updateCollectionAccounts");
-    Route.delete("/delete/:id", "CollectionAccountsController.deleteCollectionAccounts");
-    Route.get("/get-by-id/:id", "CollectionAccountsController.getByIdCollectionAccounts");
+    // Route.put("/update", "CollectionAccountsController.updateCollectionAccounts");
+    // Route.delete("/delete/:id", "CollectionAccountsController.deleteCollectionAccounts");
+    // Route.get("/get-by-id/:id", "CollectionAccountsController.getByIdCollectionAccounts");
   }).prefix("/account-statement");
 }).prefix("/api/v1")
 

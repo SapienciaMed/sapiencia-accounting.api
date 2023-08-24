@@ -21,7 +21,7 @@ export default class Contract extends BaseModel {
     columnName: "CTR_NUMERO_CONTRATO",
     serializeAs: "contractId",
   })
-  public contractId: number;
+  public contractId: string;
 
   @column({
     columnName: "CTR_CODRZO_RAZON_SOCIAL",

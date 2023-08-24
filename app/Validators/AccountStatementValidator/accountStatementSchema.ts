@@ -5,12 +5,9 @@ export const accountStatementSchema = schema.create({
         rules.required(),
         rules.unsigned(),
     ]),
-    accountNum: schema.string([
+    accountNum: schema.number([
         rules.required(),
-        rules.minLength(1),
-        rules.maxLength(15),
-        rules.alphaNum(),
-        rules.trim()
+        rules.unsigned(),
     ]),
     expeditionDate: schema.date({
         format: "sql"

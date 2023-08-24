@@ -20,7 +20,8 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Código del contrato (FK CTR_CONTRATOS)");
       table
-        .string("CTC_NUMERO", 15)
+        .integer("CTC_NUMERO")
+        .unique()
         .notNullable()
         .comment("Número de la cuenta de cobro");
       table

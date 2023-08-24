@@ -27,7 +27,7 @@ export default class AccountStatement extends BaseModel {
     columnName: "CTC_NUMERO",
     serializeAs: "accountNum",
   })
-  public accountNum: string;
+  public accountNum: number;
 
   @column.dateTime({
     columnName: "CTC_FECHA_EXPEDICION",
