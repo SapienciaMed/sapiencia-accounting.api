@@ -19,6 +19,7 @@ export default class AccountStatementController {
       return response.send(newAccountStatement)
     } catch (err) {
       console.log(err);
+      return new ApiResponse(null, EResponseCodes.FAIL, err.message);
     }
   }
   // OBTENER CUENTAS DE COBRO
@@ -34,6 +35,15 @@ export default class AccountStatementController {
       const accountStatements = await AccountStatementProvider.getFiltered(filters)
       return response.send(accountStatements)
     } catch (err) {
+      console.log(err);
+      return new ApiResponse(null, EResponseCodes.FAIL, err.message);
+    }
+  }
+  // ACTUALIZAR CUENTA DE COBRO
+  public async update() {
+    try {
+      console.log("--");
+    }catch(err) {
       console.log(err);
     }
   }

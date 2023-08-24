@@ -27,9 +27,9 @@ Route.get("/", async () => {
 Route.group(() => {
   // Cuentas de Cobro
   Route.group(() => {
+    Route.post("/", "AccountStatementController.create");
+    Route.patch("/", "AcountStatementController.update");
     Route.get("/get-filtered", "AccountStatementController.getFiltered");
-    Route.post("/create", "AccountStatementController.create");
-    // Route.put("/update", "CollectionAccountsController.updateCollectionAccounts");
     // Route.delete("/delete/:id", "CollectionAccountsController.deleteCollectionAccounts");
     // Route.get("/get-by-id/:id", "CollectionAccountsController.getByIdCollectionAccounts");
   }).prefix("/account-statement");
