@@ -1,5 +1,5 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
-import { DateTime } from 'luxon';
+import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { DateTime } from "luxon";
 
 export default class BusinessName extends BaseModel {
   public static table = "RZO_RAZONES_SOCIALES";
@@ -7,7 +7,7 @@ export default class BusinessName extends BaseModel {
   @column({
     isPrimary: true,
     columnName: "RZO_CODIGO",
-    serializeAs: "id"
+    serializeAs: "id",
   })
   public id: number;
 

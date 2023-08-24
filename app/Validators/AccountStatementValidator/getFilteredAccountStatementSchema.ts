@@ -16,4 +16,5 @@ export const getFilteredAccountStatementSchema = schema.create({
     expirationDate: schema.date.optional({
         format: "sql"
     }),
+    
 })

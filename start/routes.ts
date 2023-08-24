@@ -29,7 +29,7 @@ Route.group(() => {
   Route.group(() => {
     Route.post("/", "AccountStatementController.create");
     Route.patch("/", "AcountStatementController.update");
-    Route.get("/get-filtered", "AccountStatementController.getFiltered");
+    Route.get("/get-filtered", "AccountStatementController.getAccountStatementFiltered");
     // Route.delete("/delete/:id", "CollectionAccountsController.deleteCollectionAccounts");
     // Route.get("/get-by-id/:id", "CollectionAccountsController.getByIdCollectionAccounts");
   }).prefix("/account-statement");
