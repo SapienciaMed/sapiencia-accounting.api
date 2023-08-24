@@ -1,7 +1,7 @@
 import {
   ICollectionAccounts,
-  IGetCollectionAccountsList,
   IFilterCollectionAccounts,
+  IGetCollectionAccountsList,
 } from "App/Interfaces/CollectionAccountInterface";
 
 // import CollectionAccount from "App/Models/CollectionAccount";

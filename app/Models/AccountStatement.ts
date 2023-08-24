@@ -1,43 +1,45 @@
+import {
+  BaseModel,
+  column,
+  hasOne,
+  HasOne
+} from '@ioc:Adonis/Lucid/Orm';
 import { DateTime } from 'luxon';
-import { BaseModel,
-         column,
-         hasOne,
-         HasOne } from '@ioc:Adonis/Lucid/Orm';
-import Env from "@ioc:Adonis/Core/Env";
 import Contract from './Contract';
 
-export default class CollectionAccount extends BaseModel {
-
+export default class AccountStatement extends BaseModel {
   public static table = "CTC_CUENTAS_COBRO";
 
-  @column({ isPrimary: true,
-            columnName: "CTC_CODIGO",
-            serializeAs: "id" })
+  @column({
+    isPrimary: true,
+    columnName: "CTC_CODIGO",
+    serializeAs: "id"
+  })
   public id: number;
 
   @column({
     columnName: "CTC_CODCTR_CONTRATO",
-    serializeAs: "codContract",
+    serializeAs: "contractCode",
   })
-  public codContract: number;
+  public contractCode: number;
 
   @column({
     columnName: "CTC_NUMERO",
-    serializeAs: "numAccount",
+    serializeAs: "accountNum",
   })
-  public numAccount: number;
+  public accountNum: string;
 
   @column.dateTime({
-    columnName: "CTC_FECHA_EXPEDISION",
-    serializeAs: "dateExpedition",
+    columnName: "CTC_FECHA_EXPEDICION",
+    serializeAs: "expeditionDate",
   })
-  public dateExpedition: DateTime;
+  public expeditionDate: DateTime;
 
   @column.dateTime({
     columnName: "CTC_FECHA_VENCIMIENTO",
-    serializeAs: "dateExpired",
+    serializeAs: "expirationDate",
   })
-  public dateExpired: DateTime;
+  public expirationDate: DateTime;
 
   @column({
     columnName: "CTC_FORMA_PAGO",
@@ -66,33 +68,27 @@ export default class CollectionAccount extends BaseModel {
   @column.dateTime({
     autoUpdate: true,
     columnName: "CTC_FECHA_MODIFICO",
-    serializeAs: "dateModified",
-    prepare: () => DateTime.now().toSQL(),
+    serializeAs: "updatedAt",
   })
-  public dateModified: DateTime;
+  public updatedAt: DateTime;
 
   @column({
     columnName: "CTC_USUARIO_CREO",
     serializeAs: "userCreate",
   })
-  public userCreate: string | undefined = Env.get("USER_ID");
+  public userCreate: string;
 
   @column.dateTime({
     autoCreate: true,
     columnName: "CTC_FECHA_CREO",
-    serializeAs: "dateCreate",
-    prepare: () => DateTime.now().toSQL(),
+    serializeAs: "createdAt",
   })
-  public dateCreate: DateTime;
+  public createdAt: DateTime;
 
-
-  //?Relaciones ORM
-  //*Cuenta de Cobro pertenece a un contrato
+  // Cuenta de Cobro pertenece a un contrato
   @hasOne(() => Contract, {
-    localKey: "codContract",
+    localKey: "contractCode",
     foreignKey: "id",
   })
   public contract: HasOne<typeof Contract>;
-
-
 }

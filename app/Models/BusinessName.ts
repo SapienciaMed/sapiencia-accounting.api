@@ -1,14 +1,14 @@
-import { DateTime } from 'luxon';
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
-import Env from "@ioc:Adonis/Core/Env";
+import { DateTime } from 'luxon';
 
-export default class SocialReason extends BaseModel {
-
+export default class BusinessName extends BaseModel {
   public static table = "RZO_RAZONES_SOCIALES";
 
-  @column({ isPrimary: true,
-            columnName: "RZO_CODIGO",
-            serializeAs: "id" })
+  @column({
+    isPrimary: true,
+    columnName: "RZO_CODIGO",
+    serializeAs: "id"
+  })
   public id: number;
 
   @column({
@@ -25,9 +25,9 @@ export default class SocialReason extends BaseModel {
 
   @column({
     columnName: "RZO_DIRECCION",
-    serializeAs: "direction",
+    serializeAs: "address",
   })
-  public direction: string;
+  public address: string;
 
   @column({
     columnName: "RZO_CORREO_ELECTRONICO",
@@ -37,9 +37,9 @@ export default class SocialReason extends BaseModel {
 
   @column({
     columnName: "RZO_CODIGO_MUNICIPIO",
-    serializeAs: "codMunicipality",
+    serializeAs: "municipalityCode",
   })
-  public codMunicipality: string;
+  public municipalityCode: string;
 
   @column({
     columnName: "RZO_REMISOR",
@@ -62,26 +62,20 @@ export default class SocialReason extends BaseModel {
   @column.dateTime({
     autoUpdate: true,
     columnName: "RZO_FECHA_MODIFICO",
-    serializeAs: "dateModified",
-    prepare: () => DateTime.now().toSQL(),
+    serializeAs: "updatedAt",
   })
-  public dateModified: DateTime;
+  public updatedAt: DateTime;
 
   @column({
     columnName: "RZO_USUARIO_CREO",
     serializeAs: "userCreate",
   })
-  public userCreate: string | undefined = Env.get("USER_ID");
+  public userCreate: string;
 
   @column.dateTime({
     autoCreate: true,
     columnName: "RZO_FECHA_CREO",
-    serializeAs: "dateCreate",
-    prepare: () => DateTime.now().toSQL(),
+    serializeAs: "createdAt",
   })
-  public dateCreate: DateTime;
-
-  //TODO: Posibles relaciones ORM pendientes.
-
-
+  public createdAt: DateTime;
 }

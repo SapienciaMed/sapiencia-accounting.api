@@ -1,29 +1,33 @@
+import {
+  BaseModel,
+  column,
+  HasOne,
+  hasOne
+} from '@ioc:Adonis/Lucid/Orm';
 import { DateTime } from 'luxon';
-import { BaseModel,
-         column,
-         HasOne,
-         hasOne } from '@ioc:Adonis/Lucid/Orm';
-import Env from "@ioc:Adonis/Core/Env";
-import SocialReason from './SocialReason';
+import BusinessName from './BusinessName';
 
 export default class Contract extends BaseModel {
-
   public static table = "CTR_CONTRATOS";
 
-  @column({ isPrimary: true,
-            columnName: "CTR_CODIGO",
-            serializeAs: "id" })
+  @column({
+    isPrimary: true,
+    columnName: "CTR_CODIGO",
+    serializeAs: "id"
+  })
   public id: number;
 
   @column({
     columnName: "CTR_NUMERO_CONTRATO",
-    serializeAs: "numContract",
+    serializeAs: "contractId",
   })
-  public numContract: string;
+  public contractId: number;
 
-  @column({ columnName: "CTR_CODRZO_RAZON_SOCIAL",
-            serializeAs: "codSocialReason" })
-  public codSocialReason: number;
+  @column({
+    columnName: "CTR_CODRZO_RAZON_SOCIAL",
+    serializeAs: "businessNameCode"
+  })
+  public businessNameCode: number;
 
   @column({
     columnName: "CTR_USUARIO_MODIFICO",
@@ -34,31 +38,28 @@ export default class Contract extends BaseModel {
   @column.dateTime({
     autoUpdate: true,
     columnName: "CTR_FECHA_MODIFICO",
-    serializeAs: "dateModified",
-    prepare: () => DateTime.now().toSQL(),
+    serializeAs: "updatedAt",
   })
-  public dateModified: DateTime;
+  public updatedAt: DateTime;
 
   @column({
     columnName: "CTR_USUARIO_CREO",
     serializeAs: "userCreate",
   })
-  public userCreate: string | undefined = Env.get("USER_ID");
+  public userCreate: string;
 
   @column.dateTime({
     autoCreate: true,
     columnName: "CTR_FECHA_CREO",
-    serializeAs: "dateCreate",
-    prepare: () => DateTime.now().toSQL(),
+    serializeAs: "createdAt",
   })
-  public dateCreate: DateTime;
+  public createdAt: DateTime;
 
-  //?Relaciones ORM
-  //*Contrato pertenece a una razón social.
-  @hasOne(() => SocialReason, {
-    localKey: "codSocialReason",
+  // Contrato pertenece a una razón social
+  @hasOne(() => BusinessName, {
+    localKey: "businessNameCode",
     foreignKey: "id",
   })
-  public socialReason: HasOne<typeof SocialReason>;
+  public socialReason: HasOne<typeof BusinessName>;
 
 }
