@@ -12,6 +12,7 @@ export interface IAccountStatementRepository {
   getAccountStatementFiltered(
     filters: IGetAccountStatement
   ): Promise<IPagingData<IAccountStatement>>;
+  getAccountStatementById(id: number): Promise<IAccountStatement | null>;
 }
 
 export default class AccountStatementRepository
@@ -47,5 +48,9 @@ export default class AccountStatementRepository
     const finalQuery = await accountStatementQuery.paginate(page, perPage);
     const { data, meta } = finalQuery.serialize();
     return { array: data as IAccountStatement[], meta };
+  }
+  // GET AN ACCOUNT STATEMENT BY ID
+  public async getAccountStatementById(id: number) {
+    return await AccountStatement.findOrFail(id);
   }
 }

@@ -1,3 +1,4 @@
+import { HttpContext } from "@adonisjs/core/build/standalone";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AccountStatementProvider from "@ioc:core.AccountStatementProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
@@ -11,10 +12,8 @@ import { getAccountStatementFilteredSchema } from "App/Validators/AccountStateme
 
 export default class AccountStatementController {
   // CREATE AN ACCOUNT STATEMENT
-  public async createAccountStatement({
-    request,
-    response,
-  }: HttpContextContract) {
+  public async createAccountStatement(ctx: HttpContextContract) {
+    const { request, response } = ctx;
     let payload: IAccountStatement;
     try {
       payload = await request.validate({ schema: accountStatementSchema });
@@ -72,6 +71,19 @@ export default class AccountStatementController {
       console.log("--");
     } catch (err) {
       console.log(err);
+    }
+  }
+  // GET AN ACCOUNT STATEMENT BY ID
+  public async getAccountStatementById({ request, response }: HttpContext) {
+    try {
+      const { id } = request.params();
+      const accountStatementFound =
+        await AccountStatementProvider.getAccountStatementById(id);
+      return response.send(accountStatementFound);
+    } catch (err) {
+      console.log(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
     }
   }
 }

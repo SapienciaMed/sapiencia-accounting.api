@@ -30,9 +30,12 @@ Route.group(() => {
       "/get-filtered",
       "AccountStatementController.getAccountStatementFiltered"
     );
-    Route.patch("/", "AcountStatementController.update");
+    Route.patch("/", "AccountStatementController.update");
+    Route.get(
+      "/get-by-id/:id",
+      "AccountStatementController.getAccountStatementById"
+    ).where("id", Route.matchers.number());
     // Route.delete("/delete/:id", "CollectionAccountsController.deleteCollectionAccounts");
-    // Route.get("/get-by-id/:id", "CollectionAccountsController.getByIdCollectionAccounts");
   }).prefix("/account-statement");
 }).prefix("/api/v1");
 

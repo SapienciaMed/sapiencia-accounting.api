@@ -13,22 +13,31 @@ export interface IAccountStatementService {
   getAccountStatementFiltered(
     filters: IGetAccountStatement
   ): Promise<ApiResponse<IPagingData<IAccountStatement>>>;
+  getAccountStatementById(id: number): Promise<ApiResponse<IAccountStatement>>;
 }
 
 export default class AccountStatementService
   implements IAccountStatementService
 {
   constructor(private accountStatementRepository: AccountStatementRepository) {}
-  async createAccountStatement(payload: IAccountStatement) {
+  // CREATE ACCOUNT STATEMENT
+  public async createAccountStatement(payload: IAccountStatement) {
     const newAccountStatement =
       await this.accountStatementRepository.createAccountStatement(payload);
     return new ApiResponse(newAccountStatement, EResponseCodes.OK);
   }
-  async getAccountStatementFiltered(filters: IGetAccountStatement) {
+  // GET ALL ACCOUNT STATEMENT FILTERED
+  public async getAccountStatementFiltered(filters: IGetAccountStatement) {
     const accountsStatements =
       await this.accountStatementRepository.getAccountStatementFiltered(
         filters
       );
     return new ApiResponse(accountsStatements, EResponseCodes.OK);
+  }
+  // GET AN ACOUNT STATEMENT BY ID
+  public async getAccountStatementById(id: number) {
+    const accountStatementFound =
+      await this.accountStatementRepository.getAccountStatementById(id);
+    return new ApiResponse(accountStatementFound, EResponseCodes.OK);
   }
 }
