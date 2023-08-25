@@ -1,57 +1,51 @@
 import {
   IAccountStatement,
-  IAccountStatementFilters,
+  IGetAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import AccountStatement from "App/Models/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
 
 export interface IAccountStatementRepository {
-  create(payload: IAccountStatement): Promise<IAccountStatement>;
+  createAccountStatement(
+    payload: IAccountStatement
+  ): Promise<IAccountStatement>;
   getAccountStatementFiltered(
-    filters: IAccountStatementFilters
+    filters: IGetAccountStatement
   ): Promise<IPagingData<IAccountStatement>>;
 }
 
 export default class AccountStatementRepository
   implements IAccountStatementRepository
 {
-  async create(payload: IAccountStatement): Promise<IAccountStatement> {
+  // CREATE ACCOUNT STATEMENT
+  public async createAccountStatement(payload: IAccountStatement) {
     const newAccountStatement = new AccountStatement();
     await newAccountStatement.fill({ ...payload }).save();
     return newAccountStatement.serialize() as IAccountStatement;
   }
-  async getAccountStatementFiltered(
-    filters: IAccountStatementFilters
-  ): Promise<IPagingData<IAccountStatement>> {
+  // GET ALL ACCOUNT STATEMENT FILTERED
+  public async getAccountStatementFiltered(filters: IGetAccountStatement) {
     const { accountNum, contractCode, expirationDate, nit, page, perPage } =
       filters;
-    const query = AccountStatement.query().preload("contract", (q) =>
-      q.preload("socialReason")
-    );
+    const accountStatementQuery = AccountStatement.query();
     if (accountNum) {
-      query.where("accountNum", accountNum);
+      accountStatementQuery.where("accountNum", accountNum);
     }
-
     if (contractCode) {
-      query.where("contractCode", contractCode);
-    }
-
-    if (nit) {
-      query.whereHas("contract", (sub1query) => {
-        sub1query.whereHas("socialReason", (sub2query) =>
-          sub2query.where("nit", nit)
-        );
-      });
+      accountStatementQuery.where("contractCode", contractCode);
     }
     if (expirationDate) {
-      query.where("expirationDate", expirationDate.toString());
+      accountStatementQuery.where("expirationDate", expirationDate.toString());
     }
-
-    const res = await query.paginate(page, perPage);
-    const { data, meta } = res.serialize();
-    return {
-      array: data as IAccountStatement[],
-      meta,
-    };
+    if (nit) {
+      accountStatementQuery.preload("contract", (contractQuery) => {
+        contractQuery.preload("business", (businessQuery) => {
+          businessQuery.where("nit", nit);
+        });
+      });
+    }
+    const finalQuery = await accountStatementQuery.paginate(page, perPage);
+    const { data, meta } = finalQuery.serialize();
+    return { array: data as IAccountStatement[], meta };
   }
 }

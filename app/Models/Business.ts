@@ -1,9 +1,8 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
 import { DateTime } from "luxon";
 
-export default class BusinessName extends BaseModel {
+export default class Business extends BaseModel {
   public static table = "RZO_RAZONES_SOCIALES";
-
   @column({
     isPrimary: true,
     columnName: "RZO_CODIGO",

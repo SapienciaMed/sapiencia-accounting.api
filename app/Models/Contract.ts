@@ -1,19 +1,13 @@
-import {
-  BaseModel,
-  column,
-  HasOne,
-  hasOne
-} from '@ioc:Adonis/Lucid/Orm';
-import { DateTime } from 'luxon';
-import BusinessName from './BusinessName';
+import { BaseModel, column, HasOne, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import { DateTime } from "luxon";
+import Business from "./Business";
 
 export default class Contract extends BaseModel {
   public static table = "CTR_CONTRATOS";
-
   @column({
     isPrimary: true,
     columnName: "CTR_CODIGO",
-    serializeAs: "id"
+    serializeAs: "id",
   })
   public id: number;
 
@@ -25,9 +19,9 @@ export default class Contract extends BaseModel {
 
   @column({
     columnName: "CTR_CODRZO_RAZON_SOCIAL",
-    serializeAs: "businessNameCode"
+    serializeAs: "businessCode",
   })
-  public businessNameCode: number;
+  public businessCode: number;
 
   @column({
     columnName: "CTR_USUARIO_MODIFICO",
@@ -56,10 +50,9 @@ export default class Contract extends BaseModel {
   public createdAt: DateTime;
 
   // Contrato pertenece a una razón social
-  @hasOne(() => BusinessName, {
-    localKey: "businessNameCode",
+  @hasOne(() => Business, {
+    localKey: "businessCode",
     foreignKey: "id",
   })
-  public socialReason: HasOne<typeof BusinessName>;
-
+  public business: HasOne<typeof Business>;
 }

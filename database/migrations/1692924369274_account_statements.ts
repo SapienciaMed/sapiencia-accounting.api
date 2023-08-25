@@ -1,17 +1,16 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema';
+import BaseSchema from "@ioc:Adonis/Lucid/Schema";
 
 export default class extends BaseSchema {
-  protected tableName = 'CTC_CUENTAS_COBRO'
-
+  protected tableName = "CTC_CUENTAS_COBRO";
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.comment("Tabla que almacena las cuentas de cobro de los contratos");
       table
-        .increments('CTC_CODIGO')
+        .increments("CTC_CODIGO")
         .primary()
         .unique()
         .notNullable()
-        .comment('Llave primaria')
+        .comment("Llave primaria");
       table
         .integer("CTC_CODCTR_CONTRATO")
         .unsigned()
@@ -36,10 +35,7 @@ export default class extends BaseSchema {
         .string("CTC_FORMA_PAGO", 15)
         .notNullable()
         .comment("Forma de Pago (Listados Genéricos) (Contado - Crédito)");
-      table
-        .decimal("CTC_VALOR", 15, 2)
-        .notNullable()
-        .comment("Valor a cobrar");
+      table.decimal("CTC_VALOR", 15, 2).notNullable().comment("Valor a cobrar");
       table
         .string("CTC_CONCEPTO", 500)
         .notNullable()
@@ -47,7 +43,9 @@ export default class extends BaseSchema {
       table
         .string("CTC_USUARIO_MODIFICO", 15)
         .nullable()
-        .comment("Número del documento del último usuario que hizo una modificación");
+        .comment(
+          "Número del documento del último usuario que hizo una modificación"
+        );
       table
         .dateTime("CTC_FECHA_MODIFICO")
         .nullable()
@@ -60,10 +58,10 @@ export default class extends BaseSchema {
         .dateTime("CTC_FECHA_CREO")
         .notNullable()
         .comment("Fecha y hora de creación del registro");
-    })
+    });
   }
 
   public async down() {
-    this.schema.dropTable(this.tableName)
+    this.schema.dropTable(this.tableName);
   }
 }

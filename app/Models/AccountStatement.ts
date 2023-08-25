@@ -1,19 +1,13 @@
-import {
-  BaseModel,
-  column,
-  hasOne,
-  HasOne
-} from '@ioc:Adonis/Lucid/Orm';
-import { DateTime } from 'luxon';
-import Contract from './Contract';
+import { BaseModel, column, hasOne, HasOne } from "@ioc:Adonis/Lucid/Orm";
+import { DateTime } from "luxon";
+import Contract from "./Contract";
 
 export default class AccountStatement extends BaseModel {
   public static table = "CTC_CUENTAS_COBRO";
-
   @column({
     isPrimary: true,
     columnName: "CTC_CODIGO",
-    serializeAs: "id"
+    serializeAs: "id",
   })
   public id: number;
 

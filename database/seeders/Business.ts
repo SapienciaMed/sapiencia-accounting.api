@@ -1,11 +1,11 @@
-import BaseSeeder from '@ioc:Adonis/Lucid/Seeder';
-import BusinessName from 'App/Models/BusinessName';
+import BaseSeeder from "@ioc:Adonis/Lucid/Seeder";
+import Business from "App/Models/Business";
 
 export default class extends BaseSeeder {
   public async run() {
     // Write your database queries inside the run method
-    const uniqueKey = "name"
-    await BusinessName.updateOrCreateMany(uniqueKey, [
+    const uniqueKey = "name";
+    await Business.updateOrCreateMany(uniqueKey, [
       {
         name: "Institución Universitaria Colegio Mayor de Antioquia",
         nit: "890980134",
@@ -14,7 +14,7 @@ export default class extends BaseSeeder {
         municipalityCode: "396",
         sender: "Sindy Escalante",
         chargeSender: "Coordinadora financiera unidad de convenios y contratos",
-        userCreate: "0000 000 000"
+        userCreate: "0000 000 000",
         // userModified: null,
       },
       {
@@ -25,7 +25,7 @@ export default class extends BaseSeeder {
         municipalityCode: "396",
         sender: "Sindy Escalante",
         chargeSender: "Coordinadora financiera unidad de convenios y contratos",
-        userCreate: "0000 000 000"
+        userCreate: "0000 000 000",
         // userModified: null,
       },
       {
@@ -36,9 +36,9 @@ export default class extends BaseSeeder {
         municipalityCode: "396",
         sender: "Sindy Escalante",
         chargeSender: "Coordinadora financiera unidad de convenios y contratos",
-        userCreate: "0000 000 000"
+        userCreate: "0000 000 000",
         // userModified: null,
-      }
-    ])
+      },
+    ]);
   }
 }

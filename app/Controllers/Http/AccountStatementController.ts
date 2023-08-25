@@ -1,61 +1,72 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AccountStatementProvider from "@ioc:core.AccountStatementProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IAccountStatementFilters } from "App/Interfaces/AccountStatement";
+import {
+  IAccountStatement,
+  IGetAccountStatement,
+} from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { accountStatementSchema } from "App/Validators/AccountStatementValidator/accountStatementSchema";
+import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatementValidator/getAccountStatementFilteredSchema";
 
 export default class AccountStatementController {
-  // CREAR CUENTA DE COBRO
-  public async create({ request, response }: HttpContextContract) {
-    let payload: any;
-    try {
-      payload = await request.validate({ schema: accountStatementSchema });
-    } catch (err) {
-      return new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(err?.messages?.errors)
-      );
-    }
-    try {
-      const newAccountStatement = await AccountStatementProvider.create(
-        payload
-      );
-      return response.send(newAccountStatement);
-    } catch (err) {
-      console.log(err);
-      return new ApiResponse(null, EResponseCodes.FAIL, err.message);
-    }
-  }
-  // OBTENER CUENTAS DE COBRO
-  public async getAccountStatementFiltered({
+  // CREATE AN ACCOUNT STATEMENT
+  public async createAccountStatement({
     request,
     response,
   }: HttpContextContract) {
-    // let payload: IAccountStatementFilters;
-    // try {
-    //   payload = await request.validate({
-    //     schema: getFilteredAccountStatementSchema,
-    //   });
-    // } catch (err) {
-    //   return new ApiResponse(
-    //     null,
-    //     EResponseCodes.FAIL,
-    //     JSON.stringify(err?.messages?.errors)
-    //   );
-    // }
+    let payload: IAccountStatement;
     try {
-      const filters = request.qs() as IAccountStatementFilters;
+      payload = await request.validate({ schema: accountStatementSchema });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      console.log(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
+      const newAccountStatement =
+        await AccountStatementProvider.createAccountStatement(payload);
+      return response.created(newAccountStatement);
+    } catch (err) {
+      console.log(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ALL FILTERED ACCOUNT STATEMENTS
+  public async getAccountStatementFiltered(ctx: HttpContextContract) {
+    const { request, response } = ctx;
+    let filters: IGetAccountStatement;
+    try {
+      filters = await request.validate({
+        schema: getAccountStatementFilteredSchema,
+      });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      console.log(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
       const accountStatements =
         await AccountStatementProvider.getAccountStatementFiltered(filters);
       return response.send(accountStatements);
     } catch (err) {
       console.log(err);
-      return new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
     }
   }
-  // ACTUALIZAR CUENTA DE COBRO
+  // UPDATE AN ACCOUNT STATEMENT
   public async update() {
     try {
       console.log("--");
