@@ -1,4 +1,4 @@
-import { IBusiness } from "App/Interfaces/BusinessInterfaces";
+import { IBusiness } from "App/Interfaces/BusinessInterface";
 import { IBusinessRepository } from "App/Repositories/BusinessRepository";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { EResponseCodes } from "../Constants/ResponseCodesEnum";

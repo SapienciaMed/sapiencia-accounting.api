@@ -14,6 +14,7 @@ export interface IAccountStatementService {
     filters: IGetAccountStatement
   ): Promise<ApiResponse<IPagingData<IAccountStatement>>>;
   getAccountStatementById(id: number): Promise<ApiResponse<IAccountStatement>>;
+  getLastAccountStatement(): Promise<ApiResponse<IAccountStatement>>;
 }
 
 export default class AccountStatementService
@@ -39,5 +40,11 @@ export default class AccountStatementService
     const accountStatementFound =
       await this.accountStatementRepository.getAccountStatementById(id);
     return new ApiResponse(accountStatementFound, EResponseCodes.OK);
+  }
+  // GET LAST ACCOUNT STATEMENT
+  public async getLastAccountStatement() {
+    const lastAccountStatement =
+      await this.accountStatementRepository.getLastAccountStatement();
+    return new ApiResponse(lastAccountStatement, EResponseCodes.OK);
   }
 }

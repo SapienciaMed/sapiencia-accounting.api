@@ -12,7 +12,8 @@ export interface IAccountStatementRepository {
   getAccountStatementFiltered(
     filters: IGetAccountStatement
   ): Promise<IPagingData<IAccountStatement>>;
-  getAccountStatementById(id: number): Promise<IAccountStatement | null>;
+  getAccountStatementById(id: number): Promise<IAccountStatement>;
+  getLastAccountStatement(): Promise<IAccountStatement>;
 }
 
 export default class AccountStatementRepository
@@ -52,5 +53,12 @@ export default class AccountStatementRepository
   // GET AN ACCOUNT STATEMENT BY ID
   public async getAccountStatementById(id: number) {
     return await AccountStatement.findOrFail(id);
+  }
+  // GET LAST ACCOUNT STATEMENT
+  public async getLastAccountStatement() {
+    const lastAccountStatement = await AccountStatement.query()
+      .orderBy("id", "desc")
+      .firstOrFail();
+    return lastAccountStatement.serialize() as IAccountStatement;
   }
 }

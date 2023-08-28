@@ -66,9 +66,9 @@ export default class AccountStatementController {
     }
   }
   // UPDATE AN ACCOUNT STATEMENT
-  public async update() {
+  public async updateAccountStatement({ response }: HttpContext) {
     try {
-      console.log("--");
+      response.send("UPDATE ACCOUNT STATEMENT");
     } catch (err) {
       console.log(err);
     }
@@ -80,6 +80,18 @@ export default class AccountStatementController {
       const accountStatementFound =
         await AccountStatementProvider.getAccountStatementById(id);
       return response.send(accountStatementFound);
+    } catch (err) {
+      console.log(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET LAST ACCOUNT STATEMENT ID
+  public async getLastAccountStatement({ response }: HttpContext) {
+    try {
+      const lastAccountStatementId =
+        await AccountStatementProvider.getLastAccountStatement();
+      return response.send(lastAccountStatementId);
     } catch (err) {
       console.log(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

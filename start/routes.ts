@@ -30,7 +30,11 @@ Route.group(() => {
       "/get-filtered",
       "AccountStatementController.getAccountStatementFiltered"
     );
-    Route.patch("/", "AccountStatementController.update");
+    Route.get(
+      "/get-last",
+      "AccountStatementController.getLastAccountStatement"
+    );
+    Route.patch("/", "AccountStatementController.updateAccountStatement");
     Route.get(
       "/get-by-id/:id",
       "AccountStatementController.getAccountStatementById"

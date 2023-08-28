@@ -1,4 +1,4 @@
-import { IBusiness } from "App/Interfaces/BusinessInterfaces";
+import { IBusiness } from "App/Interfaces/BusinessInterface";
 import Business from "App/Models/Business";
 
 export interface IBusinessRepository {
