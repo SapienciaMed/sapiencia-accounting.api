@@ -1,6 +1,7 @@
 import {
   IAccountStatement,
   IGetAccountStatement,
+  IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import AccountStatement from "App/Models/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
@@ -14,6 +15,10 @@ export interface IAccountStatementRepository {
   ): Promise<IPagingData<IAccountStatement>>;
   getAccountStatementById(id: number): Promise<IAccountStatement>;
   getLastAccountStatement(): Promise<IAccountStatement>;
+  updateAccountStatement(
+    id: number,
+    payload: IUpdateAccountStatement
+  ): Promise<IAccountStatement>;
 }
 
 export default class AccountStatementRepository
@@ -49,6 +54,15 @@ export default class AccountStatementRepository
     const finalQuery = await accountStatementQuery.paginate(page, perPage);
     const { data, meta } = finalQuery.serialize();
     return { array: data as IAccountStatement[], meta };
+  }
+  // UPDATE AN ACCOUNT STATEMENT
+  public async updateAccountStatement(
+    id: number,
+    payload: IUpdateAccountStatement
+  ) {
+    const accountStatementFound = await AccountStatement.findOrFail(id);
+    const resp = await accountStatementFound.merge(payload).save();
+    return resp as IAccountStatement;
   }
   // GET AN ACCOUNT STATEMENT BY ID
   public async getAccountStatementById(id: number) {

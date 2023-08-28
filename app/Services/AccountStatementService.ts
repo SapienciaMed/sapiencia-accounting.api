@@ -2,6 +2,7 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
   IGetAccountStatement,
+  IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
@@ -15,6 +16,10 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<IPagingData<IAccountStatement>>>;
   getAccountStatementById(id: number): Promise<ApiResponse<IAccountStatement>>;
   getLastAccountStatement(): Promise<ApiResponse<IAccountStatement>>;
+  updateAccountStatement(
+    id: number,
+    payload: IUpdateAccountStatement
+  ): Promise<ApiResponse<IAccountStatement>>;
 }
 
 export default class AccountStatementService
@@ -34,6 +39,15 @@ export default class AccountStatementService
         filters
       );
     return new ApiResponse(accountsStatements, EResponseCodes.OK);
+  }
+  // UPDATE AN ACCOUNT STATEMENT
+  public async updateAccountStatement(
+    id: number,
+    payload: IUpdateAccountStatement
+  ) {
+    const accountStatementUpdated =
+      await this.accountStatementRepository.updateAccountStatement(id, payload);
+    return new ApiResponse(accountStatementUpdated, EResponseCodes.OK);
   }
   // GET AN ACOUNT STATEMENT BY ID
   public async getAccountStatementById(id: number) {

@@ -23,3 +23,9 @@ export interface IGetAccountStatement {
   page: number;
   perPage: number;
 }
+
+export interface IUpdateAccountStatement {
+  contractCode?: number;
+  valuePay?: number;
+  concept?: string;
+}

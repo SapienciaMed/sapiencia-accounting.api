@@ -5,9 +5,11 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
   IGetAccountStatement,
+  IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { accountStatementSchema } from "App/Validators/AccountStatementValidator/accountStatementSchema";
+import { accountStatementUpdateSchema } from "App/Validators/AccountStatementValidator/accountStatementUpdateSchema";
 import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatementValidator/getAccountStatementFilteredSchema";
 
 export default class AccountStatementController {
@@ -58,7 +60,7 @@ export default class AccountStatementController {
     try {
       const accountStatements =
         await AccountStatementProvider.getAccountStatementFiltered(filters);
-      return response.send(accountStatements);
+      return response.ok(accountStatements);
     } catch (err) {
       console.log(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
@@ -66,11 +68,31 @@ export default class AccountStatementController {
     }
   }
   // UPDATE AN ACCOUNT STATEMENT
-  public async updateAccountStatement({ response }: HttpContext) {
+  public async updateAccountStatement({ request, response }: HttpContext) {
+    let payload: IUpdateAccountStatement;
     try {
-      response.send("UPDATE ACCOUNT STATEMENT");
+      payload = await request.validate({
+        schema: accountStatementUpdateSchema,
+      });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      console.log(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
+      const { id } = request.params();
+      const newAccountStatement =
+        await AccountStatementProvider.updateAccountStatement(id, payload);
+      return response.ok(newAccountStatement);
     } catch (err) {
       console.log(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
     }
   }
   // GET AN ACCOUNT STATEMENT BY ID
@@ -79,7 +101,7 @@ export default class AccountStatementController {
       const { id } = request.params();
       const accountStatementFound =
         await AccountStatementProvider.getAccountStatementById(id);
-      return response.send(accountStatementFound);
+      return response.ok(accountStatementFound);
     } catch (err) {
       console.log(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
@@ -91,7 +113,7 @@ export default class AccountStatementController {
     try {
       const lastAccountStatementId =
         await AccountStatementProvider.getLastAccountStatement();
-      return response.send(lastAccountStatementId);
+      return response.ok(lastAccountStatementId);
     } catch (err) {
       console.log(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
