@@ -26,15 +26,15 @@ Route.group(() => {
   // CUENTA DE COBRO
   Route.group(() => {
     Route.post("/", "AccountStatementController.createAccountStatement");
-    Route.get(
-      "/get-filtered",
+    Route.post(
+      "/get-paginated",
       "AccountStatementController.getAccountStatementFiltered"
     );
     Route.get(
       "/get-last",
       "AccountStatementController.getLastAccountStatement"
     );
-    Route.patch(
+    Route.put(
       "/update/:id",
       "AccountStatementController.updateAccountStatement"
     ).where("id", Route.matchers.number());

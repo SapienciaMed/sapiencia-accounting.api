@@ -9,9 +9,7 @@ export const getAccountStatementFilteredSchema = schema.create({
     rules.alphaNum(),
     rules.trim(),
   ]),
-  expirationDate: schema.date.optional({
-    format: "sql",
-  }),
+  expeditionDate: schema.date.optional(),
   page: schema.number([rules.required(), rules.unsigned()]),
   perPage: schema.number([rules.required(), rules.unsigned()]),
 });

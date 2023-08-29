@@ -32,21 +32,24 @@ export default class AccountStatementRepository
   }
   // GET ALL ACCOUNT STATEMENT FILTERED
   public async getAccountStatementFiltered(filters: IGetAccountStatement) {
-    const { accountNum, contractCode, expirationDate, nit, page, perPage } =
+    const { accountNum, contractCode, expeditionDate, nit, page, perPage } =
       filters;
     const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("contract", (contractQuery) => {
+      contractQuery.preload("business");
+    });
     if (accountNum) {
       accountStatementQuery.where("accountNum", accountNum);
     }
     if (contractCode) {
       accountStatementQuery.where("contractCode", contractCode);
     }
-    if (expirationDate) {
-      accountStatementQuery.where("expirationDate", expirationDate.toString());
+    if (expeditionDate) {
+      accountStatementQuery.where("expeditionDate", expeditionDate.toString());
     }
     if (nit) {
-      accountStatementQuery.preload("contract", (contractQuery) => {
-        contractQuery.preload("business", (businessQuery) => {
+      accountStatementQuery.whereHas("contract", (contractQuery) => {
+        contractQuery.whereHas("business", (businessQuery) => {
           businessQuery.where("nit", nit);
         });
       });
@@ -66,7 +69,16 @@ export default class AccountStatementRepository
   }
   // GET AN ACCOUNT STATEMENT BY ID
   public async getAccountStatementById(id: number) {
-    return await AccountStatement.findOrFail(id);
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("contract", (contractQuery) => {
+      contractQuery.preload("business");
+    });
+    accountStatementQuery.where("id", id);
+    const accountStatementFound = await accountStatementQuery.first();
+    if (!accountStatementFound) {
+      throw new Error(`Cuenta de cobro con id ${id} no existe`);
+    }
+    return accountStatementFound.serialize() as IAccountStatement;
   }
   // GET LAST ACCOUNT STATEMENT
   public async getLastAccountStatement() {

@@ -19,7 +19,7 @@ export interface IGetAccountStatement {
   accountNum?: number;
   contractCode?: number;
   nit?: string;
-  expirationDate?: DateTime;
+  expeditionDate?: DateTime;
   page: number;
   perPage: number;
 }

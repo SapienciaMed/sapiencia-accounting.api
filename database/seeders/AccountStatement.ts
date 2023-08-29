@@ -9,9 +9,9 @@ export default class extends BaseSeeder {
       {
         contractCode: 1,
         accountNum: 42023,
-        expeditionDate: DateTime.fromISO("2023-10-01"),
+        expeditionDate: DateTime.fromISO("2023-05-01"),
         expirationDate: DateTime.fromISO("2023-09-02"),
-        paymentType: "03",
+        paymentType: "1",
         valuePay: 226687971,
         concept:
           "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
@@ -23,7 +23,7 @@ export default class extends BaseSeeder {
         accountNum: 52023,
         expeditionDate: DateTime.fromISO("2023-01-20"),
         expirationDate: DateTime.fromISO("2023-02-19"),
-        paymentType: "03",
+        paymentType: "2",
         valuePay: 226687971,
         concept:
           "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
@@ -33,9 +33,9 @@ export default class extends BaseSeeder {
       {
         contractCode: 3,
         accountNum: 62023,
-        expeditionDate: DateTime.fromISO("2023-01-20"),
+        expeditionDate: DateTime.fromISO("2023-03-28"),
         expirationDate: DateTime.fromISO("2023-02-19"),
-        paymentType: "03",
+        paymentType: "3",
         valuePay: 226687971,
         concept:
           "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
