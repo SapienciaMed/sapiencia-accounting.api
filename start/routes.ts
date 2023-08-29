@@ -20,7 +20,7 @@
 
 import Route from "@ioc:Adonis/Core/Route";
 
-Route.get("/", () => "SAPIENCIA ACCOUNTING API");
+Route.get("/accounting", () => "SAPIENCIA ACCOUNTING API");
 
 Route.group(() => {
   // CUENTA DE COBRO
