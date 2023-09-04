@@ -45,7 +45,10 @@ export default class AccountStatementRepository
       accountStatementQuery.where("contractCode", contractCode);
     }
     if (expeditionDate) {
-      accountStatementQuery.where("expeditionDate", expeditionDate.toString());
+      let auxExpeditionDate = expeditionDate.toSQLDate();
+      if (auxExpeditionDate !== null) {
+        accountStatementQuery.where("expeditionDate", auxExpeditionDate);
+      }
     }
     if (nit) {
       accountStatementQuery.whereHas("contract", (contractQuery) => {
