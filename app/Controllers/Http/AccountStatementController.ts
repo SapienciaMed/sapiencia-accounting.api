@@ -142,7 +142,7 @@ export default class AccountStatementController {
       await page.emulateMediaType("screen");
 
       // Downlaod the PDF
-      const pdf = await page.pdf({
+      await page.pdf({
         path: "result.pdf",
         margin: { top: "100px", right: "50px", bottom: "100px", left: "50px" },
         printBackground: true,
