@@ -20,11 +20,31 @@
 
 import Route from "@ioc:Adonis/Core/Route";
 
-Route.get("/", async () => {
-  return "Api contabilidad de SAPIENCIA";
-});
+Route.get("/", () => "SAPIENCIA ACCOUNTING API");
 
 Route.group(() => {
-  Route.get("/get-by-id/:id", "BusinessController.getBusinessById");
-}).prefix("/api/v1/business");
-// .middleware("auth");
+  // CUENTA DE COBRO
+  Route.group(() => {
+    Route.post("/", "AccountStatementController.createAccountStatement");
+    Route.post(
+      "/get-paginated",
+      "AccountStatementController.getAccountStatementFiltered"
+    );
+    Route.get(
+      "/get-last",
+      "AccountStatementController.getLastAccountStatement"
+    );
+    Route.put(
+      "/update/:id",
+      "AccountStatementController.updateAccountStatement"
+    ).where("id", Route.matchers.number());
+    Route.get(
+      "/get-by-id/:id",
+      "AccountStatementController.getAccountStatementById"
+    ).where("id", Route.matchers.number());
+    Route.get(
+      "/:id/generate-pdf",
+      "AccountStatementController.generateAccountStatementPDF"
+    ).where("id", Route.matchers.number());
+  }).prefix("/account-statement");
+}).prefix("/api/v1");
