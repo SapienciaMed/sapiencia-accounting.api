@@ -1,11 +1,14 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
+  IAccountStatementDownloadPDF,
   IGetAccountStatement,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
+import { createPDFTemplate } from "App/Utils/PDFTemplate";
+import { referralTemplate } from "../../storage/templates/referralTemplate";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -20,6 +23,10 @@ export interface IAccountStatementService {
     id: number,
     payload: IUpdateAccountStatement
   ): Promise<ApiResponse<IAccountStatement>>;
+  generateAccountStatementPDF(
+    id: number,
+    filters: IAccountStatementDownloadPDF
+  ): Promise<ApiResponse<string>>;
 }
 
 export default class AccountStatementService
@@ -60,5 +67,20 @@ export default class AccountStatementService
     const lastAccountStatement =
       await this.accountStatementRepository.getLastAccountStatement();
     return new ApiResponse(lastAccountStatement, EResponseCodes.OK);
+  }
+  //
+  public async generateAccountStatementPDF(
+    id: number,
+    filters: IAccountStatementDownloadPDF
+  ) {
+    console.log({ id, filters });
+    const dimension = {
+      top: "24px",
+      right: "50px",
+      bottom: "100px",
+      left: "16px",
+    };
+    const PDF_PATH = await createPDFTemplate(referralTemplate(), dimension);
+    return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
 }
