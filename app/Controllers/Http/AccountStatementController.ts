@@ -138,6 +138,7 @@ export default class AccountStatementController {
     //   // To reflect CSS used for screens instead of print
     //   await page.emulateMediaType("screen");
 
+<<<<<<< HEAD
     //   // Downlaod the PDF
     //   const pdf = await page.pdf({
     //     path: "result.pdf",
@@ -145,6 +146,15 @@ export default class AccountStatementController {
     //     printBackground: true,
     //     format: "A4",
     //   });
+=======
+      // Downlaod the PDF
+      await page.pdf({
+        path: "result.pdf",
+        margin: { top: "100px", right: "50px", bottom: "100px", left: "50px" },
+        printBackground: true,
+        format: "A4",
+      });
+>>>>>>> dev
 
     //   // Close the browser instance
     //   await browser.close();
