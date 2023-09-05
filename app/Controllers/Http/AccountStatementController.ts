@@ -5,13 +5,10 @@ import {
   IAccountStatement,
   IAccountStatementDownloadPDF,
   IGetAccountStatement,
-  IUpdateAccountStatement
+  IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
-<<<<<<< Updated upstream
-=======
 import { accountStatementDownloadPDFSchema } from "App/Validators/AccountStatementValidator/accountStatementDownloadPDFSchema";
->>>>>>> Stashed changes
 import { accountStatementSchema } from "App/Validators/AccountStatementValidator/accountStatementSchema";
 import { accountStatementUpdateSchema } from "App/Validators/AccountStatementValidator/accountStatementUpdateSchema";
 import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatementValidator/getAccountStatementFilteredSchema";
@@ -19,21 +16,13 @@ import { getAccountStatementFilteredSchema } from "App/Validators/AccountStateme
 export default class AccountStatementController {
   // CREATE AN ACCOUNT STATEMENT
   public async createAccountStatement(ctx: HttpContextContract) {
-<<<<<<< Updated upstream
-    const { request, response } = ctx;
-=======
     const { request, response, logger } = ctx;
->>>>>>> Stashed changes
     let payload: IAccountStatement;
     try {
       payload = await request.validate({ schema: accountStatementSchema });
     } catch (err) {
       const validationErrors = err?.messages?.errors;
-<<<<<<< Updated upstream
       console.log(validationErrors);
-=======
-      logger.error(validationErrors);
->>>>>>> Stashed changes
       const apiResp = new ApiResponse(
         null,
         EResponseCodes.FAIL,
@@ -53,22 +42,7 @@ export default class AccountStatementController {
   }
   // GET ALL FILTERED ACCOUNT STATEMENTS
   public async getAccountStatementFiltered(ctx: HttpContextContract) {
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-    const { response } = ctx;
-    const filters = (await validateSchema(
-      ctx,
-      getAccountStatementFilteredSchema
-    )) as IGetAccountStatement;
-=======
-<<<<<<< Updated upstream
-    const { request, response } = ctx;
-=======
     const { request, response, logger } = ctx;
->>>>>>> Stashed changes
-=======
-    const { request, response, logger } = ctx;
->>>>>>> Stashed changes
     let filters: IGetAccountStatement;
     try {
       filters = await request.validate({
@@ -76,14 +50,7 @@ export default class AccountStatementController {
       });
     } catch (err) {
       const validationErrors = err?.messages?.errors;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
       logger.error(validationErrors);
->>>>>>> Stashed changes
-=======
-      logger.error(validationErrors);
->>>>>>> Stashed changes
       const apiResp = new ApiResponse(
         null,
         EResponseCodes.FAIL,
@@ -91,10 +58,6 @@ export default class AccountStatementController {
       );
       return response.badRequest(apiResp);
     }
-<<<<<<< Updated upstream
->>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
-=======
->>>>>>> Stashed changes
     try {
       const accountStatements =
         await AccountStatementProvider.getAccountStatementFiltered(filters);
@@ -106,24 +69,8 @@ export default class AccountStatementController {
     }
   }
   // UPDATE AN ACCOUNT STATEMENT
-<<<<<<< HEAD
-  public async updateAccountStatement(ctx: HttpContextContract) {
-<<<<<<< Updated upstream
-    const { request, response } = ctx;
-    const payload = (await validateSchema(
-      ctx,
-      accountStatementUpdateSchema
-    )) as IUpdateAccountStatement;
-=======
-<<<<<<< Updated upstream
-  public async updateAccountStatement({ request, response }: HttpContext) {
-=======
   public async updateAccountStatement(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
->>>>>>> Stashed changes
-=======
-    const { request, response, logger } = ctx;
->>>>>>> Stashed changes
     let payload: IUpdateAccountStatement;
     try {
       payload = await request.validate({
@@ -131,15 +78,7 @@ export default class AccountStatementController {
       });
     } catch (err) {
       const validationErrors = err?.messages?.errors;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-      console.log(validationErrors);
-=======
       logger.error(validationErrors);
->>>>>>> Stashed changes
-=======
-      logger.error(validationErrors);
->>>>>>> Stashed changes
       const apiResp = new ApiResponse(
         null,
         EResponseCodes.FAIL,
@@ -147,10 +86,6 @@ export default class AccountStatementController {
       );
       return response.badRequest(apiResp);
     }
-<<<<<<< Updated upstream
->>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
-=======
->>>>>>> Stashed changes
     try {
       const { id } = request.params();
       const newAccountStatement =
@@ -163,24 +98,8 @@ export default class AccountStatementController {
     }
   }
   // GET AN ACCOUNT STATEMENT BY ID
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  public async getAccountStatementById({
-    request,
-    response,
-  }: HttpContextContract) {
-=======
-<<<<<<< Updated upstream
-  public async getAccountStatementById({ request, response }: HttpContext) {
-=======
   public async getAccountStatementById(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
->>>>>>> Stashed changes
->>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
-=======
-  public async getAccountStatementById(ctx: HttpContextContract) {
-    const { request, response, logger } = ctx;
->>>>>>> Stashed changes
     try {
       const { id } = request.params();
       const accountStatementFound =
@@ -193,21 +112,8 @@ export default class AccountStatementController {
     }
   }
   // GET LAST ACCOUNT STATEMENT ID
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  public async getLastAccountStatement({ response }: HttpContextContract) {
-=======
-<<<<<<< Updated upstream
-  public async getLastAccountStatement({ response }: HttpContext) {
-=======
   public async getLastAccountStatement(ctx: HttpContextContract) {
     const { response, logger } = ctx;
->>>>>>> Stashed changes
->>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
-=======
-  public async getLastAccountStatement(ctx: HttpContextContract) {
-    const { response, logger } = ctx;
->>>>>>> Stashed changes
     try {
       const lastAccountStatementId =
         await AccountStatementProvider.getLastAccountStatement();
@@ -219,50 +125,6 @@ export default class AccountStatementController {
     }
   }
   // GENERATE ACCOUNT STATEMENT PDF
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  public async generateAccountStatementPDF({ response }: HttpContextContract) {
-    // const puppeteer = require("puppeteer");
-    // const fs = require("fs");
-=======
-<<<<<<< Updated upstream
-  public async generateAccountStatementPDF({ response }: HttpContext) {
-    const puppeteer = require("puppeteer");
-    const fs = require("fs");
->>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
-
-    // (async () => {
-    //   // Create a browser instance
-    //   const browser = await puppeteer.launch();
-
-    //   // Create a new page
-    //   const page = await browser.newPage();
-
-    //   //Get HTML content from HTML file
-    //   const html = fs.readFileSync(
-    //     "./storage/templates/referralDocument/index.html",
-    //     "utf-8"
-    //   );
-    //   await page.setContent(html, { waitUntil: "domcontentloaded" });
-
-    //   // To reflect CSS used for screens instead of print
-    //   await page.emulateMediaType("screen");
-
-    // Downlaod the PDF
-    // await page.pdf({
-    //   path: "result.pdf",
-    //   margin: { top: "100px", right: "50px", bottom: "100px", left: "50px" },
-    //   printBackground: true,
-    //   format: "A4",
-    // });
-
-    //   // Close the browser instance
-    //   await browser.close();
-    // })();
-    response.noContent();
-=======
-=======
->>>>>>> Stashed changes
   public async generateAccountStatementPDF(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
     let filters: IAccountStatementDownloadPDF;
@@ -293,9 +155,5 @@ export default class AccountStatementController {
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   }
 }
