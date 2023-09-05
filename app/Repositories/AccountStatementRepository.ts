@@ -52,7 +52,7 @@ export default class AccountStatementRepository
       accountStatementQuery.where("contractCode", contractCode);
     }
     if (expeditionDate) {
-      let auxExpeditionDate = expeditionDate.toSQLDate();
+      const auxExpeditionDate = expeditionDate.toJSDate();
       if (auxExpeditionDate !== null) {
         accountStatementQuery.where("expeditionDate", auxExpeditionDate);
       }

@@ -32,21 +32,11 @@ export default class AccountStatementController {
   }
   // GET ALL FILTERED ACCOUNT STATEMENTS
   public async getAccountStatementFiltered(ctx: HttpContextContract) {
-    const { request, response } = ctx;
-    let filters: IGetAccountStatement;
-    try {
-      filters = await request.validate({
-        schema: getAccountStatementFilteredSchema,
-      });
-    } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
-    }
+    const { response } = ctx;
+    const filters = (await validateSchema(
+      ctx,
+      getAccountStatementFilteredSchema
+    )) as IGetAccountStatement;
     try {
       const accountStatements =
         await AccountStatementProvider.getAccountStatementFiltered(filters);
@@ -58,25 +48,12 @@ export default class AccountStatementController {
     }
   }
   // UPDATE AN ACCOUNT STATEMENT
-  public async updateAccountStatement({
-    request,
-    response,
-  }: HttpContextContract) {
-    let payload: IUpdateAccountStatement;
-    try {
-      payload = await request.validate({
-        schema: accountStatementUpdateSchema,
-      });
-    } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      console.log(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
-    }
+  public async updateAccountStatement(ctx: HttpContextContract) {
+    const { request, response } = ctx;
+    const payload = (await validateSchema(
+      ctx,
+      accountStatementUpdateSchema
+    )) as IUpdateAccountStatement;
     try {
       const { id } = request.params();
       const newAccountStatement =
