@@ -3,11 +3,15 @@ import AccountStatementProvider from "@ioc:core.AccountStatementProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
+  IAccountStatementDownloadPDF,
   IGetAccountStatement,
-  IUpdateAccountStatement,
+  IUpdateAccountStatement
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
-import { validateSchema } from "App/Utils/validateSchema";
+<<<<<<< Updated upstream
+=======
+import { accountStatementDownloadPDFSchema } from "App/Validators/AccountStatementValidator/accountStatementDownloadPDFSchema";
+>>>>>>> Stashed changes
 import { accountStatementSchema } from "App/Validators/AccountStatementValidator/accountStatementSchema";
 import { accountStatementUpdateSchema } from "App/Validators/AccountStatementValidator/accountStatementUpdateSchema";
 import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatementValidator/getAccountStatementFilteredSchema";
@@ -15,11 +19,28 @@ import { getAccountStatementFilteredSchema } from "App/Validators/AccountStateme
 export default class AccountStatementController {
   // CREATE AN ACCOUNT STATEMENT
   public async createAccountStatement(ctx: HttpContextContract) {
-    const { response, logger } = ctx;
-    const payload = (await validateSchema(
-      ctx,
-      accountStatementSchema
-    )) as IAccountStatement;
+<<<<<<< Updated upstream
+    const { request, response } = ctx;
+=======
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
+    let payload: IAccountStatement;
+    try {
+      payload = await request.validate({ schema: accountStatementSchema });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+<<<<<<< Updated upstream
+      console.log(validationErrors);
+=======
+      logger.error(validationErrors);
+>>>>>>> Stashed changes
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
     try {
       const newAccountStatement =
         await AccountStatementProvider.createAccountStatement(payload);
@@ -32,11 +53,48 @@ export default class AccountStatementController {
   }
   // GET ALL FILTERED ACCOUNT STATEMENTS
   public async getAccountStatementFiltered(ctx: HttpContextContract) {
+<<<<<<< Updated upstream
+<<<<<<< HEAD
     const { response } = ctx;
     const filters = (await validateSchema(
       ctx,
       getAccountStatementFilteredSchema
     )) as IGetAccountStatement;
+=======
+<<<<<<< Updated upstream
+    const { request, response } = ctx;
+=======
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
+=======
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
+    let filters: IGetAccountStatement;
+    try {
+      filters = await request.validate({
+        schema: getAccountStatementFilteredSchema,
+      });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+      logger.error(validationErrors);
+>>>>>>> Stashed changes
+=======
+      logger.error(validationErrors);
+>>>>>>> Stashed changes
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+<<<<<<< Updated upstream
+>>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
+=======
+>>>>>>> Stashed changes
     try {
       const accountStatements =
         await AccountStatementProvider.getAccountStatementFiltered(filters);
@@ -48,12 +106,51 @@ export default class AccountStatementController {
     }
   }
   // UPDATE AN ACCOUNT STATEMENT
+<<<<<<< HEAD
   public async updateAccountStatement(ctx: HttpContextContract) {
+<<<<<<< Updated upstream
     const { request, response } = ctx;
     const payload = (await validateSchema(
       ctx,
       accountStatementUpdateSchema
     )) as IUpdateAccountStatement;
+=======
+<<<<<<< Updated upstream
+  public async updateAccountStatement({ request, response }: HttpContext) {
+=======
+  public async updateAccountStatement(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
+=======
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
+    let payload: IUpdateAccountStatement;
+    try {
+      payload = await request.validate({
+        schema: accountStatementUpdateSchema,
+      });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+      console.log(validationErrors);
+=======
+      logger.error(validationErrors);
+>>>>>>> Stashed changes
+=======
+      logger.error(validationErrors);
+>>>>>>> Stashed changes
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+<<<<<<< Updated upstream
+>>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
+=======
+>>>>>>> Stashed changes
     try {
       const { id } = request.params();
       const newAccountStatement =
@@ -66,37 +163,73 @@ export default class AccountStatementController {
     }
   }
   // GET AN ACCOUNT STATEMENT BY ID
+<<<<<<< Updated upstream
+<<<<<<< HEAD
   public async getAccountStatementById({
     request,
     response,
   }: HttpContextContract) {
+=======
+<<<<<<< Updated upstream
+  public async getAccountStatementById({ request, response }: HttpContext) {
+=======
+  public async getAccountStatementById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
+>>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
+=======
+  public async getAccountStatementById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+>>>>>>> Stashed changes
     try {
       const { id } = request.params();
       const accountStatementFound =
         await AccountStatementProvider.getAccountStatementById(id);
       return response.ok(accountStatementFound);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
   }
   // GET LAST ACCOUNT STATEMENT ID
+<<<<<<< Updated upstream
+<<<<<<< HEAD
   public async getLastAccountStatement({ response }: HttpContextContract) {
+=======
+<<<<<<< Updated upstream
+  public async getLastAccountStatement({ response }: HttpContext) {
+=======
+  public async getLastAccountStatement(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+>>>>>>> Stashed changes
+>>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
+=======
+  public async getLastAccountStatement(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+>>>>>>> Stashed changes
     try {
       const lastAccountStatementId =
         await AccountStatementProvider.getLastAccountStatement();
       return response.ok(lastAccountStatementId);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
   }
   // GENERATE ACCOUNT STATEMENT PDF
+<<<<<<< Updated upstream
+<<<<<<< HEAD
   public async generateAccountStatementPDF({ response }: HttpContextContract) {
     // const puppeteer = require("puppeteer");
     // const fs = require("fs");
+=======
+<<<<<<< Updated upstream
+  public async generateAccountStatementPDF({ response }: HttpContext) {
+    const puppeteer = require("puppeteer");
+    const fs = require("fs");
+>>>>>>> sprint3-hu004-creacion-pdf-oficio-remisorio-y-cuenta-de-cobro-esteban
 
     // (async () => {
     //   // Create a browser instance
@@ -127,5 +260,42 @@ export default class AccountStatementController {
     //   await browser.close();
     // })();
     response.noContent();
+=======
+=======
+>>>>>>> Stashed changes
+  public async generateAccountStatementPDF(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementDownloadPDF;
+    try {
+      filters = await request.validate({
+        schema: accountStatementDownloadPDFSchema,
+      });
+      response.send(filters);
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      logger.error(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
+      const { id } = request.params();
+      const resp = await AccountStatementProvider.generateAccountStatementPDF(
+        id,
+        filters
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   }
 }
