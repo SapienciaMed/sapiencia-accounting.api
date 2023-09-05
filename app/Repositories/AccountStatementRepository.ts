@@ -1,3 +1,4 @@
+import Logger from "@ioc:Adonis/Core/Logger";
 import {
   IAccountStatement,
   IGetAccountStatement,
@@ -19,11 +20,17 @@ export interface IAccountStatementRepository {
     id: number,
     payload: IUpdateAccountStatement
   ): Promise<IAccountStatement>;
+  getAccountStatementByAccountNumber(
+    payload: IAccountStatement
+  ): Promise<IAccountStatement | null>;
 }
 
 export default class AccountStatementRepository
   implements IAccountStatementRepository
 {
+  getLastAccountNumberOfAccountStatements(): Promise<IAccountStatement | null> {
+    throw new Error("Method not implemented.");
+  }
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatement) {
     const newAccountStatement = new AccountStatement();
@@ -85,9 +92,20 @@ export default class AccountStatementRepository
   }
   // GET LAST ACCOUNT STATEMENT
   public async getLastAccountStatement() {
-    const lastAccountStatement = await AccountStatement.query()
-      .orderBy("id", "desc")
-      .firstOrFail();
-    return lastAccountStatement.serialize() as IAccountStatement;
+    try {
+      const lastAccountStatement = await AccountStatement.query()
+        .orderBy("id", "desc")
+        .firstOrFail();
+      return lastAccountStatement.serialize() as IAccountStatement;
+    } catch (err) {
+      const message =
+        "No hay ninguna cuenta de cobro creada para crear un consecutivo";
+      Logger.error(err, message);
+      throw new Error(message);
+    }
+  }
+  // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
+  public async getAccountStatementByAccountNumber(payload: IAccountStatement) {
+    return await AccountStatement.findBy("accountNum", payload.accountNum);
   }
 }

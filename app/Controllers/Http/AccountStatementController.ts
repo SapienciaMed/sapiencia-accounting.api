@@ -1,5 +1,4 @@
-import { HttpContext } from "@adonisjs/core/build/standalone";
-import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AccountStatementProvider from "@ioc:core.AccountStatementProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
@@ -8,6 +7,7 @@ import {
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { validateSchema } from "App/Utils/validateSchema";
 import { accountStatementSchema } from "App/Validators/AccountStatementValidator/accountStatementSchema";
 import { accountStatementUpdateSchema } from "App/Validators/AccountStatementValidator/accountStatementUpdateSchema";
 import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatementValidator/getAccountStatementFilteredSchema";
@@ -15,26 +15,17 @@ import { getAccountStatementFilteredSchema } from "App/Validators/AccountStateme
 export default class AccountStatementController {
   // CREATE AN ACCOUNT STATEMENT
   public async createAccountStatement(ctx: HttpContextContract) {
-    const { request, response } = ctx;
-    let payload: IAccountStatement;
-    try {
-      payload = await request.validate({ schema: accountStatementSchema });
-    } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      console.log(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
-    }
+    const { response, logger } = ctx;
+    const payload = (await validateSchema(
+      ctx,
+      accountStatementSchema
+    )) as IAccountStatement;
     try {
       const newAccountStatement =
         await AccountStatementProvider.createAccountStatement(payload);
       return response.created(newAccountStatement);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
@@ -67,7 +58,10 @@ export default class AccountStatementController {
     }
   }
   // UPDATE AN ACCOUNT STATEMENT
-  public async updateAccountStatement({ request, response }: HttpContext) {
+  public async updateAccountStatement({
+    request,
+    response,
+  }: HttpContextContract) {
     let payload: IUpdateAccountStatement;
     try {
       payload = await request.validate({
@@ -95,7 +89,10 @@ export default class AccountStatementController {
     }
   }
   // GET AN ACCOUNT STATEMENT BY ID
-  public async getAccountStatementById({ request, response }: HttpContext) {
+  public async getAccountStatementById({
+    request,
+    response,
+  }: HttpContextContract) {
     try {
       const { id } = request.params();
       const accountStatementFound =
@@ -108,7 +105,7 @@ export default class AccountStatementController {
     }
   }
   // GET LAST ACCOUNT STATEMENT ID
-  public async getLastAccountStatement({ response }: HttpContext) {
+  public async getLastAccountStatement({ response }: HttpContextContract) {
     try {
       const lastAccountStatementId =
         await AccountStatementProvider.getLastAccountStatement();
@@ -120,38 +117,38 @@ export default class AccountStatementController {
     }
   }
   // GENERATE ACCOUNT STATEMENT PDF
-  public async generateAccountStatementPDF({ response }: HttpContext) {
-    const puppeteer = require("puppeteer");
-    const fs = require("fs");
+  public async generateAccountStatementPDF({ response }: HttpContextContract) {
+    // const puppeteer = require("puppeteer");
+    // const fs = require("fs");
 
-    (async () => {
-      // Create a browser instance
-      const browser = await puppeteer.launch();
+    // (async () => {
+    //   // Create a browser instance
+    //   const browser = await puppeteer.launch();
 
-      // Create a new page
-      const page = await browser.newPage();
+    //   // Create a new page
+    //   const page = await browser.newPage();
 
-      //Get HTML content from HTML file
-      const html = fs.readFileSync(
-        "./storage/templates/referralDocument/index.html",
-        "utf-8"
-      );
-      await page.setContent(html, { waitUntil: "domcontentloaded" });
+    //   //Get HTML content from HTML file
+    //   const html = fs.readFileSync(
+    //     "./storage/templates/referralDocument/index.html",
+    //     "utf-8"
+    //   );
+    //   await page.setContent(html, { waitUntil: "domcontentloaded" });
 
-      // To reflect CSS used for screens instead of print
-      await page.emulateMediaType("screen");
+    //   // To reflect CSS used for screens instead of print
+    //   await page.emulateMediaType("screen");
 
-      // Downlaod the PDF
-      const pdf = await page.pdf({
-        path: "result.pdf",
-        margin: { top: "100px", right: "50px", bottom: "100px", left: "50px" },
-        printBackground: true,
-        format: "A4",
-      });
+    //   // Downlaod the PDF
+    //   const pdf = await page.pdf({
+    //     path: "result.pdf",
+    //     margin: { top: "100px", right: "50px", bottom: "100px", left: "50px" },
+    //     printBackground: true,
+    //     format: "A4",
+    //   });
 
-      // Close the browser instance
-      await browser.close();
-    })();
+    //   // Close the browser instance
+    //   await browser.close();
+    // })();
     response.noContent();
   }
 }

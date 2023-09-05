@@ -28,6 +28,16 @@ export default class AccountStatementService
   constructor(private accountStatementRepository: AccountStatementRepository) {}
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatement) {
+    // CHECK IF EXISTS ANOTHER ACCOUNT STATEMENT WITH SAME ACCOUNT NUMBER
+    const existsAccountStatementId =
+      await this.accountStatementRepository.getAccountStatementByAccountNumber(
+        payload
+      );
+    if (existsAccountStatementId) {
+      const { accountNum: lastId } =
+        await this.accountStatementRepository.getLastAccountStatement();
+      payload.accountNum = lastId + 1;
+    }
     const newAccountStatement =
       await this.accountStatementRepository.createAccountStatement(payload);
     return new ApiResponse(newAccountStatement, EResponseCodes.OK);
