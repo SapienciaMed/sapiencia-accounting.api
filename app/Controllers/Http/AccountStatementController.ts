@@ -22,7 +22,7 @@ export default class AccountStatementController {
       payload = await request.validate({ schema: accountStatementSchema });
     } catch (err) {
       const validationErrors = err?.messages?.errors;
-      console.log(validationErrors);
+      logger.error(validationErrors);
       const apiResp = new ApiResponse(
         null,
         EResponseCodes.FAIL,
@@ -63,7 +63,7 @@ export default class AccountStatementController {
         await AccountStatementProvider.getAccountStatementFiltered(filters);
       return response.ok(accountStatements);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
@@ -92,7 +92,7 @@ export default class AccountStatementController {
         await AccountStatementProvider.updateAccountStatement(id, payload);
       return response.ok(newAccountStatement);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
