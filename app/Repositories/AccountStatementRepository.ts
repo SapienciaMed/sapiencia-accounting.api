@@ -52,10 +52,16 @@ export default class AccountStatementRepository
       accountStatementQuery.where("contractCode", contractCode);
     }
     if (expeditionDate) {
-      const auxExpeditionDate = expeditionDate.toJSDate();
-      if (auxExpeditionDate !== null) {
-        accountStatementQuery.where("expeditionDate", auxExpeditionDate);
-      }
+      const startDate = expeditionDate
+        .startOf("day")
+        .toFormat("yyyy-MM-dd HH:mm:ss");
+      const endDate = expeditionDate
+        .endOf("day")
+        .toFormat("yyyy-MM-dd HH:mm:ss");
+      accountStatementQuery.whereBetween("expeditionDate", [
+        startDate,
+        endDate,
+      ]);
     }
     if (nit) {
       accountStatementQuery.whereHas("contract", (contractQuery) => {

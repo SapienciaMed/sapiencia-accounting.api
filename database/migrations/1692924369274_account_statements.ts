@@ -24,11 +24,11 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Número de la cuenta de cobro");
       table
-        .date("CTC_FECHA_EXPEDICION")
+        .dateTime("CTC_FECHA_EXPEDICION")
         .notNullable()
         .comment("Fecha de expedición de la cuenta de cobro");
       table
-        .date("CTC_FECHA_VENCIMIENTO")
+        .dateTime("CTC_FECHA_VENCIMIENTO")
         .notNullable()
         .comment("Fecha de vencimiento");
       table
