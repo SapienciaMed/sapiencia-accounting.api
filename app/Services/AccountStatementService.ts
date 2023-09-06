@@ -8,6 +8,7 @@ import {
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
+import { referralMobileTemplate } from "../../storage/templates/referralMobileTemplate";
 import { referralTemplate } from "../../storage/templates/referralTemplate";
 
 export interface IAccountStatementService {
@@ -83,14 +84,30 @@ export default class AccountStatementService
     id: number,
     filters: IAccountStatementDownloadPDF
   ) {
-    console.log({ id, filters });
-    const dimension = {
-      top: "24px",
-      right: "50px",
-      bottom: "100px",
-      left: "16px",
-    };
-    const PDF_PATH = await createPDFTemplate(referralTemplate(), dimension);
+    console.log({ id });
+    const { responsive } = filters;
+    let PDF_PATH: string;
+    if (!responsive) {
+      const dimension = {
+        top: "24px",
+        right: "50px",
+        bottom: "100px",
+        left: "16px",
+      };
+      PDF_PATH = await createPDFTemplate(referralTemplate(), dimension, "A4");
+    } else {
+      const dimension = {
+        top: "16px",
+        right: "50px",
+        bottom: "100px",
+        left: "50px",
+      };
+      PDF_PATH = await createPDFTemplate(
+        referralMobileTemplate(),
+        dimension,
+        "A5"
+      );
+    }
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
 }

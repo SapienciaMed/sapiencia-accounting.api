@@ -1,5 +1,5 @@
 import Application from "@ioc:Adonis/Core/Application";
-import puppeteer from "puppeteer";
+import puppeteer, { PaperFormat } from "puppeteer";
 
 type Dimension = {
   top: string;
@@ -12,7 +12,8 @@ export const PDF_PATH = Application.tmpPath("result.pdf");
 
 export const createPDFTemplate = async (
   template: string,
-  dimension: Dimension
+  dimension: Dimension,
+  format: PaperFormat
 ) => {
   // CREATE A BROWSER INSTANCE
   const browser = await puppeteer.launch({ headless: "new" });
@@ -33,7 +34,7 @@ export const createPDFTemplate = async (
     path: PDF_PATH,
     margin: dimension,
     printBackground: true,
-    format: "A4",
+    format,
   });
   // Close the browser instance
   await browser.close();
