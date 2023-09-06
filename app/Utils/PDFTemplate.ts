@@ -16,7 +16,11 @@ export const createPDFTemplate = async (
   format: PaperFormat
 ) => {
   // CREATE A BROWSER INSTANCE
-  const browser = await puppeteer.launch({ headless: "new" });
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ["--no-sandbox"],
+    executablePath: "/usr/bin/chromium",
+  });
   // CREATE A NEW PAGE
   const page = await browser.newPage();
   // GET HTML CONTENT FORM HTML FILE
