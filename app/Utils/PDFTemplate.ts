@@ -18,8 +18,8 @@ export const createPDFTemplate = async (
   // CREATE A BROWSER INSTANCE
   const browser = await puppeteer.launch({
     headless: "new",
-    args: ["--no-sandbox"],
-    executablePath: "/usr/bin/chromium",
+    // args: ["--no-sandbox"],
+    // executablePath: "/usr/bin/chromium",
   });
   // CREATE A NEW PAGE
   const page = await browser.newPage();
@@ -40,7 +40,7 @@ export const createPDFTemplate = async (
     printBackground: true,
     format,
   });
-  // Close the browser instance
+  // CLOSE THE BROWSER INSTANCE
   await browser.close();
   return PDF_PATH;
 };

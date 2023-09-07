@@ -112,9 +112,9 @@ export const referralMobileTemplate = () => {
         <div class="ReferralDocument">
         <div class="ReferralDocument__container">
             <div class="ReferralDocument__container__logo">
-            <img src="data:image/png;base64,${readFileSync(logoPath).toString(
-              "base64"
-            )}" alt="" />
+                <img src="data:image/png;base64,${readFileSync(
+                  logoPath
+                ).toString("base64")}" alt="" />
             </div>
             <div class="ReferralDocument__container__date">
             <span>Medellín, 28 de julio de 2023</span>
@@ -189,11 +189,11 @@ export const referralMobileTemplate = () => {
             </div>
             </div>
             <div class="ReferralDocument__container__footer">
-            <div>
-                <img src="data:image/png;base64,${readFileSync(
-                  footerPath
-                ).toString("base64")}" alt="" />
-            </div>
+                <div>
+                    <img src="data:image/png;base64,${readFileSync(
+                      footerPath
+                    ).toString("base64")}" alt="" />
+                </div>
             </div>
         </div>
         </div>

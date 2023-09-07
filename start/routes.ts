@@ -43,12 +43,16 @@ Route.group(() => {
       "AccountStatementController.getAccountStatementById"
     ).where("id", Route.matchers.number());
     Route.get(
-      "/:id/generate-pdf",
-      "AccountStatementController.generateAccountStatementPDF"
-    ).where("id", Route.matchers.number());
-    Route.get(
       "/:accountNum/get-by-account-number",
       "AccountStatementController.getAccountStatementByAccountNum"
     ).where("accountNum", Route.matchers.number());
+    Route.get(
+      "/:id/generate-account-statement-pdf",
+      "AccountStatementController.generateAccountStatementPDF"
+    ).where("id", Route.matchers.number());
+    Route.get(
+      "/:id/generate-referral-pdf",
+      "AccountStatementController.generateReferralPDF"
+    ).where("id", Route.matchers.number());
   }).prefix("/account-statement");
 }).prefix("/api/v1");

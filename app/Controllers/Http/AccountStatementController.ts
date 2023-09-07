@@ -124,6 +124,22 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
+  // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
+  public async getAccountStatementByAccountNum(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { accountNum } = request.params();
+      const accountStatementFound =
+        await AccountStatementProvider.getAccountStatementByAccountNum(
+          accountNum
+        );
+      return response.ok(accountStatementFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
   // GENERATE ACCOUNT STATEMENT PDF
   public async generateAccountStatementPDF(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
@@ -156,16 +172,32 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
-  // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
-  public async getAccountStatementByAccountNum(ctx: HttpContextContract) {
+  // GENERATE REFERRAL PDF
+  public async generateReferralPDF(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
+    let filters: IAccountStatementDownloadPDF;
     try {
-      const { accountNum } = request.params();
-      const accountStatementFound =
-        await AccountStatementProvider.getAccountStatementByAccountNum(
-          accountNum
-        );
-      return response.ok(accountStatementFound);
+      filters = await request.validate({
+        schema: accountStatementDownloadPDFSchema,
+      });
+      response.send(filters);
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      logger.error(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
+      const { id } = request.params();
+      const resp = await AccountStatementProvider.generateReferralPDF(
+        id,
+        filters
+      );
+      return response.download(resp.data);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

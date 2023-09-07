@@ -165,9 +165,9 @@ export const referralTemplate = () => {
                             </div>
                             <div class="ReferralDocument__container__representativesTable__col__content">
                                 <div>
-                                <img src="data:image/png;base64,${readFileSync(
-                                  leftSignPath
-                                ).toString("base64")}" alt="" />
+                                    <img src="data:image/png;base64,${readFileSync(
+                                      leftSignPath
+                                    ).toString("base64")}" alt="" />
                                 </div>
                                 <span>Luis Daniel Valencia Garces</span>
                                 <span>Contratista de apoyo Financiero</span>
