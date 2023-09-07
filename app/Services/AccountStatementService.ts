@@ -28,6 +28,9 @@ export interface IAccountStatementService {
     id: number,
     filters: IAccountStatementDownloadPDF
   ): Promise<ApiResponse<string>>;
+  getAccountStatementByAccountNum(
+    accountNum: number
+  ): Promise<ApiResponse<IAccountStatement>>;
 }
 
 export default class AccountStatementService
@@ -109,5 +112,15 @@ export default class AccountStatementService
       );
     }
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
+  }
+  // GET ACCOUNT STATEMENT BY ACCOUNT NUM
+  public async getAccountStatementByAccountNum(
+    accountNum: number
+  ): Promise<ApiResponse<IAccountStatement>> {
+    const accountStatementFound =
+      await this.accountStatementRepository.getAccountStatementByAccountNum(
+        accountNum
+      );
+    return new ApiResponse(accountStatementFound, EResponseCodes.OK);
   }
 }

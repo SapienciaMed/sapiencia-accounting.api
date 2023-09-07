@@ -156,4 +156,20 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
+  // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
+  public async getAccountStatementByAccountNum(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { accountNum } = request.params();
+      const accountStatementFound =
+        await AccountStatementProvider.getAccountStatementByAccountNum(
+          accountNum
+        );
+      return response.ok(accountStatementFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

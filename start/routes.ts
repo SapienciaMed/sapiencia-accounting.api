@@ -46,7 +46,9 @@ Route.group(() => {
       "/:id/generate-pdf",
       "AccountStatementController.generateAccountStatementPDF"
     ).where("id", Route.matchers.number());
+    Route.get(
+      "/:accountNum/get-by-account-number",
+      "AccountStatementController.getAccountStatementByAccountNum"
+    ).where("accountNum", Route.matchers.number());
   }).prefix("/account-statement");
 }).prefix("/api/v1");
-
-

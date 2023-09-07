@@ -21,91 +21,91 @@ export const referralMobileTemplate = () => {
     </head>
     <style>
         body {
-        font-size: 14px;
-        font-family: "Rubik", sans-serif;
+            font-size: 14px;
+            font-family: "Rubik", sans-serif;
         }
         p {
-        margin: 0;
-        padding: 0;
+            margin: 0;
+            padding: 0;
         }
         .mt-small {
-        margin-top: 1.5rem;
+            margin-top: 1.5rem;
         }
         .ReferralDocument__container {
-        margin-left: 34px;
+            margin-left: 34px;
         }
         .ReferralDocument__container__logo {
-        display: flex;
-        justify-content: center;
+            display: flex;
+            justify-content: center;
         }
         .ReferralDocument__container__logo > img {
-        width: 220px;
+            width: 220px;
         }
         .ReferralDocument__container__date {
-        margin-top: 2rem;
+            margin-top: 2rem;
         }
         .ReferralDocument__container__receptorInfo {
-        display: flex;
-        flex-direction: column;
-        margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            margin-top: 2rem;
         }
         .ReferralDocument__container__issue {
-        margin-top: 1.5rem;
+            margin-top: 1.5rem;
         }
         .ReferralDocument__container__body {
-        display: flex;
-        flex-direction: column;
-        margin-top: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            margin-top: 2.5rem;
         }
         .ReferralDocument__container__sign {
-        display: flex;
-        flex-direction: column;
-        margin-top: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            margin-top: 2.5rem;
         }
         .ReferralDocument__container__representativesTable {
-        margin-top: 4rem;
-        display: flex;
-        flex-direction: column;
+            margin-top: 4rem;
+            display: flex;
+            flex-direction: column;
         }
         .ReferralDocument__container__representativesTable__col {
-        display: flex;
-        justify-content: space-between;
+            display: flex;
+            justify-content: space-between;
         }
         .ReferralDocument__container__representativesTable__col > div:first-child {
-        padding: 1rem 0;
-        display: flex;
-        justify-content: center;
-        font-size: 16px;
-        letter-spacing: 1px;
+            padding: 1rem 0;
+            display: flex;
+            justify-content: center;
+            font-size: 16px;
+            letter-spacing: 1px;
         }
         .ReferralDocument__container__representativesTable__col__content {
-        display: flex;
-        flex-direction: column;
-        text-align: right;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
         }
         .ReferralDocument__container__representativesTable__col__content > div {
-        display: flex;
-        justify-content: center;
-        margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
         }
         .ReferralDocument__container__representativesTable__col__content
         > div
         > img {
-        width: 70px;
-        height: 40px;
+            width: 70px;
+            height: 40px;
         }
         .ReferralDocument__container__footer {
-        margin-top: 5rem;
+            margin-top: 5rem;
         }
         .ReferralDocument__container__footer {
-        display: flex;
-        justify-content: center;
+            display: flex;
+            justify-content: center;
         }
         .ReferralDocument__container__footer > div {
-        width: 240px;
+            width: 240px;
         }
         .ReferralDocument__container__footer > div > img {
-        width: 100%;
+            width: 100%;
         }
     </style>
     <body>

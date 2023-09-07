@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Statement Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    body {
+      margin: 0;
+      font-size: 14px;
+      font-family: "Rubik", sans-serif;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+    }
+    .mt-small {
+      margin-top: 1.5rem;
+    }
+    .AccountStatement__container__header {
+      display: flex;
+      align-items: center;
+      column-gap: 2rem;
+    }
+    .AccountStatement__container__logo {
+      width: 190px;
+    }
+    .AccountStatement__container__logo > img {
+      width: 100%;
+    }
+    .AccountStatement__container__title {
+      font-size: 20px;
+    }
+    .AccountStatement__container__headerTable {
+      display: grid;
+      grid-template-columns: 90px;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .AccountStatement__container__headerTable__col {
+      display: flex;
+      flex-direction: column;
+    }
+    .AccountStatement__container__headerTable__col > div:first-child {
+      height: 45px;
+      font-size: 14px;
+      background-color: #f0ecec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .AccountStatement__container__headerTable__col > div:nth-child(2) {
+      height: 45px;
+      border: 1px solid #d9d9d9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 17px;
+    }
+  </style>
+  <body>
+    <div class="AccountStatement">
+      <div class="AccountStatement__container">
+        <div class="AccountStatement__container__header">
+          <div class="AccountStatement__container__logo">
+            <img src="./assets/logo.png" alt="" />
+          </div>
+          <div class="AccountStatement__container__title">
+            <h1>CUENTA DE COBRO</h1>
+          </div>
+        </div>
+        <div class="AccountStatement__container__headerTable">
+          <div class="AccountStatement__container__headerTable__col">
+            <div>
+              <strong>
+                <span>Cuenta de cobro</span>
+              </strong>
+            </div>
+            <div>
+              <span>2422023</span>
+            </div>
+          </div>
+          <div class="AccountStatement__container__headerTable__col">
+            <div>
+              <strong>
+                <span>Fecha de expedición</span>
+              </strong>
+            </div>
+            <div>
+              <span>28/07/2023</span>
+            </div>
+          </div>
+          <div class="AccountStatement__container__headerTable__col">
+            <div>
+              <strong>
+                <span>Páguese hasta</span>
+              </strong>
+            </div>
+            <div>
+              <span>29/08/2023</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="AccountStatement__container__header__headerInfo">
+          <div>
+            <div>
+              <strong>
+                <span> Razón social: </span>
+              </strong>
+            </div>
+            <div>
+              <strong>
+                <span> NIT: </span>
+              </strong>
+            </div>
+            <div>
+              <strong>
+                <span> Dirección: </span>
+              </strong>
+            </div>
+            <div>
+              <strong>
+                <span> Ciudad: </span>
+              </strong>
+            </div>
+            <div>
+              <strong>
+                <span> Teléfono: </span>
+              </strong>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

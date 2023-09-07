@@ -20,17 +20,14 @@ export interface IAccountStatementRepository {
     id: number,
     payload: IUpdateAccountStatement
   ): Promise<IAccountStatement>;
-  getAccountStatementByAccountNumber(
-    payload: IAccountStatement
-  ): Promise<IAccountStatement | null>;
+  getAccountStatementByAccountNum(
+    accountNum: number
+  ): Promise<IAccountStatement>;
 }
 
 export default class AccountStatementRepository
   implements IAccountStatementRepository
 {
-  getLastAccountNumberOfAccountStatements(): Promise<IAccountStatement | null> {
-    throw new Error("Method not implemented.");
-  }
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatement) {
     const newAccountStatement = new AccountStatement();
@@ -113,5 +110,18 @@ export default class AccountStatementRepository
   // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
   public async getAccountStatementByAccountNumber(payload: IAccountStatement) {
     return await AccountStatement.findBy("accountNum", payload.accountNum);
+  }
+  // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
+  public async getAccountStatementByAccountNum(accountNum: number) {
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("contract", (contractQuery) => {
+      contractQuery.preload("business");
+    });
+    accountStatementQuery.where("accountNum", accountNum);
+    const accountStatementFound = await accountStatementQuery.first();
+    if (!accountStatementFound) {
+      throw new Error(`Cuenta de cobro con número ${accountNum} no existe`);
+    }
+    return accountStatementFound as IAccountStatement;
   }
 }
