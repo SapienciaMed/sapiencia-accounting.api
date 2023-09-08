@@ -15,6 +15,9 @@ export default class AppProvider {
     const AccountStatementStatusService = await import(
       "App/Services/AccountStatementStatusService"
     );
+    const AccountStatementTrackingService = await import(
+      "App/Services/AccountStatementTrackingService"
+    );
 
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
@@ -28,6 +31,9 @@ export default class AppProvider {
     );
     const AccountStatementStatusRepository = await import(
       "App/Repositories/AccountStatementStatusRepository"
+    );
+    const AccountStatementTrackingRepository = await import(
+      "App/Repositories/AccountStatementTrackingRepository"
     );
 
     /**************************************************************************/
@@ -45,6 +51,13 @@ export default class AppProvider {
       () =>
         new AccountStatementStatusService.default(
           new AccountStatementStatusRepository.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.AccountStatementTrackingProvider",
+      () =>
+        new AccountStatementTrackingService.default(
+          new AccountStatementTrackingRepository.default()
         )
     );
   }

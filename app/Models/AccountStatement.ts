@@ -1,5 +1,6 @@
 import { BaseModel, column, hasOne, HasOne } from "@ioc:Adonis/Lucid/Orm";
 import { DateTime } from "luxon";
+import AccountStatementTracking from "./AccountStatementTracking";
 import Contract from "./Contract";
 
 export default class AccountStatement extends BaseModel {
@@ -11,11 +12,20 @@ export default class AccountStatement extends BaseModel {
   })
   public id: number;
 
+  // =====================================
   @column({
     columnName: "CTC_CODCTR_CONTRATO",
     serializeAs: "contractCode",
   })
   public contractCode: number;
+  // TODO
+  // Cuenta de Cobro pertenece a un contrato
+  @hasOne(() => Contract, {
+    localKey: "contractCode",
+    foreignKey: "id",
+  })
+  public contract: HasOne<typeof Contract>;
+  // =====================================
 
   @column({
     columnName: "CTC_NUMERO",
@@ -79,10 +89,6 @@ export default class AccountStatement extends BaseModel {
   })
   public createdAt: DateTime;
 
-  // Cuenta de Cobro pertenece a un contrato
-  @hasOne(() => Contract, {
-    localKey: "contractCode",
-    foreignKey: "id",
-  })
-  public contract: HasOne<typeof Contract>;
+  @hasOne(() => AccountStatementTracking)
+  public tracking: HasOne<typeof AccountStatementTracking>;
 }

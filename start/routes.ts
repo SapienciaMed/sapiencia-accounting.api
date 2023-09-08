@@ -58,4 +58,11 @@ Route.group(() => {
       "AccountStatementStatusController.getAllAccountStatementStatus"
     );
   }).prefix("/account-statement-status");
+  // ACCOUNT STATEMENT TRACKING
+  Route.group(() => {
+    Route.put(
+      "/:accountStatementId/update-or-create",
+      "AccountStatementTrackingController.updateOrCreateAccountStatementTracking"
+    ).where("accountStatementId", Route.matchers.number());
+  }).prefix("/account-statement-tracking");
 }).prefix("/api/v1");

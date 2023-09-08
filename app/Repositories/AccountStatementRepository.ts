@@ -39,6 +39,9 @@ export default class AccountStatementRepository
     const { accountNum, contractCode, expeditionDate, nit, page, perPage } =
       filters;
     const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("tracking", (trackingQuery) => {
+      trackingQuery.preload("status");
+    });
     accountStatementQuery.preload("contract", (contractQuery) => {
       contractQuery.preload("business");
     });
