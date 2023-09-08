@@ -10,8 +10,6 @@ import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
 import { accountStatementDesktopTemplate } from "../../storage/templates/accountStatementDesktopTemplate";
 import { accountStatementMobileTemplate } from "../../storage/templates/accountStatementMobileTemplate";
-import { referralMobileTemplate } from "../../storage/templates/referralMobileTemplate";
-import { referralTemplate } from "../../storage/templates/referralTemplate";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -30,10 +28,6 @@ export interface IAccountStatementService {
     accountNum: number
   ): Promise<ApiResponse<IAccountStatement>>;
   generateAccountStatementPDF(
-    id: number,
-    filters: IAccountStatementDownloadPDF
-  ): Promise<ApiResponse<string>>;
-  generateReferralPDF(
     id: number,
     filters: IAccountStatementDownloadPDF
   ): Promise<ApiResponse<string>>;
@@ -127,37 +121,6 @@ export default class AccountStatementService
       };
       PDF_PATH = await createPDFTemplate(
         accountStatementMobileTemplate(),
-        dimension,
-        "A5"
-      );
-    }
-    return new ApiResponse(PDF_PATH, EResponseCodes.OK);
-  }
-  // GENERATE REFERRAL PDF
-  public async generateReferralPDF(
-    id: number,
-    filters: IAccountStatementDownloadPDF
-  ) {
-    console.log({ id });
-    const { responsive } = filters;
-    let PDF_PATH: string;
-    if (!responsive) {
-      const dimension = {
-        top: "24px",
-        right: "50px",
-        bottom: "100px",
-        left: "16px",
-      };
-      PDF_PATH = await createPDFTemplate(referralTemplate(), dimension, "A4");
-    } else {
-      const dimension = {
-        top: "16px",
-        right: "50px",
-        bottom: "100px",
-        left: "50px",
-      };
-      PDF_PATH = await createPDFTemplate(
-        referralMobileTemplate(),
         dimension,
         "A5"
       );

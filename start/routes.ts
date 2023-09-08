@@ -50,9 +50,5 @@ Route.group(() => {
       "/:id/generate-account-statement-pdf",
       "AccountStatementController.generateAccountStatementPDF"
     ).where("id", Route.matchers.number());
-    Route.get(
-      "/:id/generate-referral-pdf",
-      "AccountStatementController.generateReferralPDF"
-    ).where("id", Route.matchers.number());
   }).prefix("/account-statement");
 }).prefix("/api/v1");

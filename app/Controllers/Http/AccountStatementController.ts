@@ -172,36 +172,4 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
-  // GENERATE REFERRAL PDF
-  public async generateReferralPDF(ctx: HttpContextContract) {
-    const { request, response, logger } = ctx;
-    let filters: IAccountStatementDownloadPDF;
-    try {
-      filters = await request.validate({
-        schema: accountStatementDownloadPDFSchema,
-      });
-      response.send(filters);
-    } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
-    }
-    try {
-      const { id } = request.params();
-      const resp = await AccountStatementProvider.generateReferralPDF(
-        id,
-        filters
-      );
-      return response.download(resp.data);
-    } catch (err) {
-      logger.error(err);
-      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
-      return response.badRequest(apiResp);
-    }
-  }
 }
