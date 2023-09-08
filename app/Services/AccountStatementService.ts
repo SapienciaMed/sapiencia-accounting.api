@@ -55,11 +55,11 @@ export default class AccountStatementService
   }
   // GET ALL ACCOUNT STATEMENT FILTERED
   public async getAccountStatementFiltered(filters: IGetAccountStatement) {
-    const accountsStatements =
+    const accountStatements =
       await this.accountStatementRepository.getAccountStatementFiltered(
         filters
       );
-    return new ApiResponse(accountsStatements, EResponseCodes.OK);
+    return new ApiResponse(accountStatements, EResponseCodes.OK);
   }
   // UPDATE AN ACCOUNT STATEMENT
   public async updateAccountStatement(

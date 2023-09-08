@@ -23,7 +23,7 @@ import Route from "@ioc:Adonis/Core/Route";
 Route.get("/", () => "SAPIENCIA ACCOUNTING API");
 
 Route.group(() => {
-  // CUENTA DE COBRO
+  // ACCOUNT STATEMENT
   Route.group(() => {
     Route.post("/", "AccountStatementController.createAccountStatement");
     Route.post(
@@ -51,4 +51,11 @@ Route.group(() => {
       "AccountStatementController.generateAccountStatementPDF"
     ).where("id", Route.matchers.number());
   }).prefix("/account-statement");
+  // ACCOUNT STATEMENT STATUS
+  Route.group(() => {
+    Route.get(
+      "/get-all",
+      "AccountStatementStatusController.getAllAccountStatementStatus"
+    );
+  }).prefix("/account-statement-status");
 }).prefix("/api/v1");
