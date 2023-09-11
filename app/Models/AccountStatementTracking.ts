@@ -18,8 +18,6 @@ export default class AccountStatementTracking extends BaseModel {
   public observation: string;
 
   @column.dateTime({
-    autoCreate: true,
-    autoUpdate: true,
     columnName: "SCC_FECHA_SEGUIMIENTO",
     serializeAs: "trackingDate",
   })
