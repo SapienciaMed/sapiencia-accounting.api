@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { IBusiness } from "./BusinessInterface";
 import { ISocialReasons } from "./SocialReasonInterfaces";
 
 export interface IContract {
@@ -9,6 +10,10 @@ export interface IContract {
   userCreate: string; // CTR_USUARIO_CREO
   createdAt?: DateTime; // CTR_FECHA_CREO
   updatedAt?: DateTime; // CTR_FECHA_MODIFICO
+}
+
+export interface IGetContractPaginated extends IContract {
+  business: IBusiness;
 }
 
 export interface IGetContractList {

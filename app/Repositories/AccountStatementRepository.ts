@@ -2,6 +2,7 @@ import Logger from "@ioc:Adonis/Core/Logger";
 import {
   IAccountStatement,
   IGetAccountStatement,
+  IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import AccountStatement from "App/Models/AccountStatement";
@@ -13,7 +14,7 @@ export interface IAccountStatementRepository {
   ): Promise<IAccountStatement>;
   getAccountStatementFiltered(
     filters: IGetAccountStatement
-  ): Promise<IPagingData<IAccountStatement>>;
+  ): Promise<IPagingData<IGetAccountStatementPaginated>>;
   getAccountStatementById(id: number): Promise<IAccountStatement>;
   getLastAccountStatement(): Promise<IAccountStatement>;
   updateAccountStatement(
@@ -72,7 +73,7 @@ export default class AccountStatementRepository
     }
     const finalQuery = await accountStatementQuery.paginate(page, perPage);
     const { data, meta } = finalQuery.serialize();
-    return { array: data as IAccountStatement[], meta };
+    return { array: data as IGetAccountStatementPaginated[], meta };
   }
   // UPDATE AN ACCOUNT STATEMENT
   public async updateAccountStatement(

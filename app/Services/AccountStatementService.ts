@@ -1,13 +1,18 @@
+import Application from "@ioc:Adonis/Core/Application";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
   IAccountStatementDownloadPDF,
   IGetAccountStatement,
+  IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
+import { generateXLSX } from "App/Utils/generateXLSX";
+import { formaterNumberToCurrency } from "App/Utils/helpers";
+import { DateTime } from "luxon";
 import { accountStatementDesktopTemplate } from "../../storage/templates/accountStatementDesktopTemplate";
 import { accountStatementMobileTemplate } from "../../storage/templates/accountStatementMobileTemplate";
 
@@ -17,7 +22,7 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<IAccountStatement>>;
   getAccountStatementFiltered(
     filters: IGetAccountStatement
-  ): Promise<ApiResponse<IPagingData<IAccountStatement>>>;
+  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
   getAccountStatementById(id: number): Promise<ApiResponse<IAccountStatement>>;
   getLastAccountStatement(): Promise<ApiResponse<IAccountStatement>>;
   updateAccountStatement(
@@ -30,6 +35,9 @@ export interface IAccountStatementService {
   generateAccountStatementPDF(
     id: number,
     filters: IAccountStatementDownloadPDF
+  ): Promise<ApiResponse<string>>;
+  generateXLSXAccountStatement(
+    filters: IGetAccountStatement
   ): Promise<ApiResponse<string>>;
 }
 
@@ -126,5 +134,69 @@ export default class AccountStatementService
       );
     }
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT PDF
+  public async generateXLSXAccountStatement(filters: IGetAccountStatement) {
+    const accountStatements =
+      await this.accountStatementRepository.getAccountStatementFiltered(
+        filters
+      );
+    const columns = [
+      {
+        name: "CONTRATO",
+        size: 30,
+      },
+      {
+        name: "N° CXC",
+        size: 15,
+      },
+      {
+        name: "FECHA EXPEDICIÓN",
+        size: 20,
+      },
+      {
+        name: "FECHA DE VENCIMIENTO",
+        size: 20,
+      },
+      {
+        name: "NIT",
+        size: 20,
+      },
+      {
+        name: "TERCERO",
+        size: 50,
+      },
+      {
+        name: "CONCEPTO",
+        size: 70,
+      },
+      {
+        name: "VALOR $",
+        size: 20,
+      },
+    ];
+    const data = accountStatements.array.reduce((prev, curr) => {
+      return [
+        ...prev,
+        [
+          curr.contract.contractId,
+          String(curr.accountNum),
+          DateTime.fromISO(curr.expeditionDate).toSQLDate() ?? "",
+          DateTime.fromISO(curr.expirationDate).toSQLDate() ?? "",
+          curr.contract.business.nit,
+          curr.contract.business.name,
+          curr.concept,
+          formaterNumberToCurrency(curr.valuePay),
+        ],
+      ];
+    }, []);
+    const filePath = Application.tmpPath("/cuentas_de_cobro.xlsx");
+    await generateXLSX({
+      columns,
+      data,
+      filePath,
+      worksheetName: "Cuentas de cobro",
+    });
+    return new ApiResponse(filePath, EResponseCodes.OK);
   }
 }

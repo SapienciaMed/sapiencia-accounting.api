@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { IGetContractPaginated } from "./ContractInterface";
 
 export interface IAccountStatement {
   id?: number; // CTC_CODIGO
@@ -13,6 +14,22 @@ export interface IAccountStatement {
   userModified?: string; // CTC_USUARIO_MODIFICO
   createdAt?: DateTime; // CTC_FECHA_CREO
   updatedAt?: DateTime; // CTC_FECHA_MODIFICO
+}
+
+export interface IGetAccountStatementPaginated {
+  id?: number;
+  contractCode: number;
+  accountNum: number;
+  expeditionDate: string;
+  expirationDate: string;
+  paymentType: string;
+  valuePay: number;
+  concept: string;
+  userCreate: string;
+  userModified?: string;
+  createdAt?: DateTime;
+  updatedAt?: DateTime;
+  contract: IGetContractPaginated;
 }
 
 export interface IGetAccountStatement {

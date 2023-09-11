@@ -172,4 +172,37 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
+  // GENERATE XLSX
+  public async generateXLSX(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IGetAccountStatement;
+    try {
+      filters = await request.validate({
+        schema: getAccountStatementFilteredSchema,
+      });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      logger.error(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
+      const resp = await AccountStatementProvider.generateXLSXAccountStatement(
+        filters
+      );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=cuentas_cobro.xlsx"
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }
