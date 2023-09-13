@@ -23,7 +23,9 @@ export interface IAccountStatementService {
   getAccountStatementFiltered(
     filters: IGetAccountStatement
   ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
-  getAccountStatementById(id: number): Promise<ApiResponse<IAccountStatement>>;
+  getAccountStatementById(
+    id: number
+  ): Promise<ApiResponse<IGetAccountStatementPaginated>>;
   getLastAccountStatement(): Promise<ApiResponse<IAccountStatement>>;
   updateAccountStatement(
     id: number,
@@ -105,7 +107,8 @@ export default class AccountStatementService
     id: number,
     filters: IAccountStatementDownloadPDF
   ) {
-    console.log({ id });
+    const accountStatementFound =
+      await this.accountStatementRepository.getAccountStatementById(id);
     const { responsive } = filters;
     let PDF_PATH: string;
     if (!responsive) {
@@ -116,7 +119,7 @@ export default class AccountStatementService
         left: "16px",
       };
       PDF_PATH = await createPDFTemplate(
-        accountStatementDesktopTemplate(),
+        accountStatementDesktopTemplate(accountStatementFound),
         dimension,
         "A4"
       );
@@ -128,7 +131,7 @@ export default class AccountStatementService
         left: "50px",
       };
       PDF_PATH = await createPDFTemplate(
-        accountStatementMobileTemplate(),
+        accountStatementMobileTemplate(accountStatementFound),
         dimension,
         "A5"
       );

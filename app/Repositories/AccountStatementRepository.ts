@@ -15,7 +15,7 @@ export interface IAccountStatementRepository {
   getAccountStatementFiltered(
     filters: IGetAccountStatement
   ): Promise<IPagingData<IGetAccountStatementPaginated>>;
-  getAccountStatementById(id: number): Promise<IAccountStatement>;
+  getAccountStatementById(id: number): Promise<IGetAccountStatementPaginated>;
   getLastAccountStatement(): Promise<IAccountStatement>;
   updateAccountStatement(
     id: number,
@@ -95,7 +95,7 @@ export default class AccountStatementRepository
     if (!accountStatementFound) {
       throw new Error(`Cuenta de cobro con id ${id} no existe`);
     }
-    return accountStatementFound.serialize() as IAccountStatement;
+    return accountStatementFound.serialize() as IGetAccountStatementPaginated;
   }
   // GET LAST ACCOUNT STATEMENT
   public async getLastAccountStatement() {
