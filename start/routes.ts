@@ -50,7 +50,7 @@ Route.group(() => {
       "/:id/generate-account-statement-pdf",
       "AccountStatementController.generateAccountStatementPDF"
     ).where("id", Route.matchers.number());
-    Route.post("/generate-xlsx", "AccountStatementController.generateXLSX");
+    Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
   }).prefix("/account-statement");
   // ACCOUNT STATEMENT STATUS
   Route.group(() => {
