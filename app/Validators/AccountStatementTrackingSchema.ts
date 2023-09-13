@@ -8,10 +8,7 @@ export const accountStatementTrackingSchema = schema.create({
     rules.trim(),
   ]),
   statusId: schema.number([rules.required(), rules.unsigned()]),
-  trackingDate: schema.date(
-    {
-      format: "sql",
-    },
-    [rules.required()]
-  ),
+  trackingDate: schema.date.optional({
+    format: "iso",
+  }),
 });

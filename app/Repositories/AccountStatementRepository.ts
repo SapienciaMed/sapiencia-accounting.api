@@ -118,6 +118,9 @@ export default class AccountStatementRepository
   // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
   public async getAccountStatementByAccountNum(accountNum: number) {
     const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("tracking", (trackingQuery) => {
+      trackingQuery.preload("status");
+    });
     accountStatementQuery.preload("contract", (contractQuery) => {
       contractQuery.preload("business");
     });
