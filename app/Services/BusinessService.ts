@@ -7,6 +7,7 @@ export interface IBusinessService {
   createBusiness(
     payload: IBusinessSchema
   ): Promise<ApiResponse<IBusinessSchema | undefined>>;
+  getAllBusiness(): Promise<ApiResponse<IBusinessSchema[]>>;
 }
 
 export default class BusinessService implements IBusinessService {
@@ -15,5 +16,10 @@ export default class BusinessService implements IBusinessService {
   public async createBusiness(payload: IBusinessSchema) {
     const newBusiness = await this.businessRepository.createBusiness(payload);
     return new ApiResponse(newBusiness, EResponseCodes.OK);
+  }
+  // GET ALL SELECT BUSINESS
+  public async getAllBusiness() {
+    const businessesFound = await this.businessRepository.getAllBusiness();
+    return new ApiResponse(businessesFound, EResponseCodes.OK);
   }
 }

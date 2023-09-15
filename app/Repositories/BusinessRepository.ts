@@ -6,9 +6,11 @@ export interface IBusinessRepository {
   createBusiness(
     payload: IBusinessSchema
   ): Promise<IBusinessSchema | undefined>;
+  getAllBusiness(): Promise<IBusinessSchema[]>;
 }
 
 export default class BusinessRepository implements IBusinessRepository {
+  // CREATE BUSINESS
   public async createBusiness(payload: IBusinessSchema) {
     try {
       const newUser = new Business();
@@ -16,5 +18,9 @@ export default class BusinessRepository implements IBusinessRepository {
     } catch (err) {
       throwDatabaseError(err);
     }
+  }
+  // GET ALL BUSINESS
+  public async getAllBusiness() {
+    return Business.all();
   }
 }

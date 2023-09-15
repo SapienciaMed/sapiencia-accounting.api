@@ -69,5 +69,6 @@ Route.group(() => {
   // BUSINESS
   Route.group(() => {
     Route.post("/", "BusinessController.createBusiness");
+    Route.get("/get-all", "BusinessController.getAllBusiness");
   }).prefix("/business");
 }).prefix("/api/v1");

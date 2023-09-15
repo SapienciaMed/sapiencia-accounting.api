@@ -31,4 +31,16 @@ export default class BusinessController {
       return response.badRequest(apiResp);
     }
   }
+  // GET ALL BUSINESS
+  public async getAllBusiness(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+    try {
+      const businessFound = await BusinessProvider.getAllBusiness();
+      return response.created(businessFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }
