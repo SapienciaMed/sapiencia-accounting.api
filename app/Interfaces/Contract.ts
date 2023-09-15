@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
-import { IBusiness } from "./BusinessInterface";
-import { ISocialReasons } from "./SocialReasonInterfaces";
+import { IBusiness } from "./Business";
 
 export interface IContract {
   id?: number; // CTR_CODIGO
@@ -14,15 +13,4 @@ export interface IContract {
 
 export interface IGetContractPaginated extends IContract {
   business: IBusiness;
-}
-
-export interface IGetContractList {
-  contract: IContract | null;
-  socialReason: ISocialReasons | null;
-}
-
-export interface IFilterContract {
-  page: number;
-  perPage: number;
-  //?Aquí irán adicional los filtros ...
 }

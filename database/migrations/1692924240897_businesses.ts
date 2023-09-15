@@ -5,7 +5,7 @@ export default class extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.comment(
-        "Tabla que almacena las razones sociales de personas jurídicas"
+        "Tabla que almacena las razones sociales de personas jurídicas."
       );
       table
         .increments("RZO_CODIGO")
@@ -17,7 +17,11 @@ export default class extends BaseSchema {
         .string("RZO_NOMBRE", 300)
         .notNullable()
         .comment("Nombre de la razón social");
-      table.string("RZO_NIT", 15).notNullable().comment("Número de NIT");
+      table
+        .string("RZO_NIT", 15)
+        .unique()
+        .notNullable()
+        .comment("Número de NIT");
       table.string("RZO_DIRECCION", 100).notNullable().comment("Dirección");
       table
         .string("RZO_CORREO_ELECTRONICO", 50)
@@ -53,6 +57,10 @@ export default class extends BaseSchema {
         .dateTime("RZO_FECHA_CREO")
         .notNullable()
         .comment("Fecha y hora de creación del registro");
+      table
+        .string("RZO_TELEFONO", 10)
+        .notNullable()
+        .comment("Teléfono de la razón social");
     });
   }
 

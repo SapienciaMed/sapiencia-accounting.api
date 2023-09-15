@@ -77,4 +77,10 @@ export default class Business extends BaseModel {
     serializeAs: "createdAt",
   })
   public createdAt: DateTime;
+
+  @column({
+    columnName: "RZO_TELEFONO",
+    serializeAs: "phone",
+  })
+  public phone: string;
 }

@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IGetContractPaginated } from "./ContractInterface";
+import { IGetContractPaginated } from "./Contract";
 
 export interface IAccountStatement {
   id?: number; // CTC_CODIGO

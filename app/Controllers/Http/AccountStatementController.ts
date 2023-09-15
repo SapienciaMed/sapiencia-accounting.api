@@ -8,10 +8,10 @@ import {
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
-import { accountStatementDownloadPDFSchema } from "App/Validators/AccountStatementValidator/accountStatementDownloadPDFSchema";
-import { accountStatementSchema } from "App/Validators/AccountStatementValidator/accountStatementSchema";
-import { accountStatementUpdateSchema } from "App/Validators/AccountStatementValidator/accountStatementUpdateSchema";
-import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatementValidator/getAccountStatementFilteredSchema";
+import { accountStatementDownloadPDFSchema } from "App/Validators/AccountStatement/accountStatementDownloadPDFSchema";
+import { accountStatementSchema } from "App/Validators/AccountStatement/accountStatementSchema";
+import { accountStatementUpdateSchema } from "App/Validators/AccountStatement/accountStatementUpdateSchema";
+import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatement/getAccountStatementFilteredSchema";
 
 export default class AccountStatementController {
   // CREATE AN ACCOUNT STATEMENT

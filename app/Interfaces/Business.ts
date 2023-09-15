@@ -13,4 +13,7 @@ export interface IBusiness {
   userCreate: string; // RZO_USUARIO_CREO
   createdAt?: DateTime; // RZO_FECHA_CREO
   updatedAt?: DateTime; // RZO_FECHA_MODIFICO
+  phone: string; //RZO_TELEFONO
 }
+
+export type IBusinessSchema = Omit<IBusiness, "userCreate">;

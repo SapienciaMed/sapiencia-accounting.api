@@ -66,4 +66,8 @@ Route.group(() => {
       "AccountStatementTrackingController.updateOrCreateAccountStatementTracking"
     ).where("accountStatementId", Route.matchers.number());
   }).prefix("/account-statement-tracking");
+  // BUSINESS
+  Route.group(() => {
+    Route.post("/", "BusinessController.createBusiness");
+  }).prefix("/business");
 }).prefix("/api/v1");
