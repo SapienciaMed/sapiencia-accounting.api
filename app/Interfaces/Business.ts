@@ -17,3 +17,4 @@ export interface IBusiness {
 }
 
 export type IBusinessSchema = Omit<IBusiness, "userCreate">;
+export type IBusinessUpdateSchema = Partial<IBusiness>;

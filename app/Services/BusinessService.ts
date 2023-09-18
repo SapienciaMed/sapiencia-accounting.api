@@ -1,5 +1,8 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IBusinessSchema } from "App/Interfaces/Business";
+import {
+  IBusinessSchema,
+  IBusinessUpdateSchema,
+} from "App/Interfaces/Business";
 import BusinessRepository from "App/Repositories/BusinessRepository";
 import { ApiResponse } from "App/Utils/ApiResponses";
 
@@ -8,6 +11,10 @@ export interface IBusinessService {
     payload: IBusinessSchema
   ): Promise<ApiResponse<IBusinessSchema | undefined>>;
   getAllBusiness(): Promise<ApiResponse<IBusinessSchema[]>>;
+  updateBusiness(
+    id: number,
+    payload: IBusinessUpdateSchema
+  ): Promise<ApiResponse<IBusinessSchema | undefined>>;
 }
 
 export default class BusinessService implements IBusinessService {
@@ -21,5 +28,13 @@ export default class BusinessService implements IBusinessService {
   public async getAllBusiness() {
     const businessesFound = await this.businessRepository.getAllBusiness();
     return new ApiResponse(businessesFound, EResponseCodes.OK);
+  }
+  // UPDATE BUSINESS
+  public async updateBusiness(id: number, payload: IBusinessUpdateSchema) {
+    const businessUpdated = await this.businessRepository.updateBusiness(
+      id,
+      payload
+    );
+    return new ApiResponse(businessUpdated, EResponseCodes.OK);
   }
 }
