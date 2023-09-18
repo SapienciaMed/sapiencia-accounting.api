@@ -1,5 +1,6 @@
 type IDatabaseError = {
   code: string;
+  message: string;
   sqlMessage: string;
 };
 
@@ -8,11 +9,11 @@ const enum DATABASE_ERRORS {
 }
 
 export const throwDatabaseError = (error: IDatabaseError) => {
-  const { code, sqlMessage } = error;
+  const { code, sqlMessage, message } = error;
   switch (code) {
     case DATABASE_ERRORS.ER_DUP_ENTRY:
       throw new Error(`Valor duplicado, ${sqlMessage}`);
     default:
-      throw new Error(sqlMessage);
+      throw new Error(message);
   }
 };

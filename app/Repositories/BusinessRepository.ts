@@ -31,11 +31,7 @@ export default class BusinessRepository implements IBusinessRepository {
   }
   // GET BUSINESS BY ID
   public async getBusinessById(id: number) {
-    const businessFound = await Business.find(id);
-    if (businessFound === null) {
-      throw new Error(`Razón social con id ${id} no existe`);
-    }
-    return businessFound;
+    return Business.findOrFail(id);
   }
   // UPDATE BUSINESS
   public async updateBusiness(id: number, payload: IBusinessUpdateSchema) {
