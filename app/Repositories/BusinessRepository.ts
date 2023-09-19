@@ -1,4 +1,5 @@
 import {
+  IBusinessInfoSelect,
   IBusinessSchema,
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
@@ -13,6 +14,7 @@ export interface IBusinessRepository {
     id: number,
     payload: IBusinessUpdateSchema
   ): Promise<IBusinessSchema>;
+  getAllBusinessInfo(): Promise<IBusinessInfoSelect[]>;
 }
 
 export default class BusinessRepository implements IBusinessRepository {
@@ -31,7 +33,7 @@ export default class BusinessRepository implements IBusinessRepository {
   }
   // GET BUSINESS BY ID
   public async getBusinessById(id: number) {
-    return Business.findOrFail(id);
+    return await Business.findOrFail(id);
   }
   // UPDATE BUSINESS
   public async updateBusiness(id: number, payload: IBusinessUpdateSchema) {
@@ -41,5 +43,17 @@ export default class BusinessRepository implements IBusinessRepository {
     } catch (err) {
       return throwDatabaseError(err);
     }
+  }
+  // GET ALL BUSINESS INFO TO FILL SELECT
+  public async getAllBusinessInfo() {
+    const businessFound = await this.getAllBusiness();
+    const businessInfoSelect = businessFound.map((business) => {
+      const { id, name, nit } = business;
+      return {
+        value: id,
+        name: `${nit} ${name.toLocaleUpperCase()}`,
+      };
+    });
+    return businessInfoSelect;
   }
 }

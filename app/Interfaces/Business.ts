@@ -17,4 +17,14 @@ export interface IBusiness {
 }
 
 export type IBusinessSchema = Omit<IBusiness, "userCreate">;
+
 export type IBusinessUpdateSchema = Partial<IBusiness>;
+
+export type IBusinessInfoSelect = {
+  name: string;
+  value: number;
+};
+
+export interface IBusinessGetById extends IBusiness {
+  municipality: string;
+}

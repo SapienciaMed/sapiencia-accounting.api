@@ -69,10 +69,17 @@ Route.group(() => {
   // BUSINESS
   Route.group(() => {
     Route.post("/", "BusinessController.createBusiness");
-    Route.get("/get-all", "BusinessController.getAllBusiness");
+    Route.get("/:id/get-by-id", "BusinessController.getBusinessById").where(
+      "id",
+      Route.matchers.number()
+    );
     Route.put(":id/update", "BusinessController.updateBusiness").where(
       "id",
       Route.matchers.number()
+    );
+    Route.get(
+      "/get-all-business-info",
+      "BusinessController.getAllBusinessInfo"
     );
   }).prefix("/business");
 }).prefix("/api/v1");
