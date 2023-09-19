@@ -28,3 +28,9 @@ export type IBusinessInfoSelect = {
 export interface IBusinessGetById extends IBusiness {
   municipality: string;
 }
+
+export type IBusinessPaginateFilters = {
+  id: number;
+  page: number;
+  perPage: number;
+};
