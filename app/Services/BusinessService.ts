@@ -3,6 +3,7 @@ import {
   IBusinessGetById,
   IBusinessInfoSelect,
   IBusinessPaginateFilters,
+  IBusinessPaginatedWithMunicipality,
   IBusinessSchema,
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
@@ -22,7 +23,7 @@ export interface IBusinessService {
   getAllBusinessInfo(): Promise<ApiResponse<IBusinessInfoSelect[]>>;
   getBusinessPaginated(
     filters: IBusinessPaginateFilters
-  ): Promise<ApiResponse<IPagingData<IBusinessSchema>>>;
+  ): Promise<ApiResponse<IPagingData<IBusinessPaginatedWithMunicipality>>>;
 }
 
 export default class BusinessService implements IBusinessService {
@@ -72,19 +73,29 @@ export default class BusinessService implements IBusinessService {
     const businessFound = await this.businessRepository.getBusinessPaginated(
       filters
     );
-    // if (businessFound.array.length !== 0) {
-    //   const [business] = businessFound.array;
-    //   const { municipalityCode } = business;
-    //   const municipalityName =
-    //     await this.genericMasterExternalService.getMunicipalityNameByItemCode(
-    //       municipalityCode
-    //     );
-    //   const businessMutated = {
-    //     ...business,
-    //     municipality: municipalityName.itemDescription,
-    //   };
-    //   return [{ ...businessFound, array: { ...businessMutated } }];
-    // }
-    return new ApiResponse(businessFound, EResponseCodes.OK);
+    if (businessFound.array.length !== 0) {
+      const [firstBusiness] = businessFound.array;
+      const { municipalityCode } = firstBusiness;
+      const municipalityName =
+        await this.genericMasterExternalService.getMunicipalityNameByItemCode(
+          municipalityCode
+        );
+      const businessMutated = {
+        ...firstBusiness,
+        municipality: municipalityName.itemDescription,
+      };
+      return new ApiResponse(
+        {
+          ...businessFound,
+          array: [businessMutated as IBusinessPaginatedWithMunicipality],
+        },
+        EResponseCodes.OK
+      );
+    }
+    const { array, meta } = businessFound;
+    return new ApiResponse(
+      { array: array as IBusinessPaginatedWithMunicipality[], meta },
+      EResponseCodes.OK
+    );
   }
 }
