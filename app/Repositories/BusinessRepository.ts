@@ -1,6 +1,7 @@
 import {
   IBusinessInfoSelect,
   IBusinessPaginateFilters,
+  IBusinessPaginated,
   IBusinessSchema,
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
@@ -66,8 +67,10 @@ export default class BusinessRepository implements IBusinessRepository {
     const { id, page, perPage } = filters;
     const businessQuery = Business.query();
     businessQuery.where("id", id);
-    const finalQuery = await businessQuery.paginate(page, perPage);
-    const { data, meta } = finalQuery.serialize();
-    return { array: data as IBusinessSchema[], meta };
+    const omit = ["userModified", "userCreate", "createdAt", "updatedAt"];
+    const { data, meta } = (
+      await businessQuery.paginate(page, perPage)
+    ).serialize({ fields: { omit } });
+    return { array: data as IBusinessPaginated[], meta };
   }
 }

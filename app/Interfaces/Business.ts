@@ -16,6 +16,15 @@ export interface IBusiness {
   phone: string; //RZO_TELEFONO
 }
 
+export type IBusinessPaginated = Omit<
+  IBusiness,
+  "userModified" | "userCreate" | "createdAt" | "updatedAt"
+>;
+
+export interface IBusinessPaginatedWithMunicipality extends IBusinessPaginated {
+  municipality: string;
+}
+
 export type IBusinessSchema = Omit<IBusiness, "userCreate">;
 
 export type IBusinessUpdateSchema = Partial<IBusiness>;
