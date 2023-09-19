@@ -35,12 +35,13 @@ export default class BusinessController {
       return response.badRequest(apiResp);
     }
   }
-  // GET ALL BUSINESS
-  public async getAllBusiness(ctx: HttpContextContract) {
-    const { response, logger } = ctx;
+  // GET BUSINESS BY ID
+  public async getBusinessById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
     try {
-      const businessFound = await BusinessProvider.getAllBusiness();
-      return response.created(businessFound);
+      const { id } = request.params();
+      const businessFound = await BusinessProvider.getBusinessById(id);
+      return response.ok(businessFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
@@ -70,6 +71,18 @@ export default class BusinessController {
         payload
       );
       return response.ok(businessUpdated);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ALL BUSINESS INFO
+  public async getAllBusinessInfo(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+    try {
+      const businessInfoSelect = await BusinessProvider.getAllBusinessInfo();
+      return response.ok(businessInfoSelect);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
