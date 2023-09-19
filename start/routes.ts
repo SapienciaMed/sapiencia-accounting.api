@@ -73,6 +73,7 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.post("/get-paginated", "BusinessController.getBusinessPaginated");
     Route.put(":id/update", "BusinessController.updateBusiness").where(
       "id",
       Route.matchers.number()

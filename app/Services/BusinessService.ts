@@ -2,11 +2,12 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IBusinessGetById,
   IBusinessInfoSelect,
+  IBusinessPaginateFilters,
   IBusinessSchema,
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
 import BusinessRepository from "App/Repositories/BusinessRepository";
-import { ApiResponse } from "App/Utils/ApiResponses";
+import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import GenericMasterExternalService from "./external/GenericExternalService";
 
 export interface IBusinessService {
@@ -19,6 +20,9 @@ export interface IBusinessService {
     payload: IBusinessUpdateSchema
   ): Promise<ApiResponse<IBusinessSchema>>;
   getAllBusinessInfo(): Promise<ApiResponse<IBusinessInfoSelect[]>>;
+  getBusinessPaginated(
+    filters: IBusinessPaginateFilters
+  ): Promise<ApiResponse<IPagingData<IBusinessSchema>>>;
 }
 
 export default class BusinessService implements IBusinessService {
@@ -62,5 +66,25 @@ export default class BusinessService implements IBusinessService {
     const businessInfoSelect =
       await this.businessRepository.getAllBusinessInfo();
     return new ApiResponse(businessInfoSelect, EResponseCodes.OK);
+  }
+  // GET ALL BUSINESSES FILTERED
+  public async getBusinessPaginated(filters: IBusinessPaginateFilters) {
+    const businessFound = await this.businessRepository.getBusinessPaginated(
+      filters
+    );
+    // if (businessFound.array.length !== 0) {
+    //   const [business] = businessFound.array;
+    //   const { municipalityCode } = business;
+    //   const municipalityName =
+    //     await this.genericMasterExternalService.getMunicipalityNameByItemCode(
+    //       municipalityCode
+    //     );
+    //   const businessMutated = {
+    //     ...business,
+    //     municipality: municipalityName.itemDescription,
+    //   };
+    //   return [{ ...businessFound, array: { ...businessMutated } }];
+    // }
+    return new ApiResponse(businessFound, EResponseCodes.OK);
   }
 }

@@ -2,10 +2,12 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import BusinessProvider from "@ioc:core.BusinessProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
+  IBusinessPaginateFilters,
   IBusinessSchema,
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { getBusinessPaginatedFiltersSchema } from "App/Validators/Business/businessPaginatedFiltersSchema";
 import { createBusinessSchema } from "App/Validators/Business/createBusinessSchema";
 import { updateBusinessSchema } from "App/Validators/Business/updateBusinessSchema";
 
@@ -83,6 +85,35 @@ export default class BusinessController {
     try {
       const businessInfoSelect = await BusinessProvider.getAllBusinessInfo();
       return response.ok(businessInfoSelect);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET BUSINESS FILTERED
+  public async getBusinessPaginated(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IBusinessPaginateFilters;
+    try {
+      filters = await request.validate({
+        schema: getBusinessPaginatedFiltersSchema,
+      });
+    } catch (err) {
+      const validationErrors = err?.messages?.errors;
+      logger.error(validationErrors);
+      const apiResp = new ApiResponse(
+        null,
+        EResponseCodes.FAIL,
+        JSON.stringify(validationErrors)
+      );
+      return response.badRequest(apiResp);
+    }
+    try {
+      const businessFound = await BusinessProvider.getBusinessPaginated(
+        filters
+      );
+      return response.ok(businessFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

@@ -1,9 +1,11 @@
 import {
   IBusinessInfoSelect,
+  IBusinessPaginateFilters,
   IBusinessSchema,
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
 import Business from "App/Models/Business";
+import { IPagingData } from "App/Utils/ApiResponses";
 import { throwDatabaseError } from "App/Utils/databaseErrors";
 
 export interface IBusinessRepository {
@@ -15,6 +17,9 @@ export interface IBusinessRepository {
     payload: IBusinessUpdateSchema
   ): Promise<IBusinessSchema>;
   getAllBusinessInfo(): Promise<IBusinessInfoSelect[]>;
+  getBusinessPaginated(
+    filters: IBusinessPaginateFilters
+  ): Promise<IPagingData<IBusinessSchema>>;
 }
 
 export default class BusinessRepository implements IBusinessRepository {
@@ -55,5 +60,14 @@ export default class BusinessRepository implements IBusinessRepository {
       };
     });
     return businessInfoSelect;
+  }
+  // GET ALL ACCOUNT STATEMENT FILTERED
+  public async getBusinessPaginated(filters: IBusinessPaginateFilters) {
+    const { id, page, perPage } = filters;
+    const businessQuery = Business.query();
+    businessQuery.where("id", id);
+    const finalQuery = await businessQuery.paginate(page, perPage);
+    const { data, meta } = finalQuery.serialize();
+    return { array: data as IBusinessSchema[], meta };
   }
 }
