@@ -82,5 +82,9 @@ Route.group(() => {
       "/get-all-business-info",
       "BusinessController.getAllBusinessInfo"
     );
+    Route.delete("/:id/delete", "BusinessController.deleteBusinessById").where(
+      "id",
+      Route.matchers.number()
+    );
   }).prefix("/business");
 }).prefix("/api/v1");

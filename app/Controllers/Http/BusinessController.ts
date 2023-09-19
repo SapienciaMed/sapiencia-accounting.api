@@ -120,4 +120,17 @@ export default class BusinessController {
       return response.badRequest(apiResp);
     }
   }
+  //
+  public async deleteBusinessById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const resp = await BusinessProvider.deleteBusinessById(id);
+      return response.ok(resp);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

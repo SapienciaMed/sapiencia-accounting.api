@@ -21,6 +21,7 @@ export interface IBusinessRepository {
   getBusinessPaginated(
     filters: IBusinessPaginateFilters
   ): Promise<IPagingData<IBusinessSchema>>;
+  deleteBusinessById(id: number): Promise<void>;
 }
 
 export default class BusinessRepository implements IBusinessRepository {
@@ -72,5 +73,14 @@ export default class BusinessRepository implements IBusinessRepository {
       await businessQuery.paginate(page, perPage)
     ).serialize({ fields: { omit } });
     return { array: data as IBusinessPaginated[], meta };
+  }
+  // DELETE BUSINESS BY ID
+  public async deleteBusinessById(id: number) {
+    try {
+      const businessFound = await this.getBusinessById(id);
+      await businessFound.delete();
+    } catch (err) {
+      throwDatabaseError(err);
+    }
   }
 }

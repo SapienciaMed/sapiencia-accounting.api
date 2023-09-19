@@ -24,6 +24,7 @@ export interface IBusinessService {
   getBusinessPaginated(
     filters: IBusinessPaginateFilters
   ): Promise<ApiResponse<IPagingData<IBusinessPaginatedWithMunicipality>>>;
+  deleteBusinessById(id: number): Promise<ApiResponse<null>>;
 }
 
 export default class BusinessService implements IBusinessService {
@@ -97,5 +98,10 @@ export default class BusinessService implements IBusinessService {
       { array: array as IBusinessPaginatedWithMunicipality[], meta },
       EResponseCodes.OK
     );
+  }
+  // DELETE BUSINESS BY ID
+  public async deleteBusinessById(id: number) {
+    await this.businessRepository.deleteBusinessById(id);
+    return new ApiResponse(null, EResponseCodes.OK);
   }
 }
