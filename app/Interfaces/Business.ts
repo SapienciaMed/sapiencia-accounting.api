@@ -21,6 +21,11 @@ export type IBusinessPaginated = Omit<
   "userModified" | "userCreate" | "createdAt" | "updatedAt"
 >;
 
+export type IBusinessDataSelect = Pick<
+  IBusiness,
+  "municipalityCode" | "address" | "phone" | "email" | "sender" | "chargeSender"
+> & { municipality: string };
+
 export interface IBusinessPaginatedWithMunicipality extends IBusinessPaginated {
   municipality: string;
 }
@@ -32,6 +37,7 @@ export type IBusinessUpdateSchema = Partial<IBusiness>;
 export type IBusinessInfoSelect = {
   name: string;
   value: number;
+  data: IBusinessDataSelect;
 };
 
 export interface IBusinessGetById extends IBusiness {

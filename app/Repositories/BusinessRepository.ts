@@ -55,10 +55,29 @@ export default class BusinessRepository implements IBusinessRepository {
   public async getAllBusinessInfo() {
     const businessFound = await this.getAllBusiness();
     const businessInfoSelect = businessFound.map((business) => {
-      const { id, name, nit } = business;
+      const {
+        id,
+        name,
+        nit,
+        municipalityCode,
+        address,
+        phone,
+        email,
+        sender,
+        chargeSender,
+      } = business;
       return {
         value: id,
         name: `${nit} ${name.toLocaleUpperCase()}`,
+        data: {
+          municipalityCode,
+          address,
+          phone,
+          email,
+          sender,
+          chargeSender,
+          municipality: "",
+        },
       };
     });
     return businessInfoSelect;
