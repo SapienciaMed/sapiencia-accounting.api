@@ -67,7 +67,22 @@ export default class BusinessService implements IBusinessService {
   public async getAllBusinessInfo() {
     const businessInfoSelect =
       await this.businessRepository.getAllBusinessInfo();
-    return new ApiResponse(businessInfoSelect, EResponseCodes.OK);
+    let businessInfoSelectMutated: IBusinessInfoSelect[] = [];
+    for (let business of businessInfoSelect) {
+      const municipalityName =
+        await this.genericMasterExternalService.getMunicipalityNameByItemCode(
+          business.data.municipalityCode
+        );
+      const currentBusiness = {
+        ...business,
+        data: {
+          ...business.data,
+          municipality: municipalityName.itemDescription,
+        },
+      };
+      businessInfoSelectMutated.push(currentBusiness);
+    }
+    return new ApiResponse(businessInfoSelectMutated, EResponseCodes.OK);
   }
   // GET ALL BUSINESSES FILTERED
   public async getBusinessPaginated(filters: IBusinessPaginateFilters) {
