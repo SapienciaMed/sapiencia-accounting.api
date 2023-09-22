@@ -40,7 +40,7 @@ export default class ContractService implements IContractService {
     const contractsFoundMutated = contractsFound.map((contract) => {
       const { id, contractId } = contract;
       return {
-        id,
+        value: id,
         name: contractId,
       };
     });

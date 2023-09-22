@@ -21,7 +21,7 @@ export type IContractPaginated = Omit<
 >;
 
 export type IContractInfoSelect = {
-  id: number;
+  value: number;
   name: string;
 };
 
