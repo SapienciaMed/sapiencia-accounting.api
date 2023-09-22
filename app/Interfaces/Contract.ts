@@ -20,6 +20,11 @@ export type IContractPaginated = Omit<
   "userModified" | "userCreate" | "createdAt" | "updatedAt"
 >;
 
+export type IContractInfoSelect = {
+  id: number;
+  name: string;
+};
+
 export interface IContract {
   id?: number; // CTR_CODIGO
   contractId: string; // CTR_NUMERO_CONTRATO

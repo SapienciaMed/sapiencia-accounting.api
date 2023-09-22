@@ -91,5 +91,6 @@ Route.group(() => {
   Route.group(() => {
     Route.post("/create", "ContractController.createContract");
     Route.post("/get-paginated", "ContractController.getContractPaginated");
+    Route.get("/get-info-select", "ContractController.getContractInfoSelect");
   }).prefix("/contract");
 }).prefix("/api/v1");

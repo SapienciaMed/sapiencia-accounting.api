@@ -5,10 +5,15 @@ import {
   IContractSchema,
 } from "App/Interfaces/Contract";
 import Contract from "App/Models/Contract";
+import { IPagingData } from "App/Utils/ApiResponses";
 import { throwDatabaseError } from "App/Utils/databaseErrors";
 
 export interface IContractRepository {
   createContract(payload: IContractSchema): Promise<Required<IContract>>;
+  getContractPaginated(
+    filters: IContractPaginateSchema
+  ): Promise<IPagingData<IContractPaginated>>;
+  getContractInfoSelect(): Promise<IContract[]>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -39,5 +44,10 @@ export default class ContractRepository implements IContractRepository {
       await contractQuery.paginate(page, perPage)
     ).serialize({ fields: { omit } });
     return { array: data as IContractPaginated[], meta };
+  }
+  // GET CONTRACT INGO SELECT
+  public async getContractInfoSelect() {
+    const contractsFound = await Contract.all();
+    return contractsFound;
   }
 }
