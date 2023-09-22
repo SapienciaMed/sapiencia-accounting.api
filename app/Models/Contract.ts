@@ -49,6 +49,18 @@ export default class Contract extends BaseModel {
   })
   public createdAt: DateTime;
 
+  @column({
+    columnName: "CTR_CUENTA_CONTABLE_DEBITO",
+    serializeAs: "debitAccount",
+  })
+  public debitAccount: string;
+
+  @column({
+    columnName: "CTR_CUENTA_CONTABLE_CREDITO",
+    serializeAs: "creditAccount",
+  })
+  public creditAccount: string;
+
   // Contrato pertenece a una razón social
   @hasOne(() => Business, {
     localKey: "businessCode",

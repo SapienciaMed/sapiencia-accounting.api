@@ -15,6 +15,7 @@ export default class extends BaseSchema {
         .comment("Llave primaria");
       table
         .string("CTR_NUMERO_CONTRATO", 100)
+        .unique()
         .notNullable()
         .comment("Número/Identificador del Contrato");
       table
@@ -42,6 +43,14 @@ export default class extends BaseSchema {
         .dateTime("CTR_FECHA_CREO")
         .notNullable()
         .comment("Fecha y hora de creación del registro");
+      table
+        .string("CTR_CUENTA_CONTABLE_DEBITO", 15)
+        .notNullable()
+        .comment("Cuenta contable débito del contrato");
+      table
+        .string("CTR_CUENTA_CONTABLE_CREDITO", 15)
+        .notNullable()
+        .comment("Cuenta contable crédito del contrato");
     });
   }
 

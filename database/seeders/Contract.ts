@@ -9,20 +9,37 @@ export default class extends BaseSeeder {
       {
         contractId: "PAC ENERO 2023",
         businessCode: 1,
-        // userModified: null,
         userCreate: "0000 000 000",
+        creditAccount: "037670151721",
+        debitAccount: "037670151721",
       },
       {
         contractId: "338",
         businessCode: 2,
-        // userModified: null,
         userCreate: "0000 000 000",
+        creditAccount: "037670151721",
+        debitAccount: "037670151721",
       },
       {
-        contractId: "328",
+        contractId: "89",
         businessCode: 3,
-        // userModified: null,
         userCreate: "0000 000 000",
+        creditAccount: "037670151721",
+        debitAccount: "037670151721",
+      },
+      {
+        contractId: "12",
+        businessCode: 4,
+        userCreate: "0000 000 000",
+        creditAccount: "037670151721",
+        debitAccount: "037670151721",
+      },
+      {
+        contractId: "300",
+        businessCode: 5,
+        userCreate: "0000 000 000",
+        creditAccount: "037670151721",
+        debitAccount: "037670151721",
       },
     ]);
   }

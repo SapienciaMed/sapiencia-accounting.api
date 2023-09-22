@@ -87,4 +87,8 @@ Route.group(() => {
       Route.matchers.number()
     );
   }).prefix("/business");
+  // CONTRACT
+  Route.group(() => {
+    Route.post("/create", "ContractController.createContract");
+  }).prefix("/contract");
 }).prefix("/api/v1");

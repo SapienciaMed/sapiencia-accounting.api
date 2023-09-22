@@ -16,7 +16,6 @@ export default class extends BaseSeeder {
         concept:
           "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
         userCreate: "0000 000 000",
-        // userModified: null,
       },
       {
         contractCode: 2,
@@ -28,7 +27,6 @@ export default class extends BaseSeeder {
         concept:
           "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
         userCreate: "0000 000 000",
-        // userModified: null,
       },
       {
         contractCode: 3,
@@ -40,7 +38,6 @@ export default class extends BaseSeeder {
         concept:
           "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
         userCreate: "0000 000 000",
-        // userModified: null,
       },
     ]);
   }

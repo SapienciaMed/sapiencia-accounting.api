@@ -19,6 +19,7 @@ export default class AppProvider {
       "App/Services/AccountStatementTrackingService"
     );
     const BusinessService = await import("App/Services/BusinessService");
+    const ContractService = await import("App/Services/ContractService");
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
@@ -39,6 +40,9 @@ export default class AppProvider {
     );
     const BusinessRepository = await import(
       "App/Repositories/BusinessRepository"
+    );
+    const ContractRepository = await import(
+      "App/Repositories/ContractRepository"
     );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
@@ -71,6 +75,10 @@ export default class AppProvider {
           new BusinessRepository.default(),
           new GenericMasterService.default()
         )
+    );
+    this.app.container.singleton(
+      "core.ContractProvider",
+      () => new ContractService.default(new ContractRepository.default())
     );
   }
 
