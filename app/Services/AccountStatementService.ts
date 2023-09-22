@@ -15,6 +15,7 @@ import { formaterNumberToCurrency } from "App/Utils/helpers";
 import { DateTime } from "luxon";
 import { accountStatementDesktopTemplate } from "../../storage/templates/accountStatementDesktopTemplate";
 import { accountStatementMobileTemplate } from "../../storage/templates/accountStatementMobileTemplate";
+import GenericMasterExternalService from "./external/GenericExternalService";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -46,7 +47,10 @@ export interface IAccountStatementService {
 export default class AccountStatementService
   implements IAccountStatementService
 {
-  constructor(private accountStatementRepository: AccountStatementRepository) {}
+  constructor(
+    private accountStatementRepository: AccountStatementRepository,
+    private genericMasterExternalService: GenericMasterExternalService
+  ) {}
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatement) {
     // CHECK IF EXISTS ANOTHER ACCOUNT STATEMENT WITH SAME ACCOUNT NUMBER
@@ -109,6 +113,15 @@ export default class AccountStatementService
   ) {
     const accountStatementFound =
       await this.accountStatementRepository.getAccountStatementById(id);
+    const municipalityName =
+      await this.genericMasterExternalService.getMunicipalityNameByItemCode(
+        accountStatementFound.contract.business.municipalityCode
+      );
+    const accountStatementFoundMutated = {
+      ...accountStatementFound,
+      municipality: municipalityName.itemDescription,
+    };
+
     const { responsive } = filters;
     let PDF_PATH: string;
     if (!responsive) {
@@ -119,7 +132,7 @@ export default class AccountStatementService
         left: "16px",
       };
       PDF_PATH = await createPDFTemplate(
-        accountStatementDesktopTemplate(accountStatementFound),
+        accountStatementDesktopTemplate(accountStatementFoundMutated),
         dimension,
         "A4"
       );
@@ -131,7 +144,7 @@ export default class AccountStatementService
         left: "50px",
       };
       PDF_PATH = await createPDFTemplate(
-        accountStatementMobileTemplate(accountStatementFound),
+        accountStatementMobileTemplate(accountStatementFoundMutated),
         dimension,
         "A5"
       );

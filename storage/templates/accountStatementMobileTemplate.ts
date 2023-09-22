@@ -5,7 +5,7 @@ import { dateFormatted, formaterNumberToCurrency } from "App/Utils/helpers";
 import { readFileSync } from "fs";
 
 export const accountStatementMobileTemplate = (
-  accountStatement: IGetAccountStatementPaginated
+  accountStatement: IGetAccountStatementPaginated & { municipality: string }
 ) => {
   const basePath = "/storage/templates/assets";
   const logoPath = Application.makePath(basePath, "logo.png");
@@ -186,14 +186,18 @@ export const accountStatementMobileTemplate = (
                             <span>${accountStatement.contract.business.sender.toLocaleUpperCase()}</span>
                         </strong>
                         <strong>
-                            <span>Representante Legal</span>
+                            <span>${
+                              accountStatement.contract.business.chargeSender
+                            }</span>
                         </strong>
                         <span>${accountStatement.contract.business.name.toLocaleUpperCase()}</span>
                         <span>${
                           accountStatement.contract.business.address
                         }</span>
-                        <span>Teléfono: 3855555</span>
-                        <span>Medellín</span>
+                        <span>Teléfono: ${
+                          accountStatement.contract.business.phone
+                        }</span>
+                        <span>${accountStatement.municipality}</span>
                     </div>
                     <div class="ReferralDocument__container__issue">
                         <strong>
@@ -203,7 +207,9 @@ export const accountStatementMobileTemplate = (
                     <div class="ReferralDocument__container__body">
                         <span>Respetado (a) Señor (a):</span>
                         <p class="mt-small">
-                            Adjuntamos Cuenta de Cobro No 222022 para el asunto en mención, de
+                            Adjuntamos Cuenta de Cobro No ${
+                              accountStatement.accountNum
+                            } para el asunto en mención, de
                             acuerdo a información recibida de Convenio No 724 de 2021, Firmado entre las
                             partes.
                         </p>
@@ -330,13 +336,15 @@ export const accountStatementMobileTemplate = (
                             <strong>
                                 <span>Ciudad:</span>
                             </strong>
-                            <span>Medellín</span>
+                            <span>${accountStatement.municipality}</span>
                         </div>
                         <div>
                             <strong>
                                 <span>Teléfono:</span>
                             </strong>
-                            <span>385 55 55</span>
+                            <span>${
+                              accountStatement.contract.business.phone
+                            }</span>
                         </div>
                         <div>
                             <strong>

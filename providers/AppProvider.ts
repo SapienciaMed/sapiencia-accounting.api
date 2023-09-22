@@ -51,7 +51,8 @@ export default class AppProvider {
       "core.AccountStatementProvider",
       () =>
         new AccountStatementService.default(
-          new AccountStatementRepository.default()
+          new AccountStatementRepository.default(),
+          new GenericMasterService.default()
         )
     );
     this.app.container.singleton(
