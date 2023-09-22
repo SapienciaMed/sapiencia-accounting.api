@@ -82,7 +82,7 @@ export default class BusinessRepository implements IBusinessRepository {
     });
     return businessInfoSelect;
   }
-  // GET ALL ACCOUNT STATEMENT FILTERED
+  // GET ALL BUSINESS FILTERED
   public async getBusinessPaginated(filters: IBusinessPaginateFilters) {
     const { id, page, perPage } = filters;
     const businessQuery = Business.query();

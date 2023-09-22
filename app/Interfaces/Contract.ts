@@ -8,6 +8,18 @@ export type IContractSchema = {
   debitAccount: string;
 };
 
+export type IContractPaginateSchema = {
+  id?: number;
+  businessCode?: number;
+  page: number;
+  perPage: number;
+};
+
+export type IContractPaginated = Omit<
+  IContract,
+  "userModified" | "userCreate" | "createdAt" | "updatedAt"
+>;
+
 export interface IContract {
   id?: number; // CTR_CODIGO
   contractId: string; // CTR_NUMERO_CONTRATO

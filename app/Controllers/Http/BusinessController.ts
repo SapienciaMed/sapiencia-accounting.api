@@ -91,7 +91,7 @@ export default class BusinessController {
       return response.badRequest(apiResp);
     }
   }
-  // GET BUSINESS FILTERED
+  // GET BUSINESS PAGINATED
   public async getBusinessPaginated(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
     let filters: IBusinessPaginateFilters;
@@ -120,7 +120,7 @@ export default class BusinessController {
       return response.badRequest(apiResp);
     }
   }
-  //
+  // DELETE BUSINESS BY ID
   public async deleteBusinessById(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
     try {
