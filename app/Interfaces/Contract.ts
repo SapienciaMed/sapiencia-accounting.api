@@ -23,6 +23,20 @@ export type IContractPaginated = Omit<
 export type IContractInfoSelect = {
   value: number;
   name: string;
+  data: Pick<IBusiness, "nit" | "name">;
+};
+
+export type IContractInfo = {
+  id: number;
+  contractId: string;
+  businessCode: number;
+  userModified: string;
+  userCreate: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  debitAccount: string;
+  creditAccount: string;
+  business: Pick<IBusiness, "nit" | "name">;
 };
 
 export interface IContract {

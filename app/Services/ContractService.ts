@@ -38,10 +38,11 @@ export default class ContractService implements IContractService {
     const contractsFound =
       await this.contractRepository.getContractInfoSelect();
     const contractsFoundMutated = contractsFound.map((contract) => {
-      const { id, contractId } = contract;
+      const { id, contractId, business } = contract;
       return {
         value: id,
         name: contractId,
+        data: business,
       };
     });
     return new ApiResponse(contractsFoundMutated, EResponseCodes.OK);

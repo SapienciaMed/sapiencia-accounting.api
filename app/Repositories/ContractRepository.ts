@@ -1,5 +1,6 @@
 import {
   IContract,
+  IContractInfo,
   IContractPaginateSchema,
   IContractPaginated,
   IContractSchema,
@@ -13,7 +14,7 @@ export interface IContractRepository {
   getContractPaginated(
     filters: IContractPaginateSchema
   ): Promise<IPagingData<IContractPaginated>>;
-  getContractInfoSelect(): Promise<IContract[]>;
+  getContractInfoSelect(): Promise<IContractInfo[]>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -47,7 +48,11 @@ export default class ContractRepository implements IContractRepository {
   }
   // GET CONTRACT INGO SELECT
   public async getContractInfoSelect() {
-    const contractsFound = await Contract.all();
+    const contractQuery = Contract.query();
+    contractQuery.preload("business", (businessQuery) => {
+      businessQuery.select("name", "nit");
+    });
+    const contractsFound = await contractQuery.finally();
     return contractsFound;
   }
 }
