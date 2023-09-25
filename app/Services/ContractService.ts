@@ -1,6 +1,7 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IContract,
+  IContractInfoCleared,
   IContractInfoSelect,
   IContractPaginateSchema,
   IContractPaginated,
@@ -17,7 +18,7 @@ export interface IContractService {
     filters: IContractPaginateSchema
   ): Promise<ApiResponse<IPagingData<IContractPaginated>>>;
   getContractInfoSelect(): Promise<ApiResponse<IContractInfoSelect[]>>;
-  getContractById(id: number): Promise<ApiResponse<IContract>>;
+  getContractById(id: number): Promise<ApiResponse<IContractInfoCleared>>;
 }
 
 export default class ContractService implements IContractService {
