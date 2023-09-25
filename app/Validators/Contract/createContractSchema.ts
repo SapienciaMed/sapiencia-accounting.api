@@ -7,6 +7,6 @@ export const createContractSchema = schema.create({
     rules.maxLength(100),
   ]),
   businessCode: schema.number([rules.required(), rules.unsigned()]),
-  creditAccount: schema.string([rules.required(), rules.maxLength(15)]),
-  debitAccount: schema.string([rules.required(), rules.maxLength(15)]),
+  creditAccount: schema.string([rules.required(), rules.maxLength(20)]),
+  debitAccount: schema.string([rules.required(), rules.maxLength(20)]),
 });

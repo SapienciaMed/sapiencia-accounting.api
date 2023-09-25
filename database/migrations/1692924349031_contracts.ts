@@ -44,11 +44,11 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Fecha y hora de creación del registro");
       table
-        .string("CTR_CUENTA_CONTABLE_DEBITO", 15)
+        .string("CTR_CUENTA_CONTABLE_DEBITO", 20)
         .notNullable()
         .comment("Cuenta contable débito del contrato");
       table
-        .string("CTR_CUENTA_CONTABLE_CREDITO", 15)
+        .string("CTR_CUENTA_CONTABLE_CREDITO", 20)
         .notNullable()
         .comment("Cuenta contable crédito del contrato");
     });
