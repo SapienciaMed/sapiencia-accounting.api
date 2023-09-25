@@ -1,12 +1,4 @@
-type IDatabaseError = {
-  code: string;
-  message: string;
-  sqlMessage: string;
-};
-
-const enum DATABASE_ERRORS {
-  ER_DUP_ENTRY = "ER_DUP_ENTRY",
-}
+import { DATABASE_ERRORS, IDatabaseError } from "App/Constants/DatabaseErrors";
 
 export const throwDatabaseError = (error: IDatabaseError) => {
   const { code, sqlMessage, message } = error;
