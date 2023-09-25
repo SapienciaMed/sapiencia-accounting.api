@@ -12,7 +12,6 @@ import {
 } from "App/Interfaces/Business";
 import Business from "App/Models/Business";
 import { IPagingData } from "App/Utils/ApiResponses";
-import { throwDatabaseError } from "App/Utils/databaseErrors";
 
 export interface IBusinessRepository {
   createBusiness(payload: IBusinessSchema): Promise<IBusinessSchema>;
@@ -51,7 +50,12 @@ export default class BusinessRepository implements IBusinessRepository {
   }
   // GET BUSINESS BY ID
   public async getBusinessById(id: number) {
-    return await Business.findOrFail(id);
+    try {
+      const businessFound = await Business.findOrFail(id);
+      return businessFound;
+    } catch (err) {
+      throw new Error("Razón social inexistente");
+    }
   }
   // UPDATE BUSINESS
   public async updateBusiness(id: number, payload: IBusinessUpdateSchema) {
@@ -59,7 +63,7 @@ export default class BusinessRepository implements IBusinessRepository {
       const businessFound = await this.getBusinessById(id);
       return await businessFound.merge(payload).save();
     } catch (err) {
-      return throwDatabaseError(err);
+      throw new Error(err);
     }
   }
   // GET ALL BUSINESS INFO TO FILL SELECT
