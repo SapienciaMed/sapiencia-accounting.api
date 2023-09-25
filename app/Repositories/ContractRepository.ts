@@ -1,4 +1,9 @@
 import {
+  CONTRACT_SQL_ERROR,
+  DATABASE_ERRORS,
+  IDatabaseError,
+} from "App/Constants/DatabaseErrors";
+import {
   IContract,
   IContractInfo,
   IContractPaginateSchema,
@@ -7,7 +12,6 @@ import {
 } from "App/Interfaces/Contract";
 import Contract from "App/Models/Contract";
 import { IPagingData } from "App/Utils/ApiResponses";
-import { throwDatabaseError } from "App/Utils/databaseErrors";
 
 export interface IContractRepository {
   createContract(payload: IContractSchema): Promise<Required<IContract>>;
@@ -24,7 +28,15 @@ export default class ContractRepository implements IContractRepository {
       const newContract = new Contract();
       return await newContract.fill({ ...payload, userCreate: "foo" }).save();
     } catch (err) {
-      return throwDatabaseError(err);
+      const { code, sqlMessage } = err as IDatabaseError;
+      switch (code) {
+        case DATABASE_ERRORS.ER_DUP_ENTRY:
+          if (sqlMessage.includes(CONTRACT_SQL_ERROR.NUM_CONTRACT_DUPLICATE)) {
+            throw new Error("El contrato ingresado ya existe");
+          }
+        default:
+          throw new Error(err);
+      }
     }
   }
   // GET CONTRACT PAGINATED
