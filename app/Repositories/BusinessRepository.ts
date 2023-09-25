@@ -110,7 +110,11 @@ export default class BusinessRepository implements IBusinessRepository {
       const businessFound = await this.getBusinessById(id);
       await businessFound.delete();
     } catch (err) {
-      throwDatabaseError(err);
+      const { code } = err as IDatabaseError;
+      if (code === DATABASE_ERRORS.ER_ROW_IS_REFERENCED_2) {
+        throw new Error("No se puede eliminar razón social");
+      }
+      throw new Error(err);
     }
   }
 }
