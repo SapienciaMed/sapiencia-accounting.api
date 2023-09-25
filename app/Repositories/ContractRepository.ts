@@ -6,6 +6,7 @@ import {
 import {
   IContract,
   IContractInfo,
+  IContractInfoCleared,
   IContractPaginateSchema,
   IContractPaginated,
   IContractSchema,
@@ -19,7 +20,7 @@ export interface IContractRepository {
     filters: IContractPaginateSchema
   ): Promise<IPagingData<IContractPaginated>>;
   getContractInfoSelect(): Promise<IContractInfo[]>;
-  getContractById(id: number): Promise<IContract>;
+  getContractById(id: number): Promise<IContractInfoCleared>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -71,7 +72,22 @@ export default class ContractRepository implements IContractRepository {
   // GET CONTRACT BY ID
   public async getContractById(id: number) {
     try {
-      return await Contract.findOrFail(id);
+      const contractQuery = Contract.query();
+      contractQuery.preload("business");
+      contractQuery.where("id", id);
+      const contractFound = await contractQuery.firstOrFail();
+      return contractFound.serialize({
+        fields: {
+          omit: ["userModified", "userCreate", "createdAt", "updatedAt"],
+        },
+        relations: {
+          business: {
+            fields: {
+              omit: ["createdAt", "updatedAt", "userModified", "userCreate"],
+            },
+          },
+        },
+      }) as IContractInfoCleared;
     } catch (err) {
       if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
         throw new Error("Contrato inexistente");

@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IBusiness } from "./Business";
+import { IBusiness, IBusinessPaginated } from "./Business";
 
 export type IContractSchema = {
   contractId: string;
@@ -19,6 +19,10 @@ export type IContractPaginated = Omit<
   IContract,
   "userModified" | "userCreate" | "createdAt" | "updatedAt"
 >;
+
+export interface IContractInfoCleared extends IContractPaginated {
+  business: IBusinessPaginated;
+}
 
 export type IContractInfoSelect = {
   value: number;

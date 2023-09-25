@@ -96,5 +96,6 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    // Route.put("/:id/update", "ContractController.updateContract");
   }).prefix("/contract");
 }).prefix("/api/v1");
