@@ -1,4 +1,9 @@
 import {
+  BusinessModelError,
+  DATABASE_ERRORS,
+  IDatabaseError,
+} from "App/Constants/DatabaseErrors";
+import {
   IBusinessInfoSelect,
   IBusinessPaginateFilters,
   IBusinessPaginated,
@@ -31,7 +36,13 @@ export default class BusinessRepository implements IBusinessRepository {
       const newUser = new Business();
       return await newUser.fill({ ...payload, userCreate: "foo" }).save();
     } catch (err) {
-      return throwDatabaseError(err);
+      const { code, sqlMessage } = err as IDatabaseError;
+      if (code === DATABASE_ERRORS.ER_DUP_ENTRY) {
+        if (sqlMessage.includes(BusinessModelError.NIT_DUPLICATE)) {
+          throw new Error("El nit ingresado ya existe");
+        }
+      }
+      throw new Error(err);
     }
   }
   // GET ALL BUSINESS
