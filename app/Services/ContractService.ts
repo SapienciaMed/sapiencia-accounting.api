@@ -17,6 +17,7 @@ export interface IContractService {
     filters: IContractPaginateSchema
   ): Promise<ApiResponse<IPagingData<IContractPaginated>>>;
   getContractInfoSelect(): Promise<ApiResponse<IContractInfoSelect[]>>;
+  getContractById(id: number): Promise<ApiResponse<IContract>>;
 }
 
 export default class ContractService implements IContractService {
@@ -46,5 +47,10 @@ export default class ContractService implements IContractService {
       };
     });
     return new ApiResponse(contractsFoundMutated, EResponseCodes.OK);
+  }
+  // GET CONTRACT BY ID
+  public async getContractById(id: number) {
+    const contractFound = await this.contractRepository.getContractById(id);
+    return new ApiResponse(contractFound, EResponseCodes.OK);
   }
 }

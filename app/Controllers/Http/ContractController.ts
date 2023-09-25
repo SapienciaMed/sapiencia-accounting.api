@@ -76,4 +76,17 @@ export default class ContractController {
       return response.badRequest(apiResp);
     }
   }
+  // GET CONTRACT BY ID
+  public async getContractById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const contractFound = await ContractProvider.getContractById(id);
+      return response.created(contractFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

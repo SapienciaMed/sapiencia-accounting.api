@@ -19,6 +19,7 @@ export interface IContractRepository {
     filters: IContractPaginateSchema
   ): Promise<IPagingData<IContractPaginated>>;
   getContractInfoSelect(): Promise<IContractInfo[]>;
+  getContractById(id: number): Promise<IContract>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -66,5 +67,16 @@ export default class ContractRepository implements IContractRepository {
     });
     const contractsFound = await contractQuery.finally();
     return contractsFound;
+  }
+  // GET CONTRACT BY ID
+  public async getContractById(id: number) {
+    try {
+      return await Contract.findOrFail(id);
+    } catch (err) {
+      if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
+        throw new Error("Contrato inexistente");
+      }
+      throw new Error(err);
+    }
   }
 }

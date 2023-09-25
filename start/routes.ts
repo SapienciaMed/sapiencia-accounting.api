@@ -92,5 +92,9 @@ Route.group(() => {
     Route.post("/create", "ContractController.createContract");
     Route.post("/get-paginated", "ContractController.getContractPaginated");
     Route.get("/get-info-select", "ContractController.getContractInfoSelect");
+    Route.get("/:id/get-by-id", "ContractController.getContractById").where(
+      "id",
+      Route.matchers.number()
+    );
   }).prefix("/contract");
 }).prefix("/api/v1");

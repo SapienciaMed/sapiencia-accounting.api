@@ -36,12 +36,14 @@ export default class BusinessRepository implements IBusinessRepository {
       return await newUser.fill({ ...payload, userCreate: "foo" }).save();
     } catch (err) {
       const { code, sqlMessage } = err as IDatabaseError;
-      if (code === DATABASE_ERRORS.ER_DUP_ENTRY) {
-        if (sqlMessage.includes(BusinessModelError.NIT_DUPLICATE)) {
-          throw new Error("El nit ingresado ya existe");
-        }
+      switch (code) {
+        case DATABASE_ERRORS.ER_DUP_ENTRY:
+          if (sqlMessage.includes(BusinessModelError.NIT_DUPLICATE)) {
+            throw new Error("El Nit ingresado ya existe");
+          }
+        default:
+          throw new Error(err);
       }
-      throw new Error(err);
     }
   }
   // GET ALL BUSINESS
@@ -54,7 +56,10 @@ export default class BusinessRepository implements IBusinessRepository {
       const businessFound = await Business.findOrFail(id);
       return businessFound;
     } catch (err) {
-      throw new Error("Razón social inexistente");
+      if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
+        throw new Error("Razón social inexistente");
+      }
+      throw new Error(err);
     }
   }
   // UPDATE BUSINESS
