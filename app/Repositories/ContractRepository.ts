@@ -25,6 +25,7 @@ export interface IContractRepository {
     id: number,
     payload: IContractUpdateSchema
   ): Promise<IContract>;
+  deleteContractById(id: number): Promise<void>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -91,5 +92,20 @@ export default class ContractRepository implements IContractRepository {
   public async updateContractById(id: number, payload: IContractUpdateSchema) {
     const contractFound = await this.getContractById(id);
     return await contractFound.merge(payload).save();
+  }
+  // DELETE CONTRACT BY ID
+  public async deleteContractById(id: number) {
+    try {
+      const contractFound = await this.getContractById(id);
+      return await contractFound.delete();
+    } catch (err) {
+      const { code } = err as IDatabaseError;
+      switch (code) {
+        case DATABASE_ERRORS.ER_ROW_IS_REFERENCED_2:
+          throw new Error("No se puede eliminar este contrato");
+        default:
+          throw new Error(err);
+      }
+    }
   }
 }

@@ -104,4 +104,17 @@ export default class ContractController {
       return response.badRequest(apiResp);
     }
   }
+  // DELETE CONTRACT BY ID
+  public async deleteContractById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const resp = await ContractProvider.deleteContractById(id);
+      return response.ok(resp);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

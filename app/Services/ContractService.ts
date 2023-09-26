@@ -24,6 +24,7 @@ export interface IContractService {
     id: number,
     payload: IContractUpdateSchema
   ): Promise<ApiResponse<IContractInfoCleared>>;
+  deleteContractById(id: number): Promise<ApiResponse<null>>;
 }
 
 export default class ContractService implements IContractService {
@@ -81,5 +82,10 @@ export default class ContractService implements IContractService {
       omit: ["userModified", "createdAt", "updatedAt", "userCreate"],
     }) as IContractInfoCleared;
     return new ApiResponse(contractSerialized, EResponseCodes.OK);
+  }
+  // DELETE CONTRACT BY ID
+  public async deleteContractById(id: number) {
+    await this.contractRepository.deleteContractById(id);
+    return new ApiResponse(null, EResponseCodes.OK);
   }
 }

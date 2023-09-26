@@ -96,6 +96,13 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
-    Route.put("/:id/update-by-id", "ContractController.updateContractById");
+    Route.put(
+      "/:id/update-by-id",
+      "ContractController.updateContractById"
+    ).where("id", Route.matchers.number());
+    Route.delete(
+      "/:id/delete-by-id",
+      "ContractController.deleteContractById"
+    ).where("id", Route.matchers.number());
   }).prefix("/contract");
 }).prefix("/api/v1");
