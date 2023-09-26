@@ -277,13 +277,9 @@ export const accountStatementDesktopTemplate = (
                     <div class="ReferralDocument__container__body">
                         <span>Respetado (a) Señor (a):</span>
                         <p class="mt-small">
-                            Adjuntamos Cuenta de Cobro No ${
-                              accountStatement.accountNum
-                            } para el asunto en mención, de
-                            acuerdo a
-                            <br />
-                            información recibida de Convenio No 724 de 2021, Firmado entre las
-                            partes.
+                            Muy amablemente solicitamos su autorización para el desembolso de las transferencias corrientes
+                            para los proyectos de funcionamiento de la Agencia SAPIENCIA adjuntamos cuenta de cobro No
+                            ${accountStatement.accountNum}.
                         </p>
                         <span class="mt-small">Gracias por su acostumbrada atención.</span>
                         <span class="mt-small">Cordialmente,</span>
@@ -319,7 +315,7 @@ export const accountStatementDesktopTemplate = (
                             </div>
                             <div class="ReferralDocument__container__representativesTable__col__content">
                                 <div>
-                                <img />
+                                    <img />
                                 </div>
                                 <span>Daphne Morales Soto</span>
                                 <span>Profesional Universitaria-Contadora</span>
