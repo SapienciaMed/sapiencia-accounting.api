@@ -58,3 +58,10 @@ export interface IContract {
 export interface IGetContractPaginated extends IContract {
   business: IBusiness;
 }
+
+export type IContractUpdateSchema = {
+  contractId?: string;
+  businessCode?: number;
+  debitAccount?: string;
+  creditAccount?: string;
+};

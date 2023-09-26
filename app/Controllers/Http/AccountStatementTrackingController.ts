@@ -3,6 +3,7 @@ import AccountStatementTrackingProvider from "@ioc:core.AccountStatementTracking
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { IAccountStatementTrackingPayload } from "App/Interfaces/AccountStatementTracking";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { DBException } from "App/Utils/DbHandlerError";
 import { accountStatementTrackingSchema } from "App/Validators/AccountStatementTrackingSchema";
 
 export default class AccountStatementTrackingController {
@@ -17,14 +18,7 @@ export default class AccountStatementTrackingController {
         schema: accountStatementTrackingSchema,
       });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const { accountStatementId } = request.params();

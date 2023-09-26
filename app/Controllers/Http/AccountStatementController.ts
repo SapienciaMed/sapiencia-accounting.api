@@ -8,6 +8,7 @@ import {
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { DBException } from "App/Utils/DbHandlerError";
 import { accountStatementDownloadPDFSchema } from "App/Validators/AccountStatement/accountStatementDownloadPDFSchema";
 import { accountStatementSchema } from "App/Validators/AccountStatement/accountStatementSchema";
 import { accountStatementUpdateSchema } from "App/Validators/AccountStatement/accountStatementUpdateSchema";
@@ -21,14 +22,7 @@ export default class AccountStatementController {
     try {
       payload = await request.validate({ schema: accountStatementSchema });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const newAccountStatement =
@@ -49,14 +43,7 @@ export default class AccountStatementController {
         schema: getAccountStatementFilteredSchema,
       });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const accountStatements =
@@ -77,14 +64,7 @@ export default class AccountStatementController {
         schema: accountStatementUpdateSchema,
       });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const { id } = request.params();
@@ -150,14 +130,7 @@ export default class AccountStatementController {
       });
       response.send(filters);
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const { id } = request.params();
@@ -181,14 +154,7 @@ export default class AccountStatementController {
         schema: getAccountStatementFilteredSchema,
       });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const resp = await AccountStatementProvider.generateXLSXAccountStatement(
