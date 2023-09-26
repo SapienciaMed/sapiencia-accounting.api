@@ -4,9 +4,14 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IContractPaginateSchema,
   IContractSchema,
+  IContractUpdateSchema,
 } from "App/Interfaces/Contract";
 import { ApiResponse } from "App/Utils/ApiResponses";
-import { createContractSchema } from "App/Validators/Contract/createContractSchema";
+import { DBException } from "App/Utils/DbHandlerError";
+import {
+  createContractSchema,
+  updateContractSchema,
+} from "App/Validators/Contract/createContractSchema";
 import { paginateContractSchema } from "App/Validators/Contract/paginateContractSchema";
 
 export default class ContractController {
@@ -17,14 +22,7 @@ export default class ContractController {
     try {
       payload = await request.validate({ schema: createContractSchema });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const newContract = await ContractProvider.createContract(payload);
@@ -44,14 +42,7 @@ export default class ContractController {
         schema: paginateContractSchema,
       });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const businessFound = await ContractProvider.getContractPaginated(
@@ -83,6 +74,30 @@ export default class ContractController {
       const { id } = request.params();
       const contractFound = await ContractProvider.getContractById(id);
       return response.created(contractFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // UPDATE CONTRACT BY ID
+  public async updateContractById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let payload: IContractUpdateSchema;
+    try {
+      payload = await request.validate({
+        schema: updateContractSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const { id } = request.params();
+      const contractEdited = await ContractProvider.updateContractById(
+        id,
+        payload
+      );
+      return response.ok(contractEdited);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

@@ -6,6 +6,7 @@ import {
   IContractPaginateSchema,
   IContractPaginated,
   IContractSchema,
+  IContractUpdateSchema,
 } from "App/Interfaces/Contract";
 import ContractRepository from "App/Repositories/ContractRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
@@ -19,6 +20,10 @@ export interface IContractService {
   ): Promise<ApiResponse<IPagingData<IContractPaginated>>>;
   getContractInfoSelect(): Promise<ApiResponse<IContractInfoSelect[]>>;
   getContractById(id: number): Promise<ApiResponse<IContractInfoCleared>>;
+  updateContractById(
+    id: number,
+    payload: IContractUpdateSchema
+  ): Promise<ApiResponse<IContractInfoCleared>>;
 }
 
 export default class ContractService implements IContractService {
@@ -52,6 +57,29 @@ export default class ContractService implements IContractService {
   // GET CONTRACT BY ID
   public async getContractById(id: number) {
     const contractFound = await this.contractRepository.getContractById(id);
-    return new ApiResponse(contractFound, EResponseCodes.OK);
+    const contractSerialized = contractFound.serialize({
+      fields: {
+        omit: ["userModified", "userCreate", "createdAt", "updatedAt"],
+      },
+      relations: {
+        business: {
+          fields: {
+            omit: ["createdAt", "updatedAt", "userModified", "userCreate"],
+          },
+        },
+      },
+    }) as IContractInfoCleared;
+    return new ApiResponse(contractSerialized, EResponseCodes.OK);
+  }
+  // UPDATE CONTRACT BY ID
+  public async updateContractById(id: number, payload: IContractUpdateSchema) {
+    const newContract = await this.contractRepository.updateContractById(
+      id,
+      payload
+    );
+    const contractSerialized = newContract.serializeAttributes({
+      omit: ["userModified", "createdAt", "updatedAt", "userCreate"],
+    }) as IContractInfoCleared;
+    return new ApiResponse(contractSerialized, EResponseCodes.OK);
   }
 }

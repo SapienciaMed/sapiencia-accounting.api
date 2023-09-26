@@ -6,10 +6,10 @@ import {
 import {
   IContract,
   IContractInfo,
-  IContractInfoCleared,
   IContractPaginateSchema,
   IContractPaginated,
   IContractSchema,
+  IContractUpdateSchema,
 } from "App/Interfaces/Contract";
 import Contract from "App/Models/Contract";
 import { IPagingData } from "App/Utils/ApiResponses";
@@ -20,7 +20,11 @@ export interface IContractRepository {
     filters: IContractPaginateSchema
   ): Promise<IPagingData<IContractPaginated>>;
   getContractInfoSelect(): Promise<IContractInfo[]>;
-  getContractById(id: number): Promise<IContractInfoCleared>;
+  getContractById(id: number): Promise<IContract>;
+  updateContractById(
+    id: number,
+    payload: IContractUpdateSchema
+  ): Promise<IContract>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -75,24 +79,17 @@ export default class ContractRepository implements IContractRepository {
       const contractQuery = Contract.query();
       contractQuery.preload("business");
       contractQuery.where("id", id);
-      const contractFound = await contractQuery.firstOrFail();
-      return contractFound.serialize({
-        fields: {
-          omit: ["userModified", "userCreate", "createdAt", "updatedAt"],
-        },
-        relations: {
-          business: {
-            fields: {
-              omit: ["createdAt", "updatedAt", "userModified", "userCreate"],
-            },
-          },
-        },
-      }) as IContractInfoCleared;
+      return await contractQuery.firstOrFail();
     } catch (err) {
       if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
         throw new Error("Contrato inexistente");
       }
       throw new Error(err);
     }
+  }
+  // UPDATE CONTRACT BY ID
+  public async updateContractById(id: number, payload: IContractUpdateSchema) {
+    const contractFound = await this.getContractById(id);
+    return await contractFound.merge(payload).save();
   }
 }

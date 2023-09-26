@@ -7,6 +7,7 @@ import {
   IBusinessUpdateSchema,
 } from "App/Interfaces/Business";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { DBException } from "App/Utils/DbHandlerError";
 import { getBusinessPaginatedFiltersSchema } from "App/Validators/Business/businessPaginatedFiltersSchema";
 import { createBusinessSchema } from "App/Validators/Business/createBusinessSchema";
 import { updateBusinessSchema } from "App/Validators/Business/updateBusinessSchema";
@@ -19,14 +20,7 @@ export default class BusinessController {
     try {
       payload = await request.validate({ schema: createBusinessSchema });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const newBusiness = await BusinessProvider.createBusiness(payload);
@@ -57,14 +51,7 @@ export default class BusinessController {
     try {
       payload = await request.validate({ schema: updateBusinessSchema });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const { id } = request.params();
@@ -100,14 +87,7 @@ export default class BusinessController {
         schema: getBusinessPaginatedFiltersSchema,
       });
     } catch (err) {
-      const validationErrors = err?.messages?.errors;
-      logger.error(validationErrors);
-      const apiResp = new ApiResponse(
-        null,
-        EResponseCodes.FAIL,
-        JSON.stringify(validationErrors)
-      );
-      return response.badRequest(apiResp);
+      return DBException.badRequest(ctx, err);
     }
     try {
       const businessFound = await BusinessProvider.getBusinessPaginated(
