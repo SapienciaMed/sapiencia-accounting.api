@@ -79,7 +79,11 @@ export default class AppProvider {
     );
     this.app.container.singleton(
       "core.ContractProvider",
-      () => new ContractService.default(new ContractRepository.default())
+      () =>
+        new ContractService.default(
+          new ContractRepository.default(),
+          new GenericMasterService.default()
+        )
     );
   }
 

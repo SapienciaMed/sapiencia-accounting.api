@@ -91,6 +91,7 @@ export default class BusinessRepository implements IBusinessRepository {
         name: `${nit} ${name.toLocaleUpperCase()}`,
         data: {
           municipalityCode,
+          name,
           address,
           phone,
           email,

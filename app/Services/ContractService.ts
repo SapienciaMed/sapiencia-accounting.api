@@ -3,7 +3,6 @@ import {
   IContract,
   IContractInfoCleared,
   IContractInfoSelect,
-  IContractInfoSelectByNit,
   IContractPaginateSchema,
   IContractPaginated,
   IContractSchema,
@@ -11,6 +10,7 @@ import {
 } from "App/Interfaces/Contract";
 import ContractRepository from "App/Repositories/ContractRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
+import GenericMasterExternalService from "./external/GenericExternalService";
 
 export interface IContractService {
   createContract(
@@ -26,13 +26,13 @@ export interface IContractService {
     payload: IContractUpdateSchema
   ): Promise<ApiResponse<IContractInfoCleared>>;
   deleteContractById(id: number): Promise<ApiResponse<null>>;
-  getContractInfoSelectByNit(): Promise<
-    ApiResponse<IContractInfoSelectByNit[]>
-  >;
 }
 
 export default class ContractService implements IContractService {
-  constructor(private contractRepository: ContractRepository) {}
+  constructor(
+    private contractRepository: ContractRepository,
+    private genericMasterExternalService: GenericMasterExternalService
+  ) {}
   // CREATE CONTRACT
   public async createContract(payload: IContractSchema) {
     const newContract = await this.contractRepository.createContract(payload);
@@ -74,7 +74,19 @@ export default class ContractService implements IContractService {
         },
       },
     }) as IContractInfoCleared;
-    return new ApiResponse(contractSerialized, EResponseCodes.OK);
+    const { municipalityCode } = contractSerialized.business;
+    const municipalityName =
+      await this.genericMasterExternalService.getMunicipalityNameByItemCode(
+        municipalityCode
+      );
+    const contractSerializedMutated = {
+      ...contractSerialized,
+      business: {
+        ...contractSerialized.business,
+        municipality: municipalityName.itemDescription,
+      },
+    };
+    return new ApiResponse(contractSerializedMutated, EResponseCodes.OK);
   }
   // UPDATE CONTRACT BY ID
   public async updateContractById(id: number, payload: IContractUpdateSchema) {
@@ -91,31 +103,5 @@ export default class ContractService implements IContractService {
   public async deleteContractById(id: number) {
     await this.contractRepository.deleteContractById(id);
     return new ApiResponse(null, EResponseCodes.OK);
-  }
-  // GET CONTACT INFO SELECT BY NIT
-  public async getContractInfoSelectByNit() {
-    const contractsFound = await this.contractRepository.getAllContracts();
-    const contractSelectInfo = contractsFound.map((contract) => {
-      return contract.serialize({
-        fields: {
-          omit: ["createdAt", "updatedAt", "userCreate", "userModified"],
-        },
-        relations: {
-          business: {
-            fields: {
-              omit: ["createdAt", "updatedAt", "userCreate", "userModified"],
-            },
-          },
-        },
-      }) as IContractInfoSelectByNit;
-    });
-    const contractSelectInfoMutated = contractSelectInfo.map((contract) => {
-      return {
-        ...contract,
-        name: contract.business.nit,
-        value: contract.business.id,
-      };
-    });
-    return new ApiResponse(contractSelectInfoMutated, EResponseCodes.OK);
   }
 }

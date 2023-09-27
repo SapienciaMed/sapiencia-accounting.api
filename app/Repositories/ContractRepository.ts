@@ -26,7 +26,6 @@ export interface IContractRepository {
     payload: IContractUpdateSchema
   ): Promise<IContract>;
   deleteContractById(id: number): Promise<void>;
-  getAllContracts(): Promise<IContract[]>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -103,16 +102,10 @@ export default class ContractRepository implements IContractRepository {
       const { code } = err as IDatabaseError;
       switch (code) {
         case DATABASE_ERRORS.ER_ROW_IS_REFERENCED_2:
-          throw new Error("No se puede eliminar este contrato");
+          throw new Error("No se puede eliminar contrato");
         default:
           throw new Error(err);
       }
     }
-  }
-  // GET ALL CONTRACTS
-  public async getAllContracts() {
-    const contractQuery = Contract.query();
-    contractQuery.preload("business");
-    return await contractQuery.finally();
   }
 }
