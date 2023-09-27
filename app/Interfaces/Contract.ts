@@ -65,3 +65,9 @@ export type IContractUpdateSchema = {
   debitAccount?: string;
   creditAccount?: string;
 };
+
+export interface IContractInfoSelectByNit extends IContractSchema {
+  business: Required<
+    Omit<IBusiness, "createdAt" | "updatedAt" | "userCreate" | "userModified">
+  >;
+}

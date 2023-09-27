@@ -96,6 +96,10 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.get(
+      "/get-info-select-by-nit",
+      "ContractController.getContractInfoSelectByNit"
+    );
     Route.put(
       "/:id/update-by-id",
       "ContractController.updateContractById"

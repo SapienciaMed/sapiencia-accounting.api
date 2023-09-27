@@ -26,6 +26,7 @@ export interface IContractRepository {
     payload: IContractUpdateSchema
   ): Promise<IContract>;
   deleteContractById(id: number): Promise<void>;
+  getAllContracts(): Promise<IContract[]>;
 }
 
 export default class ContractRepository implements IContractRepository {
@@ -107,5 +108,11 @@ export default class ContractRepository implements IContractRepository {
           throw new Error(err);
       }
     }
+  }
+  // GET ALL CONTRACTS
+  public async getAllContracts() {
+    const contractQuery = Contract.query();
+    contractQuery.preload("business");
+    return await contractQuery.finally();
   }
 }

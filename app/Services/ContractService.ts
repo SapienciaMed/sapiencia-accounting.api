@@ -3,6 +3,7 @@ import {
   IContract,
   IContractInfoCleared,
   IContractInfoSelect,
+  IContractInfoSelectByNit,
   IContractPaginateSchema,
   IContractPaginated,
   IContractSchema,
@@ -25,6 +26,9 @@ export interface IContractService {
     payload: IContractUpdateSchema
   ): Promise<ApiResponse<IContractInfoCleared>>;
   deleteContractById(id: number): Promise<ApiResponse<null>>;
+  getContractInfoSelectByNit(): Promise<
+    ApiResponse<IContractInfoSelectByNit[]>
+  >;
 }
 
 export default class ContractService implements IContractService {
@@ -87,5 +91,31 @@ export default class ContractService implements IContractService {
   public async deleteContractById(id: number) {
     await this.contractRepository.deleteContractById(id);
     return new ApiResponse(null, EResponseCodes.OK);
+  }
+  // GET CONTACT INFO SELECT BY NIT
+  public async getContractInfoSelectByNit() {
+    const contractsFound = await this.contractRepository.getAllContracts();
+    const contractSelectInfo = contractsFound.map((contract) => {
+      return contract.serialize({
+        fields: {
+          omit: ["createdAt", "updatedAt", "userCreate", "userModified"],
+        },
+        relations: {
+          business: {
+            fields: {
+              omit: ["createdAt", "updatedAt", "userCreate", "userModified"],
+            },
+          },
+        },
+      }) as IContractInfoSelectByNit;
+    });
+    const contractSelectInfoMutated = contractSelectInfo.map((contract) => {
+      return {
+        ...contract,
+        name: contract.business.nit,
+        value: contract.business.id,
+      };
+    });
+    return new ApiResponse(contractSelectInfoMutated, EResponseCodes.OK);
   }
 }

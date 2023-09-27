@@ -117,4 +117,17 @@ export default class ContractController {
       return response.badRequest(apiResp);
     }
   }
+  // GET CONTRACT INFO SELECT BY NIT
+  public async getContractInfoSelectByNit(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+    try {
+      const contractInfoFound =
+        await ContractProvider.getContractInfoSelectByNit();
+      return response.ok(contractInfoFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }
