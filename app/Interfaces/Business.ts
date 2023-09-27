@@ -30,6 +30,7 @@ export type IBusinessDataSelect = Pick<
   | "sender"
   | "chargeSender"
   | "nit"
+  | "name"
 > & { municipality: string };
 
 export interface IBusinessPaginatedWithMunicipality extends IBusinessPaginated {

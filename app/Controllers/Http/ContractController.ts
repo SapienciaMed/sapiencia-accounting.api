@@ -73,7 +73,7 @@ export default class ContractController {
     try {
       const { id } = request.params();
       const contractFound = await ContractProvider.getContractById(id);
-      return response.created(contractFound);
+      return response.ok(contractFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
@@ -111,19 +111,6 @@ export default class ContractController {
       const { id } = request.params();
       const resp = await ContractProvider.deleteContractById(id);
       return response.ok(resp);
-    } catch (err) {
-      logger.error(err);
-      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
-      return response.badRequest(apiResp);
-    }
-  }
-  // GET CONTRACT INFO SELECT BY NIT
-  public async getContractInfoSelectByNit(ctx: HttpContextContract) {
-    const { response, logger } = ctx;
-    try {
-      const contractInfoFound =
-        await ContractProvider.getContractInfoSelectByNit();
-      return response.ok(contractInfoFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
