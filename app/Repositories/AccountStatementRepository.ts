@@ -127,7 +127,7 @@ export default class AccountStatementRepository
     accountStatementQuery.where("accountNum", accountNum);
     const accountStatementFound = await accountStatementQuery.first();
     if (!accountStatementFound) {
-      throw new Error(`Cuenta de cobro con número ${accountNum} no existe`);
+      throw new Error(`No se generaron resultados con la búsqueda`);
     }
     return accountStatementFound as IAccountStatement;
   }

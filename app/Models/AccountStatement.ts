@@ -36,7 +36,7 @@ export default class AccountStatement extends BaseModel {
   @column.dateTime({
     columnName: "CTC_FECHA_EXPEDICION",
     serializeAs: "expeditionDate",
-    serialize: (value) => value.toFormat("dd/MM/yyyy"),
+    // serialize: (value) => value.toFormat("dd/MM/yyyy"),
   })
   public expeditionDate: DateTime;
 
