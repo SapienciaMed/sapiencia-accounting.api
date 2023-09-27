@@ -95,6 +95,7 @@ export default class BusinessRepository implements IBusinessRepository {
           phone,
           email,
           sender,
+          nit,
           chargeSender,
           municipality: "",
         },

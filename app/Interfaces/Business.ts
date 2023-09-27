@@ -23,7 +23,13 @@ export type IBusinessPaginated = Omit<
 
 export type IBusinessDataSelect = Pick<
   IBusiness,
-  "municipalityCode" | "address" | "phone" | "email" | "sender" | "chargeSender"
+  | "municipalityCode"
+  | "address"
+  | "phone"
+  | "email"
+  | "sender"
+  | "chargeSender"
+  | "nit"
 > & { municipality: string };
 
 export interface IBusinessPaginatedWithMunicipality extends IBusinessPaginated {
