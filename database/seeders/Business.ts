@@ -8,7 +8,7 @@ export default class extends BaseSeeder {
     await Business.updateOrCreateMany(uniqueKey, [
       {
         name: "Institución Universitaria Colegio Mayor de Antioquia",
-        nit: "890980134",
+        nit: "890980134-1",
         address: "Calle 78 N°65-46",
         email: "example@email.com",
         municipalityCode: "396",
@@ -19,7 +19,7 @@ export default class extends BaseSeeder {
       },
       {
         name: "Institución Universitaria Pascual Bravo",
-        nit: "890980153",
+        nit: "890980153-1",
         address: "Calle 73 N°73A-226",
         email: "example@mail.com",
         municipalityCode: "396",
@@ -30,7 +30,7 @@ export default class extends BaseSeeder {
       },
       {
         name: "Instituto Tecnológico Metropolitano",
-        nit: "800214750",
+        nit: "800214750-1",
         address: "Calle 73 N°76A-354",
         email: "example@mail.com",
         municipalityCode: "396",
@@ -41,7 +41,7 @@ export default class extends BaseSeeder {
       },
       {
         name: "DATOLABS S.A.S",
-        nit: "901131054",
+        nit: "901131054-1",
         address: "CR 39 5A-95 OF 307",
         email: "example@mail.com",
         municipalityCode: "396",
@@ -52,7 +52,7 @@ export default class extends BaseSeeder {
       },
       {
         name: "Museo Casa de la Memoria",
-        nit: "900857221",
+        nit: "900857221-1",
         address: "CL 51 36 66",
         email: "example@mail.com",
         municipalityCode: "396",
