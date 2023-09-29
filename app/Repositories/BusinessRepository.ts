@@ -68,7 +68,15 @@ export default class BusinessRepository implements IBusinessRepository {
       const businessFound = await this.getBusinessById(id);
       return await businessFound.merge(payload).save();
     } catch (err) {
-      throw new Error(err);
+      const { code, sqlMessage } = err as IDatabaseError;
+      switch (code) {
+        case DATABASE_ERRORS.ER_DUP_ENTRY:
+          if (sqlMessage.includes(BusinessModelError.NIT_DUPLICATE)) {
+            throw new Error("El Nit ingresado ya existe");
+          }
+        default:
+          throw new Error(err);
+      }
     }
   }
   // GET ALL BUSINESS INFO TO FILL SELECT
