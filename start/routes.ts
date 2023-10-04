@@ -74,7 +74,7 @@ Route.group(() => {
       Route.matchers.number()
     );
     Route.post("/get-paginated", "BusinessController.getBusinessPaginated");
-    Route.put(":id/update", "BusinessController.updateBusiness").where(
+    Route.put("/:id/update", "BusinessController.updateBusiness").where(
       "id",
       Route.matchers.number()
     );
@@ -105,4 +105,15 @@ Route.group(() => {
       "ContractController.deleteContractById"
     ).where("id", Route.matchers.number());
   }).prefix("/contract");
+  // BIEN INMUEBLE
+  Route.group(() => {
+    Route.get(
+      "/get-identification-users-select-info",
+      "FurnitureController.getIdentificationUsersSelectInfo"
+    );
+    Route.get(
+      "/get-workers-full-name-select-info",
+      "FurnitureController.getWorkersFullNameSelectInfo"
+    );
+  }).prefix("/furniture");
 }).prefix("/api/v1");

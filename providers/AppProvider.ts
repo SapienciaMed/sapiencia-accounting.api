@@ -20,11 +20,15 @@ export default class AppProvider {
     );
     const BusinessService = await import("App/Services/BusinessService");
     const ContractService = await import("App/Services/ContractService");
+    const FurnitureService = await import("App/Services/FurnitureService");
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
     const GenericMasterService = await import(
       "App/Services/external/GenericExternalService"
+    );
+    const PayrollFurnitureService = await import(
+      "App/Services/external/PayrollExternalService"
     );
     /**************************************************************************/
     /******************************** REPOSITORIES ****************************/
@@ -44,6 +48,9 @@ export default class AppProvider {
     const ContractRepository = await import(
       "App/Repositories/ContractRepository"
     );
+    // const FurnitureRepository = await import(
+    //   "App/Repositories/FurnitureRepository"
+    // );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
     /**************************************************************************/
@@ -83,6 +90,14 @@ export default class AppProvider {
         new ContractService.default(
           new ContractRepository.default(),
           new GenericMasterService.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.FurnitureProvider",
+      () =>
+        new FurnitureService.default(
+          // new FurnitureRepository.default(),
+          new PayrollFurnitureService.default()
         )
     );
   }

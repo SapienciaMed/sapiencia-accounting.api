@@ -11,7 +11,6 @@ export const accountStatementDesktopTemplate = (
   const logoPath = Application.makePath(basePath, "logo.png");
   const footerPath = Application.makePath(basePath, "footer.png");
   const leftSignPath = Application.makePath(basePath, "leftSign.png");
-  console.log(accountStatement);
   return `
     <!DOCTYPE html>
     <html lang="en">
