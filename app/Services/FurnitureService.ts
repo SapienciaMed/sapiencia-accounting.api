@@ -46,13 +46,23 @@ export default class FurnitureService implements IFurnitureService {
   }
   // CREATE FURNITURE
   public async createFurniture(payload: IFurnitureSchema) {
+    if (!payload?.workerId) throw new Error("workerId is required optional");
+    const workerFound = await this.payrollExternalService.getWorkerById(
+      payload.workerId
+    );
+    const {
+      firstName,
+      secondName = "",
+      surname,
+      secondSurname = "",
+      numberDocument,
+    } = workerFound.worker;
     delete payload.workerId;
-    const newFurniture: IFurniture = {
+    const furnitureMutated: IFurniture = {
       ...payload,
-      fullName: "Foo Bar",
-      userIdentification: "109283428672",
+      fullName: `${firstName} ${secondName} ${surname} ${secondSurname}`,
+      userIdentification: numberDocument,
     };
-    console.log({ newFurniture });
-    return await this.furnitureRepository.createFurniture(newFurniture);
+    return await this.furnitureRepository.createFurniture(furnitureMutated);
   }
 }

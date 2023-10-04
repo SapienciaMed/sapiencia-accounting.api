@@ -17,3 +17,7 @@ export const enum BusinessModelError {
 export const enum CONTRACT_SQL_ERROR {
   NUM_CONTRACT_DUPLICATE = "ctr_contratos_ctr_numero_contrato_unique",
 }
+
+export const enum FURNITURE_SQL_ERROR {
+  PLATE_DUPLICATE = "bie_bienes_inmueble_bie_placa_activo_unique",
+}
