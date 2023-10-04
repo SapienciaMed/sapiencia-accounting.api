@@ -115,5 +115,6 @@ Route.group(() => {
       "/get-workers-full-name-select-info",
       "FurnitureController.getWorkersFullNameSelectInfo"
     );
+    Route.post("/create", "FurnitureController.createFurniture");
   }).prefix("/furniture");
 }).prefix("/api/v1");

@@ -1,4 +1,5 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { DateTime } from "luxon";
 
 export default class Furniture extends BaseModel {
   public static table = "BIE_BIENES_INMUEBLE";
@@ -25,8 +26,11 @@ export default class Furniture extends BaseModel {
   @column({
     columnName: "BIE_FECHA_ADQUISICION",
     serializeAs: "acquisitionDate",
+    prepare(value: string) {
+      return DateTime.fromISO(value).toSQLDate();
+    },
   })
-  public acquisitionDate: string;
+  public acquisitionDate: DateTime;
 
   @column({
     columnName: "BIE_ESTADO_EQUIPO",
@@ -38,7 +42,7 @@ export default class Furniture extends BaseModel {
     columnName: "BIE_CC_USUARIO",
     serializeAs: "userIdentification",
   })
-  public userIdentification: number;
+  public userIdentification: string;
 
   @column({
     columnName: "BIE_AREA",
@@ -59,6 +63,12 @@ export default class Furniture extends BaseModel {
   public model: string;
 
   @column({
+    columnName: "BIE_MARCA",
+    serializeAs: "model",
+  })
+  public brand: string;
+
+  @column({
     columnName: "BIE_MEDIDAS",
     serializeAs: "measure",
   })
@@ -68,7 +78,7 @@ export default class Furniture extends BaseModel {
     columnName: "BIE_PROPIETARIO_ACTIVO",
     serializeAs: "activeOwner",
   })
-  public activeOwner: string;
+  public activeOwner: number;
 
   @column({
     columnName: "BIE_OBSERVACION",

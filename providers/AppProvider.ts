@@ -48,9 +48,9 @@ export default class AppProvider {
     const ContractRepository = await import(
       "App/Repositories/ContractRepository"
     );
-    // const FurnitureRepository = await import(
-    //   "App/Repositories/FurnitureRepository"
-    // );
+    const FurnitureRepository = await import(
+      "App/Repositories/FurnitureRepository"
+    );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
     /**************************************************************************/
@@ -96,7 +96,7 @@ export default class AppProvider {
       "core.FurnitureProvider",
       () =>
         new FurnitureService.default(
-          // new FurnitureRepository.default(),
+          new FurnitureRepository.default(),
           new PayrollFurnitureService.default()
         )
     );
