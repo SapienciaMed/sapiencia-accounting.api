@@ -44,11 +44,11 @@ export default class extends BaseSchema {
         .unsigned()
         .comment("Área (Listados Genéricos - sapiencia-core)");
       table
-        .string("BIE_NOMBRE_APELLIDO", 30)
+        .string("BIE_NOMBRE_APELLIDO", 50)
         .notNullable()
         .comment("Nombre y apellidos del usuario asignado.");
       table
-        .string("BIE_MODELO", 20)
+        .string("BIE_MODELO", 50)
         .notNullable()
         .comment("Modelo del bien inmueble.");
       table
@@ -56,7 +56,7 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Modelo del bien inmueble.");
       table
-        .string("BIE_MEDIDAS", 15)
+        .string("BIE_MEDIDAS", 20)
         .notNullable()
         .comment("Medidas del modelo.");
       table
