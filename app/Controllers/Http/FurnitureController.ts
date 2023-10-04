@@ -43,8 +43,8 @@ export default class ContractController {
       return DBException.badRequest(ctx, err);
     }
     try {
-      const newContract = await FurnitureProvider.createFurniture(payload);
-      return response.created(newContract);
+      const newFurniture = await FurnitureProvider.createFurniture(payload);
+      return response.created(newFurniture);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
