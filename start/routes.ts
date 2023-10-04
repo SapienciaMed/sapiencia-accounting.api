@@ -116,5 +116,9 @@ Route.group(() => {
       "FurnitureController.getWorkersFullNameSelectInfo"
     );
     Route.post("/create", "FurnitureController.createFurniture");
+    Route.get("/:id/get-by-id", "FurnitureController.getFurnitureById").where(
+      "id",
+      Route.matchers.number()
+    );
   }).prefix("/furniture");
 }).prefix("/api/v1");

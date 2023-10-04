@@ -8,6 +8,7 @@ import Furniture from "App/Models/Furniture";
 
 export interface IFurnitureRepository {
   createFurniture(payload: IFurniture): Promise<IFurniture>;
+  getFurnitureById(id: number): Promise<IFurniture>;
 }
 
 export default class FurnitureRepository implements IFurnitureRepository {
@@ -25,6 +26,19 @@ export default class FurnitureRepository implements IFurnitureRepository {
         default:
           throw new Error(err);
       }
+    }
+  }
+  // GET FURNITURE BY ID
+  public async getFurnitureById(id: number) {
+    try {
+      const furnitureQuery = Furniture.query();
+      furnitureQuery.where("id", id);
+      return await furnitureQuery.firstOrFail();
+    } catch (err) {
+      if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
+        throw new Error("Bien mueble inexistente");
+      }
+      throw new Error(err);
     }
   }
 }

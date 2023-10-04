@@ -51,4 +51,17 @@ export default class ContractController {
       return response.badRequest(apiResp);
     }
   }
+  // GET FURNITURE BY ID
+  public async getFurnitureById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const furnitureFound = await FurnitureProvider.getFurnitureById(id);
+      return response.ok(furnitureFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }
