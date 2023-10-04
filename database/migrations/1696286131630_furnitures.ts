@@ -30,13 +30,13 @@ export default class extends BaseSchema {
       table
         .integer("BIE_ESTADO_EQUIPO")
         .notNullable()
+        .unsigned()
         .comment(
           "Estado del equipo: Asignado, Disponible, De baja (Listados Genéricos - sapiencia-core)"
         );
       table
-        .integer("BIE_CC_USUARIO")
+        .string("BIE_CC_USUARIO", 15)
         .notNullable()
-        .unsigned()
         .comment("Cédula del usuario");
       table
         .integer("BIE_AREA")
@@ -52,12 +52,17 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Modelo del bien inmueble.");
       table
+        .string("BIE_MARCA", 50)
+        .notNullable()
+        .comment("Modelo del bien inmueble.");
+      table
         .string("BIE_MEDIDAS", 15)
         .notNullable()
         .comment("Medidas del modelo.");
       table
-        .string("BIE_PROPIETARIO_ACTIVO", 20)
+        .integer("BIE_PROPIETARIO_ACTIVO")
         .notNullable()
+        .unsigned()
         .comment("Propietario activo del inmueble.");
       table
         .string("BIE_OBSERVACION", 500)
