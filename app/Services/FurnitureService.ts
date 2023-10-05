@@ -82,32 +82,39 @@ export default class FurnitureService implements IFurnitureService {
   public async getFurnitureById(id: number) {
     const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
     const { area, equipmentStatus, activeOwner, clerk } = furnitureFound;
-    const { itemDescription: areaName } =
-      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+    const areaPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
         GENERIC_LIST.AREA,
         area
       );
-    const { itemDescription: equipmentStatusName } =
-      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+    const equipmentStatusPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
         GENERIC_LIST.EQUIPMENT_STATUS,
         equipmentStatus
       );
-    const { itemDescription: activeOwnerName } =
-      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+    const activeOwnerPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
         GENERIC_LIST.ACTIVE_OWNER,
         activeOwner
       );
-    const { itemDescription: clerkName } =
-      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+    const clerkPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
         GENERIC_LIST.CLERK,
         clerk
       );
+    const [areaItem, equipmentStatusItem, activeOwnerItem, clerkItem] =
+      await Promise.all([
+        areaPromise,
+        equipmentStatusPromise,
+        activeOwnerPromise,
+        clerkPromise,
+      ]);
     const furnitureMutated = {
       ...furnitureFound,
-      area: areaName,
-      equipmentStatus: equipmentStatusName,
-      activeOwner: activeOwnerName,
-      clerk: clerkName,
+      area: areaItem.itemDescription,
+      equipmentStatus: equipmentStatusItem.itemDescription,
+      activeOwner: activeOwnerItem.itemDescription,
+      clerk: clerkItem.itemDescription,
     };
     return new ApiResponse(furnitureMutated, EResponseCodes.OK);
   }
