@@ -5,11 +5,13 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IFiltersFurnitureSchema,
   IFurnitureSchema,
+  IUpdateFurnitureSchema,
 } from "App/Interfaces/Furniture";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { createFurnitureSchema } from "App/Validators/Furniture/createFurnitureSchema";
 import { filtersFurnitureSchema } from "App/Validators/Furniture/filtersFurnitureSchema";
+import { updateFurnitureSchema } from "App/Validators/Furniture/updateFurnitureSchema";
 
 export default class ContractController {
   // GET IDENTIFICATION USERS SELECT INFO
@@ -91,16 +93,20 @@ export default class ContractController {
   }
   // UPDATE FURNITURE BY ID
   public async updateFurnitureById(ctx: HttpContext) {
-    // const { request, response, logger } = ctx;
-    const { response, logger } = ctx;
-    // let payload: IUpdateFurnitureSchema;
-    // try {
-    //   payload = await request.validate({ schema: updateFurnitureSchema });
-    // } catch (err) {
-    //   return DBException.badRequest(ctx, err);
-    // }
+    const { request, response, logger } = ctx;
+    let payload: IUpdateFurnitureSchema;
     try {
-      return response.ok({});
+      payload = await request.validate({ schema: updateFurnitureSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const { id } = request.params();
+      const furnitureUpdate = await FurnitureProvider.updateFurnitureById(
+        id,
+        payload
+      );
+      return response.ok(furnitureUpdate);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

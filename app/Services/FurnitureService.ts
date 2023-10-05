@@ -5,8 +5,10 @@ import {
   IFurniture,
   IFurnitureMutated,
   IFurnitureSchema,
+  IUpdateFurniture,
+  IUpdateFurnitureSchema,
 } from "App/Interfaces/Furniture";
-import { IWorkerSelectInfo } from "App/Interfaces/Worker";
+import { IWorker, IWorkerSelectInfo } from "App/Interfaces/Worker";
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import GenericMasterExternalService from "./external/GenericExternalService";
@@ -21,6 +23,11 @@ export interface IFurnitureService {
     payload: IFiltersFurnitureSchema
   ): Promise<ApiResponse<IPagingData<IFurnitureMutated>>>;
   getCompleteFurnitureInfo(furniture: IFurniture): Promise<IFurnitureMutated>;
+  getCompleteWorkerInfo(id: number): Promise<IWorker>;
+  updateFurnitureById(
+    id: number,
+    payload: IUpdateFurnitureSchema
+  ): Promise<ApiResponse<IFurniture>>;
 }
 
 export default class FurnitureService implements IFurnitureService {
@@ -126,7 +133,7 @@ export default class FurnitureService implements IFurnitureService {
   public async getFurnitureById(id: number) {
     const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
     const furnitureMutated = await this.getCompleteFurnitureInfo(
-      furnitureFound
+      furnitureFound.serializeAttributes() as IFurniture
     );
     return new ApiResponse(furnitureMutated, EResponseCodes.OK);
   }
@@ -143,5 +150,44 @@ export default class FurnitureService implements IFurnitureService {
       { array: furnituresMutated, meta },
       EResponseCodes.OK
     );
+  }
+  // GET COMPLETE WORKER INFO
+  public async getCompleteWorkerInfo(id: number) {
+    const { worker } = await this.payrollExternalService.getWorkerById(id);
+    const {
+      firstName,
+      secondName = "",
+      surname,
+      secondSurname = "",
+      numberDocument,
+    } = worker;
+    return {
+      ...worker,
+      fullName: `${firstName} ${secondName} ${surname} ${secondSurname}`,
+      userIdentification: numberDocument,
+    };
+  }
+  // UPDATE FURNITURE BY ID
+  public async updateFurnitureById(
+    id: number,
+    payload: IUpdateFurnitureSchema
+  ) {
+    let furnitureMutated: IUpdateFurniture | null = null;
+    if (payload?.workerId) {
+      const { fullName, userIdentification } = await this.getCompleteWorkerInfo(
+        payload.workerId
+      );
+      delete payload.workerId;
+      furnitureMutated = {
+        ...payload,
+        fullName,
+        userIdentification,
+      };
+    }
+    const furnitureUpdated = await this.furnitureRepository.updateFurnitureById(
+      id,
+      furnitureMutated ?? payload
+    );
+    return new ApiResponse(furnitureUpdated, EResponseCodes.OK);
   }
 }

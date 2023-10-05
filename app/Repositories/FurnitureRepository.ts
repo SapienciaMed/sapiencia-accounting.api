@@ -3,16 +3,24 @@ import {
   FURNITURE_SQL_ERROR,
   IDatabaseError,
 } from "App/Constants/DatabaseErrors";
-import { IFiltersFurnitureSchema, IFurniture } from "App/Interfaces/Furniture";
+import {
+  IFiltersFurnitureSchema,
+  IFurniture,
+  IUpdateFurniture,
+} from "App/Interfaces/Furniture";
 import Furniture from "App/Models/Furniture";
 import { IPagingData } from "App/Utils/ApiResponses";
 
 export interface IFurnitureRepository {
   createFurniture(payload: IFurniture): Promise<IFurniture>;
-  getFurnitureById(id: number): Promise<IFurniture>;
+  getFurnitureById(id: number): Promise<Furniture>;
   getAllFurnituresPaginated(
     payload: IFiltersFurnitureSchema
   ): Promise<IPagingData<IFurniture>>;
+  updateFurnitureById(
+    id: number,
+    payload: IUpdateFurniture
+  ): Promise<IFurniture>;
 }
 
 export default class FurnitureRepository implements IFurnitureRepository {
@@ -35,11 +43,7 @@ export default class FurnitureRepository implements IFurnitureRepository {
   // GET FURNITURE BY ID
   public async getFurnitureById(id: number) {
     try {
-      const furnitureQuery = Furniture.query();
-      furnitureQuery.where("id", id);
-      return (
-        await furnitureQuery.firstOrFail()
-      ).serializeAttributes() as IFurniture;
+      return await Furniture.findOrFail(id);
     } catch (err) {
       if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
         throw new Error("Bien mueble inexistente");
@@ -65,7 +69,7 @@ export default class FurnitureRepository implements IFurnitureRepository {
       furnitureQuery.where("description", description);
     }
     if (acquisitionDate) {
-      const auxAcquisitionDate = acquisitionDate.setLocale("zh").toSQLDate();
+      const auxAcquisitionDate = acquisitionDate.toSQLDate();
       if (auxAcquisitionDate !== null) {
         furnitureQuery.where("acquisitionDate", auxAcquisitionDate);
       }
@@ -77,5 +81,13 @@ export default class FurnitureRepository implements IFurnitureRepository {
       await furnitureQuery.paginate(page, perPage)
     ).serialize();
     return { array: data as IFurniture[], meta };
+  }
+  // UPDATE FURNITURE BY ID
+  public async updateFurnitureById(
+    id: number,
+    payload: Partial<Omit<IFurniture, "plate">>
+  ) {
+    const furnitureFound = await this.getFurnitureById(id);
+    return await furnitureFound.merge(payload).save();
   }
 }
