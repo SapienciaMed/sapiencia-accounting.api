@@ -97,7 +97,8 @@ export default class AppProvider {
       () =>
         new FurnitureService.default(
           new FurnitureRepository.default(),
-          new PayrollFurnitureService.default()
+          new PayrollFurnitureService.default(),
+          new GenericMasterService.default()
         )
     );
   }

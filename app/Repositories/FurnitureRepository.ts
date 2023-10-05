@@ -33,7 +33,9 @@ export default class FurnitureRepository implements IFurnitureRepository {
     try {
       const furnitureQuery = Furniture.query();
       furnitureQuery.where("id", id);
-      return await furnitureQuery.firstOrFail();
+      return (
+        await furnitureQuery.firstOrFail()
+      ).serializeAttributes() as IFurniture;
     } catch (err) {
       if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
         throw new Error("Bien mueble inexistente");

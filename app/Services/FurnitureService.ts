@@ -1,21 +1,28 @@
+import { GENERIC_LIST } from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IFurniture, IFurnitureSchema } from "App/Interfaces/Furniture";
+import {
+  IFurniture,
+  IFurnitureMutated,
+  IFurnitureSchema,
+} from "App/Interfaces/Furniture";
 import { IWorkerSelectInfo } from "App/Interfaces/Worker";
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import GenericMasterExternalService from "./external/GenericExternalService";
 import PayrollExternalService from "./external/PayrollExternalService";
 
 export interface IFurnitureService {
   getIdentificationUsersSelectInfo(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
   getWorkersFullNameSelectInfo(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
   createFurniture(payload: IFurnitureSchema): Promise<ApiResponse<IFurniture>>;
-  getFurnitureById(id: number): Promise<ApiResponse<IFurniture>>;
+  getFurnitureById(id: number): Promise<ApiResponse<IFurnitureMutated>>;
 }
 
 export default class FurnitureService implements IFurnitureService {
   constructor(
     private furnitureRepository: FurnitureRepository,
-    private payrollExternalService: PayrollExternalService
+    private payrollExternalService: PayrollExternalService,
+    private genericMasterService: GenericMasterExternalService
   ) {}
   // GET IDENTIFICATION USERS SELECT INFO
   public async getIdentificationUsersSelectInfo() {
@@ -74,6 +81,34 @@ export default class FurnitureService implements IFurnitureService {
   // GET FURNITURE BY ID
   public async getFurnitureById(id: number) {
     const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
-    return new ApiResponse(furnitureFound, EResponseCodes.OK);
+    const { area, equipmentStatus, activeOwner, clerk } = furnitureFound;
+    const { itemDescription: areaName } =
+      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.AREA,
+        area
+      );
+    const { itemDescription: equipmentStatusName } =
+      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.EQUIPMENT_STATUS,
+        equipmentStatus
+      );
+    const { itemDescription: activeOwnerName } =
+      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.ACTIVE_OWNER,
+        activeOwner
+      );
+    const { itemDescription: clerkName } =
+      await this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.CLERK,
+        clerk
+      );
+    const furnitureMutated = {
+      ...furnitureFound,
+      area: areaName,
+      equipmentStatus: equipmentStatusName,
+      activeOwner: activeOwnerName,
+      clerk: clerkName,
+    };
+    return new ApiResponse(furnitureMutated, EResponseCodes.OK);
   }
 }
