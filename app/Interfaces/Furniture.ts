@@ -48,9 +48,11 @@ export type IFurnitureSchema = {
   clerk: number;
 };
 
-export interface IFurnitureUpdateSchema extends IDataPaginateFilters {
+export interface IFiltersFurnitureSchema extends IDataPaginateFilters {
   plate?: string;
   description?: string;
   acquisitionDate?: DateTime;
   equipmentStatus?: number;
 }
+
+export type IUpdateFurnitureSchema = Partial<Omit<IFurnitureSchema, "plate">>;

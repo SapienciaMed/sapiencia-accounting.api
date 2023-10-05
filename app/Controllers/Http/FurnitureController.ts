@@ -3,13 +3,13 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import FurnitureProvider from "@ioc:core.FurnitureProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
+  IFiltersFurnitureSchema,
   IFurnitureSchema,
-  IFurnitureUpdateSchema,
 } from "App/Interfaces/Furniture";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { createFurnitureSchema } from "App/Validators/Furniture/createFurnitureSchema";
-import { updateFurnitureSchema } from "App/Validators/Furniture/updateFurnitureSchema";
+import { filtersFurnitureSchema } from "App/Validators/Furniture/filtersFurnitureSchema";
 
 export default class ContractController {
   // GET IDENTIFICATION USERS SELECT INFO
@@ -72,9 +72,9 @@ export default class ContractController {
   // GET ALL FURNITURES PAGINATED
   public async getAllFurnituresPaginated(ctx: HttpContext) {
     const { request, response, logger } = ctx;
-    let payload: IFurnitureUpdateSchema;
+    let payload: IFiltersFurnitureSchema;
     try {
-      payload = await request.validate({ schema: updateFurnitureSchema });
+      payload = await request.validate({ schema: filtersFurnitureSchema });
     } catch (err) {
       return DBException.badRequest(ctx, err);
     }
@@ -83,6 +83,24 @@ export default class ContractController {
         payload
       );
       return response.ok(furnituresFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // UPDATE FURNITURE BY ID
+  public async updateFurnitureById(ctx: HttpContext) {
+    // const { request, response, logger } = ctx;
+    const { response, logger } = ctx;
+    // let payload: IUpdateFurnitureSchema;
+    // try {
+    //   payload = await request.validate({ schema: updateFurnitureSchema });
+    // } catch (err) {
+    //   return DBException.badRequest(ctx, err);
+    // }
+    try {
+      return response.ok({});
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

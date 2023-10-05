@@ -1,10 +1,10 @@
 import { GENERIC_LIST } from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
+  IFiltersFurnitureSchema,
   IFurniture,
   IFurnitureMutated,
   IFurnitureSchema,
-  IFurnitureUpdateSchema,
 } from "App/Interfaces/Furniture";
 import { IWorkerSelectInfo } from "App/Interfaces/Worker";
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
@@ -18,7 +18,7 @@ export interface IFurnitureService {
   createFurniture(payload: IFurnitureSchema): Promise<ApiResponse<IFurniture>>;
   getFurnitureById(id: number): Promise<ApiResponse<IFurnitureMutated>>;
   getAllFurnituresPaginated(
-    payload: IFurnitureUpdateSchema
+    payload: IFiltersFurnitureSchema
   ): Promise<ApiResponse<IPagingData<IFurnitureMutated>>>;
   getCompleteFurnitureInfo(furniture: IFurniture): Promise<IFurnitureMutated>;
 }
@@ -131,7 +131,7 @@ export default class FurnitureService implements IFurnitureService {
     return new ApiResponse(furnitureMutated, EResponseCodes.OK);
   }
   // GET ALL FURNITURES PAGINATED
-  public async getAllFurnituresPaginated(payload: IFurnitureUpdateSchema) {
+  public async getAllFurnituresPaginated(payload: IFiltersFurnitureSchema) {
     const { array: furnituresFound, meta } =
       await this.furnitureRepository.getAllFurnituresPaginated(payload);
     let furnituresMutated: IFurnitureMutated[] = [];

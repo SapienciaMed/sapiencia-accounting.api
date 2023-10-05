@@ -124,5 +124,9 @@ Route.group(() => {
       "/get-all-paginated",
       "FurnitureController.getAllFurnituresPaginated"
     );
+    Route.put(
+      "/:id/update-by-id",
+      "FurnitureController.updateFurnitureById"
+    ).where("id", Route.matchers.number());
   }).prefix("/furniture");
 }).prefix("/api/v1");
