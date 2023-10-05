@@ -54,7 +54,7 @@ export default class extends BaseSchema {
       table
         .string("BIE_MARCA", 50)
         .notNullable()
-        .comment("Modelo del bien inmueble.");
+        .comment("Marca del bien inmueble.");
       table
         .string("BIE_MEDIDAS", 20)
         .notNullable()

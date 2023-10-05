@@ -62,7 +62,7 @@ export default class Furniture extends BaseModel {
 
   @column({
     columnName: "BIE_MARCA",
-    serializeAs: "model",
+    serializeAs: "brand",
   })
   public brand: string;
 
