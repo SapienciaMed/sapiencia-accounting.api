@@ -53,7 +53,7 @@ export default class AccountStatementRepository
       accountStatementQuery.where("contractCode", contractCode);
     }
     if (expeditionDate) {
-      const auxExpeditionDate = expeditionDate.setLocale("zh").toSQLDate();
+      const auxExpeditionDate = expeditionDate.toSQLDate();
       if (auxExpeditionDate !== null) {
         accountStatementQuery.where("expeditionDate", auxExpeditionDate);
       }

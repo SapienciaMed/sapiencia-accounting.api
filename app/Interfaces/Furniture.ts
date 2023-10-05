@@ -55,4 +55,31 @@ export interface IFiltersFurnitureSchema extends IDataPaginateFilters {
   equipmentStatus?: number;
 }
 
-export type IUpdateFurnitureSchema = Partial<Omit<IFurnitureSchema, "plate">>;
+export type IUpdateFurnitureSchema = {
+  description?: string;
+  acquisitionDate?: DateTime;
+  equipmentStatus?: number;
+  workerId?: number;
+  area?: number;
+  model?: string;
+  brand?: string;
+  measure?: string;
+  activeOwner?: number;
+  observation?: string;
+  clerk?: number;
+};
+
+export type IUpdateFurniture = {
+  description?: string;
+  acquisitionDate?: DateTime;
+  equipmentStatus?: number;
+  userIdentification: string;
+  fullName: string;
+  area?: number;
+  model?: string;
+  brand?: string;
+  measure?: string;
+  activeOwner?: number;
+  observation?: string;
+  clerk?: number;
+};
