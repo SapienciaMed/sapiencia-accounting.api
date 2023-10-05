@@ -1,3 +1,4 @@
+import { IDataPaginateFilters } from "App/Utils/ApiResponses";
 import { DateTime } from "luxon";
 
 export type IFurniture = {
@@ -46,3 +47,10 @@ export type IFurnitureSchema = {
   observation: string;
   clerk: number;
 };
+
+export interface IFurnitureUpdateSchema extends IDataPaginateFilters {
+  plate?: string;
+  description?: string;
+  acquisitionDate?: DateTime;
+  equipmentStatus?: number;
+}

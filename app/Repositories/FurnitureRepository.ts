@@ -3,12 +3,16 @@ import {
   FURNITURE_SQL_ERROR,
   IDatabaseError,
 } from "App/Constants/DatabaseErrors";
-import { IFurniture } from "App/Interfaces/Furniture";
+import { IFurniture, IFurnitureUpdateSchema } from "App/Interfaces/Furniture";
 import Furniture from "App/Models/Furniture";
+import { IPagingData } from "App/Utils/ApiResponses";
 
 export interface IFurnitureRepository {
   createFurniture(payload: IFurniture): Promise<IFurniture>;
   getFurnitureById(id: number): Promise<IFurniture>;
+  getAllFurnituresPaginated(
+    payload: IFurnitureUpdateSchema
+  ): Promise<IPagingData<IFurniture>>;
 }
 
 export default class FurnitureRepository implements IFurnitureRepository {
@@ -42,5 +46,33 @@ export default class FurnitureRepository implements IFurnitureRepository {
       }
       throw new Error(err);
     }
+  }
+  // GET ALL FURNITURES PAGINATED
+  public async getAllFurnituresPaginated(payload: IFurnitureUpdateSchema) {
+    const {
+      page,
+      perPage,
+      plate,
+      description,
+      acquisitionDate,
+      equipmentStatus,
+    } = payload;
+    const furnitureQuery = Furniture.query();
+    if (plate) {
+      furnitureQuery.where("plate", plate);
+    }
+    if (description) {
+      furnitureQuery.where("description", description);
+    }
+    if (acquisitionDate) {
+      // furnitureQuery.where("acquisitionDate", acquisitionDate)
+    }
+    if (equipmentStatus) {
+      furnitureQuery.where("equipmentStatus", equipmentStatus);
+    }
+    const { data, meta } = (
+      await furnitureQuery.paginate(page, perPage)
+    ).serialize();
+    return { array: data as IFurniture[], meta };
   }
 }

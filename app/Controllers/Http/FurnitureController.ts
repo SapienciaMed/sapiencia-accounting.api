@@ -1,10 +1,15 @@
+import { HttpContext } from "@adonisjs/core/build/standalone";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import FurnitureProvider from "@ioc:core.FurnitureProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IFurnitureSchema } from "App/Interfaces/Furniture";
+import {
+  IFurnitureSchema,
+  IFurnitureUpdateSchema,
+} from "App/Interfaces/Furniture";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { createFurnitureSchema } from "App/Validators/Furniture/createFurnitureSchema";
+import { updateFurnitureSchema } from "App/Validators/Furniture/updateFurnitureSchema";
 
 export default class ContractController {
   // GET IDENTIFICATION USERS SELECT INFO
@@ -58,6 +63,26 @@ export default class ContractController {
       const { id } = request.params();
       const furnitureFound = await FurnitureProvider.getFurnitureById(id);
       return response.ok(furnitureFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ALL FURNITURES PAGINATED
+  public async getAllFurnituresPaginated(ctx: HttpContext) {
+    const { request, response, logger } = ctx;
+    let payload: IFurnitureUpdateSchema;
+    try {
+      payload = await request.validate({ schema: updateFurnitureSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const furnituresFound = await FurnitureProvider.getAllFurnituresPaginated(
+        payload
+      );
+      return response.ok(furnituresFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

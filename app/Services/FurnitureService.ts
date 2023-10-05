@@ -4,10 +4,11 @@ import {
   IFurniture,
   IFurnitureMutated,
   IFurnitureSchema,
+  IFurnitureUpdateSchema,
 } from "App/Interfaces/Furniture";
 import { IWorkerSelectInfo } from "App/Interfaces/Worker";
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
-import { ApiResponse } from "App/Utils/ApiResponses";
+import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import GenericMasterExternalService from "./external/GenericExternalService";
 import PayrollExternalService from "./external/PayrollExternalService";
 
@@ -16,6 +17,10 @@ export interface IFurnitureService {
   getWorkersFullNameSelectInfo(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
   createFurniture(payload: IFurnitureSchema): Promise<ApiResponse<IFurniture>>;
   getFurnitureById(id: number): Promise<ApiResponse<IFurnitureMutated>>;
+  getAllFurnituresPaginated(
+    payload: IFurnitureUpdateSchema
+  ): Promise<ApiResponse<IPagingData<IFurnitureMutated>>>;
+  getCompleteFurnitureInfo(furniture: IFurniture): Promise<IFurnitureMutated>;
 }
 
 export default class FurnitureService implements IFurnitureService {
@@ -78,10 +83,9 @@ export default class FurnitureService implements IFurnitureService {
     );
     return new ApiResponse(newFurniture, EResponseCodes.OK);
   }
-  // GET FURNITURE BY ID
-  public async getFurnitureById(id: number) {
-    const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
-    const { area, equipmentStatus, activeOwner, clerk } = furnitureFound;
+  // GET COMPLETE FURNITURE INFO
+  public async getCompleteFurnitureInfo(furniture: IFurniture) {
+    const { area, equipmentStatus, activeOwner, clerk } = furniture;
     const areaPromise =
       this.genericMasterService.getGenericItemDescriptionByItemCode(
         GENERIC_LIST.AREA,
@@ -110,12 +114,34 @@ export default class FurnitureService implements IFurnitureService {
         clerkPromise,
       ]);
     const furnitureMutated = {
-      ...furnitureFound,
+      ...furniture,
       area: areaItem.itemDescription,
       equipmentStatus: equipmentStatusItem.itemDescription,
       activeOwner: activeOwnerItem.itemDescription,
       clerk: clerkItem.itemDescription,
     };
+    return furnitureMutated;
+  }
+  // GET FURNITURE BY ID
+  public async getFurnitureById(id: number) {
+    const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
+    const furnitureMutated = await this.getCompleteFurnitureInfo(
+      furnitureFound
+    );
     return new ApiResponse(furnitureMutated, EResponseCodes.OK);
+  }
+  // GET ALL FURNITURES PAGINATED
+  public async getAllFurnituresPaginated(payload: IFurnitureUpdateSchema) {
+    const { array: furnituresFound, meta } =
+      await this.furnitureRepository.getAllFurnituresPaginated(payload);
+    let furnituresMutated: IFurnitureMutated[] = [];
+    for (let furniture of furnituresFound) {
+      const auxFurniture = await this.getCompleteFurnitureInfo(furniture);
+      furnituresMutated.push(auxFurniture);
+    }
+    return new ApiResponse(
+      { array: furnituresMutated, meta },
+      EResponseCodes.OK
+    );
   }
 }

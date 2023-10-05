@@ -120,5 +120,9 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.post(
+      "/get-all-paginated",
+      "FurnitureController.getAllFurnituresPaginated"
+    );
   }).prefix("/furniture");
 }).prefix("/api/v1");
