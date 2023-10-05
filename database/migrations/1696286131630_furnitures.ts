@@ -15,7 +15,7 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Llave primaria.");
       table
-        .string("BIE_PLACA_ACTIVO", 15)
+        .string("BIE_PLACA_ACTIVO", 50)
         .unique()
         .notNullable()
         .comment("Valor que indica la placa del bien inmueble.");
@@ -56,7 +56,7 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Marca del bien inmueble.");
       table
-        .string("BIE_MEDIDAS", 20)
+        .string("BIE_MEDIDAS", 50)
         .notNullable()
         .comment("Medidas del modelo.");
       table
