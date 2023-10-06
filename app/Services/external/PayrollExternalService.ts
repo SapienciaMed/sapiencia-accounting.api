@@ -6,6 +6,7 @@ import axios, { AxiosInstance } from "axios";
 export interface IPayrollExternalService {
   getAllWorkers(): Promise<IWorker[]>;
   getWorkerById(id: number): Promise<{ worker: IWorker }>;
+  getWorkerByDocument(document: string): Promise<IWorker>;
 }
 
 export default class PayrollExternalService implements IPayrollExternalService {
@@ -34,5 +35,20 @@ export default class PayrollExternalService implements IPayrollExternalService {
       throw new Error(`Empleado con id ${id} no existe`);
     }
     return resp.data;
+  }
+  // GET WORKER BY DOCUMENT
+  public async getWorkerByDocument(document: string) {
+    const endpoint = "/vinculation/worker/get-by-filters";
+    const body = {
+      documentList: [document],
+    };
+    const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
+      endpoint,
+      body
+    );
+    if (resp.data.length === 0) {
+      throw new Error(`No existen usuarios con documento ${document}`);
+    }
+    return resp.data[0];
   }
 }

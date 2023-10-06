@@ -4,6 +4,7 @@ import {
   IFiltersFurnitureSchema,
   IFurniture,
   IFurnitureMutated,
+  IFurnitureRaw,
   IFurnitureSchema,
   IUpdateFurniture,
   IUpdateFurnitureSchema,
@@ -19,6 +20,7 @@ export interface IFurnitureService {
   getWorkersFullNameSelectInfo(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
   createFurniture(payload: IFurnitureSchema): Promise<ApiResponse<IFurniture>>;
   getFurnitureById(id: number): Promise<ApiResponse<IFurnitureMutated>>;
+  getFurnitureByIdRaw(id: number): Promise<ApiResponse<IFurnitureRaw>>;
   getAllFurnituresPaginated(
     payload: IFiltersFurnitureSchema
   ): Promise<ApiResponse<IPagingData<IFurnitureMutated>>>;
@@ -135,6 +137,23 @@ export default class FurnitureService implements IFurnitureService {
     const furnitureMutated = await this.getCompleteFurnitureInfo(
       furnitureFound.serializeAttributes() as IFurniture
     );
+    return new ApiResponse(furnitureMutated, EResponseCodes.OK);
+  }
+  // GET FURNITURE BY ID
+  public async getFurnitureByIdRaw(id: number) {
+    const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
+    const furnitureSerialized =
+      furnitureFound.serializeAttributes() as IFurnitureRaw;
+    const { id: workerId } =
+      await this.payrollExternalService.getWorkerByDocument(
+        furnitureFound.userIdentification
+      );
+    const furnitureMutated = {
+      ...furnitureSerialized,
+      workerId,
+    };
+    delete furnitureMutated.fullName;
+    delete furnitureMutated.userIdentification;
     return new ApiResponse(furnitureMutated, EResponseCodes.OK);
   }
   // GET ALL FURNITURES PAGINATED

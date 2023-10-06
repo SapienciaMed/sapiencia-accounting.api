@@ -17,6 +17,22 @@ export type IFurniture = {
   clerk: number; // BIE_FUNCIONARIO
 };
 
+export type IFurnitureRaw = {
+  plate: string;
+  description: string;
+  acquisitionDate: DateTime;
+  equipmentStatus: number;
+  userIdentification?: string;
+  fullName?: string;
+  area: number;
+  model: string;
+  brand: string;
+  measure: string;
+  activeOwner: number;
+  observation: string;
+  clerk: number;
+};
+
 export type IFurnitureMutated = {
   plate: string;
   description: string;
