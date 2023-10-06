@@ -71,6 +71,19 @@ export default class ContractController {
       return response.badRequest(apiResp);
     }
   }
+  // GET FURNITURE BY ID RAW
+  public async getFurnitureByIdRaw(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const furnitureFound = await FurnitureProvider.getFurnitureByIdRaw(id);
+      return response.ok(furnitureFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
   // GET ALL FURNITURES PAGINATED
   public async getAllFurnituresPaginated(ctx: HttpContext) {
     const { request, response, logger } = ctx;

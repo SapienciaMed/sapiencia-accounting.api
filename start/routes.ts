@@ -120,6 +120,10 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.get(
+      "/:id/get-by-id-raw",
+      "FurnitureController.getFurnitureByIdRaw"
+    ).where("id", Route.matchers.number());
     Route.post(
       "/get-all-paginated",
       "FurnitureController.getAllFurnituresPaginated"
