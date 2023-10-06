@@ -19,8 +19,8 @@ export default class PayrollExternalService implements IPayrollExternalService {
   }
   // GET ALL WORKERS
   public async getAllWorkers() {
-    const endpoint = `${this.baseURL}/vinculation/worker`;
-    const { data: resp } = await this.apiPayroll.get<ApiResponse<IWorker[]>>(
+    const endpoint = `/vinculation/worker/get-by-filters`;
+    const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
       endpoint
     );
     return resp.data;
