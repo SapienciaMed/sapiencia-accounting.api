@@ -10,8 +10,8 @@ export default class extends BaseSeeder {
       {
         area: 1, // TI
         equipmentStatus: 1, // ASIGNADO
-        userIdentification: "71210748",
-        fullName: "EMERSON MACHADO",
+        userIdentification: "1234454",
+        fullName: "Jhon James doe pete",
         clerk: 2, // CONTRATISTA
         acquisitionDate: DateTime.fromISO("2023-07-05"),
         description: "PORTATIL",
@@ -25,8 +25,8 @@ export default class extends BaseSeeder {
       {
         area: 1, // TI
         equipmentStatus: 1, // ASIGNADO
-        userIdentification: "71210748",
-        fullName: "EMERSON MACHADO",
+        userIdentification: "998978",
+        fullName: "Jhon James Doe Pardo",
         clerk: 2, // CONTRATISTA
         acquisitionDate: DateTime.fromISO("2023-02-05"),
         description: "PORTATIL",
@@ -40,8 +40,8 @@ export default class extends BaseSeeder {
       {
         area: 13, // CARTERA
         equipmentStatus: 1, // ASIGNADO
-        userIdentification: "98522264",
-        fullName: "CARLOS EDUARDO LONDOÑO GARCÉS",
+        userIdentification: "1030523782",
+        fullName: "Jeisson Andrés Gonzaléz Martínez",
         clerk: 2, // CONTRATISTA
         acquisitionDate: DateTime.fromISO("2023-12-24"),
         description: "PORTATIL",
@@ -55,8 +55,8 @@ export default class extends BaseSeeder {
       {
         area: 1, // PLANEACIÓN
         equipmentStatus: 1, // ASIGNADO
-        userIdentification: "71210748",
-        fullName: "EMERSON MACHADO",
+        userIdentification: "51691338",
+        fullName: "Gladys Jimena Rosenda Tenerife",
         clerk: 2, // CONTRATISTA
         acquisitionDate: DateTime.fromISO("2023-06-22"),
         description: "PORTATIL",
@@ -70,8 +70,8 @@ export default class extends BaseSeeder {
       {
         area: 1, // TI
         equipmentStatus: 1, // ASIGNADO
-        userIdentification: "1036621874",
-        fullName: "JHON ALEXIS FERLA PEREZ",
+        userIdentification: "53331331",
+        fullName: "Angelica Juliana Sastoque Fitzgerald",
         clerk: 2, // CONTRATISTA
         acquisitionDate: DateTime.fromISO("2023-06-15"),
         description: "PORTATIL",
@@ -85,8 +85,8 @@ export default class extends BaseSeeder {
       {
         area: 3, // GEP
         equipmentStatus: 1, // ASIGNADO
-        userIdentification: "71729412",
-        fullName: "GERMAN AUGUSTO FORERO PELAEZ",
+        userIdentification: "88741741",
+        fullName: "Jorge Segundo Isaacs De la rosa",
         clerk: 2, // CONTRATISTA
         acquisitionDate: DateTime.fromISO("2013-12-27"),
         description: "ALL-IN-ONE",
