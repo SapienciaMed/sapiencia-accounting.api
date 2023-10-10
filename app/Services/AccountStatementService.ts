@@ -168,11 +168,11 @@ export default class AccountStatementService
       },
       {
         name: "FECHA EXPEDICIÓN",
-        size: 20,
+        size: 30,
       },
       {
         name: "FECHA DE VENCIMIENTO",
-        size: 20,
+        size: 30,
       },
       {
         name: "NIT",
