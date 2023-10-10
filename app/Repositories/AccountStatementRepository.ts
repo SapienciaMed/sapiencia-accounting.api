@@ -32,7 +32,7 @@ export default class AccountStatementRepository
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatement) {
     const newAccountStatement = new AccountStatement();
-    await newAccountStatement.fill({ ...payload }).save();
+    await newAccountStatement.fill(payload).save();
     return newAccountStatement.serialize() as IAccountStatement;
   }
   // GET ALL ACCOUNT STATEMENT FILTERED

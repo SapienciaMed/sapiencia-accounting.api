@@ -27,8 +27,11 @@ export default class Furniture extends BaseModel {
     columnName: "BIE_FECHA_ADQUISICION",
     serializeAs: "acquisitionDate",
     prepare: (value: DateTime) => value.toSQLDate(),
-    serialize: (value: DateTime) => {
-      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
+    serialize: (value: Date) => {
+      const parsedValue = DateTime.fromJSDate(value);
+      return parsedValue
+        ? parsedValue.setLocale("zh").toFormat("yyyy/MM/dd")
+        : value;
     },
   })
   public acquisitionDate: DateTime;
