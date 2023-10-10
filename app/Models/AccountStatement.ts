@@ -1,6 +1,5 @@
 import { BaseModel, column, hasOne, HasOne } from "@ioc:Adonis/Lucid/Orm";
 import { DateTime } from "luxon";
-import moment from "moment-timezone";
 import AccountStatementTracking from "./AccountStatementTracking";
 import Contract from "./Contract";
 
@@ -38,9 +37,7 @@ export default class AccountStatement extends BaseModel {
     columnName: "CTC_FECHA_EXPEDICION",
     serializeAs: "expeditionDate",
     serialize: (value: DateTime) => {
-      const m = moment(value.toISO());
-      console.log(m);
-      return m.tz("America/Bogota").format("DD/MM/YYYY");
+      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
     },
   })
   public expeditionDate: DateTime;
