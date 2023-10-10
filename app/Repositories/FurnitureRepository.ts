@@ -27,7 +27,9 @@ export default class FurnitureRepository implements IFurnitureRepository {
   // CREATE FURNITURE
   public async createFurniture(payload: IFurniture) {
     try {
-      return await Furniture.create(payload);
+      const newFurniture = new Furniture();
+      await newFurniture.fill(payload).save();
+      return newFurniture.serialize() as IFurniture;
     } catch (err) {
       const { code, sqlMessage } = err as IDatabaseError;
       switch (code) {
