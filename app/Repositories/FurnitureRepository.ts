@@ -69,10 +69,13 @@ export default class FurnitureRepository implements IFurnitureRepository {
       furnitureQuery.where("description", description);
     }
     if (acquisitionDate) {
-      const auxAcquisitionDate = acquisitionDate.toSQLDate();
-      if (auxAcquisitionDate !== null) {
-        furnitureQuery.where("acquisitionDate", auxAcquisitionDate);
-      }
+      const startDate = acquisitionDate
+        .startOf("day")
+        .toFormat("yyyy-MM-dd HH:mm:ss");
+      const endDate = acquisitionDate
+        .endOf("day")
+        .toFormat("yyyy-MM-dd HH:mm:ss");
+      furnitureQuery.whereBetween("acquisitionDate", [startDate, endDate]);
     }
     if (equipmentStatus) {
       furnitureQuery.where("equipmentStatus", equipmentStatus);
