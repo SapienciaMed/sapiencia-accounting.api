@@ -1,4 +1,5 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { tzToAmericaBogota } from "App/Utils/moment";
 import { DateTime } from "luxon";
 
 export default class Furniture extends BaseModel {
@@ -27,7 +28,7 @@ export default class Furniture extends BaseModel {
     columnName: "BIE_FECHA_ADQUISICION",
     serializeAs: "acquisitionDate",
     prepare: (value: DateTime) => value.toSQLDate(),
-    serialize: (value: Date) => DateTime.fromJSDate(value).toISO(),
+    serialize: (value: string) => tzToAmericaBogota(value),
   })
   public acquisitionDate: DateTime;
 

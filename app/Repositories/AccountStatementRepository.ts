@@ -59,6 +59,7 @@ export default class AccountStatementRepository
       const endDate = expeditionDate
         .endOf("day")
         .toFormat("yyyy-MM-dd HH:mm:ss");
+      console.log(startDate, endDate);
       accountStatementQuery.whereBetween("expeditionDate", [
         startDate,
         endDate,
