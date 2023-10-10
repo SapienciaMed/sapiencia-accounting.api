@@ -39,6 +39,7 @@ export default class AccountStatement extends BaseModel {
     serializeAs: "expeditionDate",
     serialize: (value: DateTime) => {
       const m = moment(value.toISO());
+      console.log(m);
       return m.tz("America/Bogota").format("DD/MM/YYYY");
     },
   })
