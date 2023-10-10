@@ -26,7 +26,7 @@ export default class Furniture extends BaseModel {
   @column({
     columnName: "BIE_FECHA_ADQUISICION",
     serializeAs: "acquisitionDate",
-    prepare: (value: string) => DateTime.fromSQL(value).toISO(),
+    prepare: (value: DateTime) => value.toSQLDate(),
   })
   public acquisitionDate: DateTime;
 

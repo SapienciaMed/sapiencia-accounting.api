@@ -74,7 +74,6 @@ export default class FurnitureService implements IFurnitureService {
     const workerFound = await this.payrollExternalService.getWorkerById(
       payload.workerId
     );
-    console.log(workerFound);
     const {
       firstName,
       secondName = "",
