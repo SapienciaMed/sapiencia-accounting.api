@@ -7,7 +7,12 @@ export const createFurnitureSchema = schema.create({
     rules.trim(),
     rules.maxLength(200),
   ]),
-  acquisitionDate: schema.date({}, [rules.required()]),
+  acquisitionDate: schema.date(
+    {
+      format: "sql",
+    },
+    [rules.required()]
+  ),
   equipmentStatus: schema.number([rules.required(), rules.unsigned()]),
   workerId: schema.number([rules.required(), rules.unsigned()]),
   area: schema.number([rules.required(), rules.unsigned()]),
