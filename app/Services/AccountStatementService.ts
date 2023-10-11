@@ -160,19 +160,19 @@ export default class AccountStatementService
     const columns = [
       {
         name: "CONTRATO",
-        size: 30,
-      },
-      {
-        name: "N° CXC",
         size: 15,
       },
       {
+        name: "N° CXC",
+        size: 10,
+      },
+      {
         name: "FECHA EXPEDICIÓN",
-        size: 30,
+        size: 25,
       },
       {
         name: "FECHA DE VENCIMIENTO",
-        size: 30,
+        size: 25,
       },
       {
         name: "NIT",
@@ -197,7 +197,7 @@ export default class AccountStatementService
         [
           curr.contract.contractId,
           String(curr.accountNum),
-          DateTime.fromISO(curr.expeditionDate).toSQLDate() ?? "",
+          curr.expeditionDate.replace(/\//g, "-") ?? "",
           DateTime.fromISO(curr.expirationDate).toSQLDate() ?? "",
           curr.contract.business.nit,
           curr.contract.business.name,
