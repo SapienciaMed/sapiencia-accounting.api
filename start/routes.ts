@@ -59,13 +59,10 @@ Route.group(() => {
     Route.get(
       "/:id/generate-account-statement-pdf",
       "AccountStatementController.generateAccountStatementPDF"
-    )
-      .where("id", Route.matchers.number())
-      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
-    Route.get(
-      "/generate-xlsx",
-      "AccountStatementController.generateXLSX"
-    ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
+    ).where("id", Route.matchers.number());
+    // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
+    Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
+    // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
   }).prefix("/account-statement");
   // ACCOUNT STATEMENT STATUS
   Route.group(() => {
