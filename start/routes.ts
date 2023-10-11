@@ -19,45 +19,60 @@
 */
 
 import Route from "@ioc:Adonis/Core/Route";
+import { PERMISSIONS } from "App/Constants/Permissions";
 
 Route.get("/", () => "SAPIENCIA ACCOUNTING API");
 
 Route.group(() => {
   // ACCOUNT STATEMENT
   Route.group(() => {
-    Route.post("/", "AccountStatementController.createAccountStatement");
+    Route.post(
+      "/",
+      "AccountStatementController.createAccountStatement"
+    ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_CREATE}`);
     Route.post(
       "/get-paginated",
       "AccountStatementController.getAccountStatementFiltered"
-    );
+    ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_CONSULT}`);
     Route.get(
       "/get-last",
       "AccountStatementController.getLastAccountStatement"
-    );
+    ).middleware("auth");
     Route.put(
       "/update/:id",
       "AccountStatementController.updateAccountStatement"
-    ).where("id", Route.matchers.number());
+    )
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_UPDATE}`);
     Route.get(
       "/get-by-id/:id",
       "AccountStatementController.getAccountStatementById"
-    ).where("id", Route.matchers.number());
+    )
+      .where("id", Route.matchers.number())
+      .middleware("auth");
     Route.get(
       "/:accountNum/get-by-account-number",
       "AccountStatementController.getAccountStatementByAccountNum"
-    ).where("accountNum", Route.matchers.number());
+    )
+      .where("accountNum", Route.matchers.number())
+      .middleware("auth");
     Route.get(
       "/:id/generate-account-statement-pdf",
       "AccountStatementController.generateAccountStatementPDF"
-    ).where("id", Route.matchers.number());
-    Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
+    )
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
+    Route.get(
+      "/generate-xlsx",
+      "AccountStatementController.generateXLSX"
+    ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
   }).prefix("/account-statement");
   // ACCOUNT STATEMENT STATUS
   Route.group(() => {
     Route.get(
       "/get-all",
       "AccountStatementStatusController.getAllAccountStatementStatus"
-    );
+    ).middleware("auth");
   }).prefix("/account-statement-status");
   // ACCOUNT STATEMENT TRACKING
   Route.group(() => {
@@ -65,72 +80,80 @@ Route.group(() => {
       "/:accountStatementId/update-or-create",
       "AccountStatementTrackingController.updateOrCreateAccountStatementTracking"
     ).where("accountStatementId", Route.matchers.number());
-  }).prefix("/account-statement-tracking");
+  })
+    .prefix("/account-statement-tracking")
+    .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_TRACKING_UPDATE}`);
   // BUSINESS
   Route.group(() => {
-    Route.post("/", "BusinessController.createBusiness");
-    Route.get("/:id/get-by-id", "BusinessController.getBusinessById").where(
-      "id",
-      Route.matchers.number()
+    Route.post("/", "BusinessController.createBusiness").middleware(
+      `auth:${PERMISSIONS.BUSINESS_CREATE}`
     );
-    Route.post("/get-paginated", "BusinessController.getBusinessPaginated");
-    Route.put("/:id/update", "BusinessController.updateBusiness").where(
-      "id",
-      Route.matchers.number()
-    );
+    Route.get("/:id/get-by-id", "BusinessController.getBusinessById")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
+    Route.post(
+      "/get-paginated",
+      "BusinessController.getBusinessPaginated"
+    ).middleware(`auth:${PERMISSIONS.BUSINESS_CONSULT}`);
+    Route.put("/:id/update", "BusinessController.updateBusiness")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.BUSINESS_UPDATE}`);
     Route.get(
       "/get-all-business-info",
       "BusinessController.getAllBusinessInfo"
-    );
-    Route.delete("/:id/delete", "BusinessController.deleteBusinessById").where(
-      "id",
-      Route.matchers.number()
-    );
+    ).middleware("auth");
+    Route.delete("/:id/delete", "BusinessController.deleteBusinessById")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.BUSINESS_DELETE}`);
   }).prefix("/business");
   // CONTRACT
   Route.group(() => {
-    Route.post("/create", "ContractController.createContract");
-    Route.post("/get-paginated", "ContractController.getContractPaginated");
-    Route.get("/get-info-select", "ContractController.getContractInfoSelect");
-    Route.get("/:id/get-by-id", "ContractController.getContractById").where(
-      "id",
-      Route.matchers.number()
+    Route.post("/create", "ContractController.createContract").middleware(
+      `auth:${PERMISSIONS.CONTRACT_CREATE}`
     );
-    Route.put(
-      "/:id/update-by-id",
-      "ContractController.updateContractById"
-    ).where("id", Route.matchers.number());
-    Route.delete(
-      "/:id/delete-by-id",
-      "ContractController.deleteContractById"
-    ).where("id", Route.matchers.number());
+    Route.post(
+      "/get-paginated",
+      "ContractController.getContractPaginated"
+    ).middleware(`auth:${PERMISSIONS.CONTRACT_CONSULT}`);
+    Route.get(
+      "/get-info-select",
+      "ContractController.getContractInfoSelect"
+    ).middleware("auth");
+    Route.get("/:id/get-by-id", "ContractController.getContractById")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
+    Route.put("/:id/update-by-id", "ContractController.updateContractById")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.CONTRACT_UPDATE}`);
+    Route.delete("/:id/delete-by-id", "ContractController.deleteContractById")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.CONTRACT_DELETE}`);
   }).prefix("/contract");
   // BIEN INMUEBLE
   Route.group(() => {
     Route.get(
       "/get-identification-users-select-info",
       "FurnitureController.getIdentificationUsersSelectInfo"
-    );
+    ).middleware("auth");
     Route.get(
       "/get-workers-full-name-select-info",
       "FurnitureController.getWorkersFullNameSelectInfo"
+    ).middleware("auth");
+    Route.post("/create", "FurnitureController.createFurniture").middleware(
+      `auth:${PERMISSIONS.FURNITURE_CREATE}`
     );
-    Route.post("/create", "FurnitureController.createFurniture");
-    Route.get("/:id/get-by-id", "FurnitureController.getFurnitureById").where(
-      "id",
-      Route.matchers.number()
-    );
-    Route.get(
-      "/:id/get-by-id-raw",
-      "FurnitureController.getFurnitureByIdRaw"
-    ).where("id", Route.matchers.number());
+    Route.get("/:id/get-by-id", "FurnitureController.getFurnitureById")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
+    Route.get("/:id/get-by-id-raw", "FurnitureController.getFurnitureByIdRaw")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.FURNITURE_DETAIL}`);
     Route.post(
       "/get-all-paginated",
       "FurnitureController.getAllFurnituresPaginated"
-    );
-    Route.put(
-      "/:id/update-by-id",
-      "FurnitureController.updateFurnitureById"
-    ).where("id", Route.matchers.number());
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_CONSULT}`);
+    Route.put("/:id/update-by-id", "FurnitureController.updateFurnitureById")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
   }).prefix("/furniture");
 }).prefix("/api/v1");
