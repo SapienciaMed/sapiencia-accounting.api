@@ -10,7 +10,7 @@ export default class AppProvider {
     /******************************** SERVICES ********************************/
     /**************************************************************************/
     const AccountStatementService = await import(
-      "App/Services/AccountStatementService"
+      "App/Services/AccountStatementService/AccountStatementService"
     );
     const AccountStatementStatusService = await import(
       "App/Services/AccountStatementStatusService"
@@ -20,7 +20,9 @@ export default class AppProvider {
     );
     const BusinessService = await import("App/Services/BusinessService");
     const ContractService = await import("App/Services/ContractService");
-    const FurnitureService = await import("App/Services/FurnitureService");
+    const FurnitureService = await import(
+      "App/Services/FurnitureService/FurnitureService"
+    );
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/

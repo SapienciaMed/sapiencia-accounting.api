@@ -12,8 +12,14 @@ import {
 import { IWorker, IWorkerSelectInfo } from "App/Interfaces/Worker";
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
-import GenericMasterExternalService from "./external/GenericExternalService";
-import PayrollExternalService from "./external/PayrollExternalService";
+import { generateXLSX } from "App/Utils/generateXLSX";
+import GenericMasterExternalService from "../external/GenericExternalService";
+import PayrollExternalService from "../external/PayrollExternalService";
+import {
+  furnitureXLSXFilePath,
+  furnitureXLSXRows,
+  furnitureXLSXcolumnNames,
+} from "./XLSX";
 
 export interface IFurnitureService {
   getIdentificationUsersSelectInfo(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
@@ -30,6 +36,9 @@ export interface IFurnitureService {
     id: number,
     payload: IUpdateFurnitureSchema
   ): Promise<ApiResponse<IFurniture>>;
+  generateFurnitureXLSX(
+    filters: IFiltersFurnitureSchema
+  ): Promise<ApiResponse<string>>;
 }
 
 export default class FurnitureService implements IFurnitureService {
@@ -160,11 +169,13 @@ export default class FurnitureService implements IFurnitureService {
   public async getAllFurnituresPaginated(payload: IFiltersFurnitureSchema) {
     const { array: furnituresFound, meta } =
       await this.furnitureRepository.getAllFurnituresPaginated(payload);
+    let furnituresPromises: Promise<IFurnitureMutated>[] = [];
     let furnituresMutated: IFurnitureMutated[] = [];
     for (let furniture of furnituresFound) {
-      const auxFurniture = await this.getCompleteFurnitureInfo(furniture);
-      furnituresMutated.push(auxFurniture);
+      const auxFurniturePromise = this.getCompleteFurnitureInfo(furniture);
+      furnituresPromises.push(auxFurniturePromise);
     }
+    furnituresMutated = await Promise.all(furnituresPromises);
     return new ApiResponse(
       { array: furnituresMutated, meta },
       EResponseCodes.OK
@@ -208,5 +219,16 @@ export default class FurnitureService implements IFurnitureService {
       furnitureMutated ?? payload
     );
     return new ApiResponse(furnitureUpdated, EResponseCodes.OK);
+  }
+  // GENERATE FURNITURE XLSX
+  public async generateFurnitureXLSX(filters: IFiltersFurnitureSchema) {
+    const furnituresFound = await this.getAllFurnituresPaginated(filters);
+    await generateXLSX({
+      columns: furnitureXLSXcolumnNames,
+      data: furnitureXLSXRows(furnituresFound),
+      filePath: furnitureXLSXFilePath,
+      worksheetName: "Activos fijos",
+    });
+    return new ApiResponse(furnitureXLSXFilePath, EResponseCodes.OK);
   }
 }

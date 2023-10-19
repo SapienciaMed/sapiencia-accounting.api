@@ -87,15 +87,15 @@ export default class ContractController {
   // GET ALL FURNITURES PAGINATED
   public async getAllFurnituresPaginated(ctx: HttpContext) {
     const { request, response, logger } = ctx;
-    let payload: IFiltersFurnitureSchema;
+    let filters: IFiltersFurnitureSchema;
     try {
-      payload = await request.validate({ schema: filtersFurnitureSchema });
+      filters = await request.validate({ schema: filtersFurnitureSchema });
     } catch (err) {
       return DBException.badRequest(ctx, err);
     }
     try {
       const furnituresFound = await FurnitureProvider.getAllFurnituresPaginated(
-        payload
+        filters
       );
       return response.ok(furnituresFound);
     } catch (err) {
@@ -120,6 +120,28 @@ export default class ContractController {
         payload
       );
       return response.ok(furnitureUpdate);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GENERATE FURNITURE XLSX
+  public async generateFurnitureXLSX(ctx: HttpContext) {
+    const { request, response, logger } = ctx;
+    let filters: IFiltersFurnitureSchema;
+    try {
+      filters = await request.validate({ schema: filtersFurnitureSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp = await FurnitureProvider.generateFurnitureXLSX(filters);
+      response.header(
+        "Content-Disposition",
+        `attachment; filename=activos_fijos.xlsx`
+      );
+      return response.download(resp.data);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

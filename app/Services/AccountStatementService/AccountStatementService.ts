@@ -1,4 +1,3 @@
-import Application from "@ioc:Adonis/Core/Application";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
@@ -11,11 +10,14 @@ import AccountStatementRepository from "App/Repositories/AccountStatementReposit
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
 import { generateXLSX } from "App/Utils/generateXLSX";
-import { formaterNumberToCurrency } from "App/Utils/helpers";
-import { DateTime } from "luxon";
-import { accountStatementDesktopTemplate } from "../../storage/templates/accountStatementDesktopTemplate";
-import { accountStatementMobileTemplate } from "../../storage/templates/accountStatementMobileTemplate";
-import GenericMasterExternalService from "./external/GenericExternalService";
+import { accountStatementDesktopTemplate } from "../../../storage/templates/accountStatementDesktopTemplate";
+import { accountStatementMobileTemplate } from "../../../storage/templates/accountStatementMobileTemplate";
+import GenericMasterExternalService from "../external/GenericExternalService";
+import {
+  accountStatementXLSXColumns,
+  accountStatementXLSXFilePath,
+  accountStatementXLSXRows,
+} from "./XLSX";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -151,68 +153,18 @@ export default class AccountStatementService
     }
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
-  // GENERATE ACCOUNT STATEMENT PDF
+  // GENERATE ACCOUNT STATEMENT XLSX
   public async generateXLSXAccountStatement(filters: IGetAccountStatement) {
-    const accountStatements =
+    const accountStatementsFound =
       await this.accountStatementRepository.getAccountStatementFiltered(
         filters
       );
-    const columns = [
-      {
-        name: "CONTRATO",
-        size: 15,
-      },
-      {
-        name: "N° CXC",
-        size: 10,
-      },
-      {
-        name: "FECHA EXPEDICIÓN",
-        size: 25,
-      },
-      {
-        name: "FECHA DE VENCIMIENTO",
-        size: 25,
-      },
-      {
-        name: "NIT",
-        size: 20,
-      },
-      {
-        name: "TERCERO",
-        size: 50,
-      },
-      {
-        name: "CONCEPTO",
-        size: 70,
-      },
-      {
-        name: "VALOR $",
-        size: 20,
-      },
-    ];
-    const data = accountStatements.array.reduce((prev, curr) => {
-      return [
-        ...prev,
-        [
-          curr.contract.contractId,
-          String(curr.accountNum),
-          curr.expeditionDate.replace(/\//g, "-") ?? "",
-          DateTime.fromISO(curr.expirationDate).toSQLDate() ?? "",
-          curr.contract.business.nit,
-          curr.contract.business.name,
-          curr.concept,
-          formaterNumberToCurrency(curr.valuePay),
-        ],
-      ];
-    }, []);
-    const filePath = Application.tmpPath("/cuentas_de_cobro.xlsx");
     await generateXLSX({
-      columns,
-      data,
-      filePath,
+      columns: accountStatementXLSXColumns,
+      data: accountStatementXLSXRows(accountStatementsFound),
+      filePath: accountStatementXLSXFilePath,
       worksheetName: "Cuentas de cobro",
     });
-    return new ApiResponse(filePath, EResponseCodes.OK);
+    return new ApiResponse(accountStatementXLSXFilePath, EResponseCodes.OK);
   }
 }

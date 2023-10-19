@@ -152,5 +152,6 @@ Route.group(() => {
     Route.put("/:id/update-by-id", "FurnitureController.updateFurnitureById")
       .where("id", Route.matchers.number())
       .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
+    Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
   }).prefix("/furniture");
 }).prefix("/api/v1");
