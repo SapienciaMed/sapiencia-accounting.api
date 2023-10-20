@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { IWorker } from "App/Interfaces/Worker";
 import { ApiResponse } from "App/Utils/ApiResponses";
@@ -15,6 +16,12 @@ export default class PayrollExternalService implements IPayrollExternalService {
   constructor() {
     this.apiPayroll = axios.create({
       baseURL: this.baseURL,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        permissions: Env.get("CURRENT_PERMISSIONS"),
+        authorization: Env.get("CURRENT_AUTHORIZATION"),
+      },
     });
   }
   // GET ALL WORKERS

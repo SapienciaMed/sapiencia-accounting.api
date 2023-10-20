@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
-import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import Encryption from "@ioc:Adonis/Core/Encryption";
 import Env from "@ioc:Adonis/Core/Env";
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { ApiResponse } from "App/Utils/ApiResponses";
-import Encryption from "@ioc:Adonis/Core/Encryption";
+import jwt from "jsonwebtoken";
 
 export default class Auth {
   public async handle(
