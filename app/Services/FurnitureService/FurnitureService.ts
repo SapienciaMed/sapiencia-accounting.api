@@ -10,6 +10,7 @@ import {
   IUpdateFurnitureSchema,
 } from "App/Interfaces/Furniture";
 import { IWorker, IWorkerSelectInfo } from "App/Interfaces/Worker";
+import FurnitureHistoryRepository from "App/Repositories/FurnitureHistoryRepository";
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
@@ -45,7 +46,8 @@ export default class FurnitureService implements IFurnitureService {
   constructor(
     private furnitureRepository: FurnitureRepository,
     private payrollExternalService: PayrollExternalService,
-    private genericMasterService: GenericMasterExternalService
+    private genericMasterService: GenericMasterExternalService,
+    private furnitureHistoryRepository: FurnitureHistoryRepository
   ) {}
   // GET IDENTIFICATION USERS SELECT INFO
   public async getIdentificationUsersSelectInfo() {
@@ -214,10 +216,26 @@ export default class FurnitureService implements IFurnitureService {
         userIdentification,
       };
     }
+    const body = furnitureMutated ?? payload;
+    const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
+    const furnitureChanges = {
+      oldChanges: {},
+      newChanges: {},
+    };
+    for (const [key, value] of Object.entries(body)) {
+      if (furnitureFound[key] !== value) {
+        furnitureChanges.oldChanges[key] = furnitureFound[key];
+        furnitureChanges.newChanges[key] = value;
+      }
+    }
     const furnitureUpdated = await this.furnitureRepository.updateFurnitureById(
       id,
-      furnitureMutated ?? payload
+      body
     );
+    await this.furnitureHistoryRepository.createFurnitureHistory({
+      changes: furnitureChanges,
+      furnitureId: id,
+    });
     return new ApiResponse(furnitureUpdated, EResponseCodes.OK);
   }
   // GENERATE FURNITURE XLSX

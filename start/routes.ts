@@ -149,9 +149,18 @@ Route.group(() => {
       "/get-all-paginated",
       "FurnitureController.getAllFurnituresPaginated"
     ).middleware(`auth:${PERMISSIONS.FURNITURE_CONSULT}`);
-    Route.put("/:id/update-by-id", "FurnitureController.updateFurnitureById")
-      .where("id", Route.matchers.number())
-      .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
+    Route.put(
+      "/:id/update-by-id",
+      "FurnitureController.updateFurnitureById"
+    ).where("id", Route.matchers.number());
+    // .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
     Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
   }).prefix("/furniture");
+  // BIEN INMUEBLE HISTÓRICO
+  Route.group(() => {
+    Route.get(
+      "/:furnitureId/get-furniture-history-by-id",
+      "FurnitureHistoryController.getFurnitureHistoryById"
+    ).where("furnitureId", Route.matchers.number());
+  }).prefix("/furniture-history");
 }).prefix("/api/v1");
