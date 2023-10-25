@@ -7,11 +7,11 @@ export default class extends BaseSeeder {
     await FurnitureHistory.createMany([
       {
         changes: {
-          oldFields: {
+          oldChanges: {
             area: 1,
             model: "EliteBook 840 G5",
           },
-          newFields: {
+          newChanges: {
             area: 2,
             model: "EliteBook 840 G5S",
           },
