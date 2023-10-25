@@ -26,36 +26,48 @@ export default class PayrollExternalService implements IPayrollExternalService {
   }
   // GET ALL WORKERS
   public async getAllWorkers() {
-    const endpoint = `/vinculation/worker/get-by-filters`;
-    const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
-      endpoint
-    );
-    return resp.data;
+    try {
+      const endpoint = `/vinculation/worker/get-by-filters`;
+      const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
+        endpoint
+      );
+      return resp.data;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
   // GET WORKER BY ID
   public async getWorkerById(id: number) {
-    const endpoint = `${this.baseURL}/vinculation/${id}`;
-    const { data: resp } = await this.apiPayroll.get<
-      ApiResponse<{ worker: IWorker }>
-    >(endpoint);
-    if (resp.operation.code === EResponseCodes.FAIL) {
-      throw new Error(`Empleado con id ${id} no existe`);
+    try {
+      const endpoint = `${this.baseURL}/vinculation/${id}`;
+      const { data: resp } = await this.apiPayroll.get<
+        ApiResponse<{ worker: IWorker }>
+      >(endpoint);
+      if (resp.operation.code === EResponseCodes.FAIL) {
+        throw new Error(`Empleado con id ${id} no existe`);
+      }
+      return resp.data;
+    } catch (err) {
+      throw new Error(err);
     }
-    return resp.data;
   }
   // GET WORKER BY DOCUMENT
   public async getWorkerByDocument(document: string) {
-    const endpoint = "/vinculation/worker/get-by-filters";
-    const body = {
-      documentList: [document],
-    };
-    const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
-      endpoint,
-      body
-    );
-    if (resp.data.length === 0) {
-      throw new Error(`No existen usuarios con documento ${document}`);
+    try {
+      const endpoint = "/vinculation/worker/get-by-filters";
+      const body = {
+        documentList: [document],
+      };
+      const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
+        endpoint,
+        body
+      );
+      if (resp.data.length === 0) {
+        throw new Error(`No existen usuarios con documento ${document}`);
+      }
+      return resp.data[0];
+    } catch (err) {
+      throw new Error(err);
     }
-    return resp.data[0];
   }
 }
