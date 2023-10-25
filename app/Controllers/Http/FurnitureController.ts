@@ -23,7 +23,7 @@ export default class ContractController {
       return response.ok(idsFound);
     } catch (err) {
       logger.error(err);
-      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      const apiResp = new ApiResponse([], EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
   }
@@ -36,7 +36,7 @@ export default class ContractController {
       return response.ok(fullNamesFound);
     } catch (err) {
       logger.error(err);
-      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      const apiResp = new ApiResponse([], EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
   }
