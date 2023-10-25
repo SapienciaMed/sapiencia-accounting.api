@@ -15,5 +15,5 @@ export type IGenericItem = {
   grouper: string;
   itemCode: string;
   itemDescription: string;
-  additionalFields: IAdditionalFields;
+  additionalFields: object;
 };

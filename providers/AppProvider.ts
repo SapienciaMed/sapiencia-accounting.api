@@ -114,7 +114,8 @@ export default class AppProvider {
       "core.FurnitureHistoryProvider",
       () =>
         new FurnitureHistoryService.default(
-          new FurnitureHistoryRepository.default()
+          new FurnitureHistoryRepository.default(),
+          new GenericMasterService.default()
         )
     );
   }
