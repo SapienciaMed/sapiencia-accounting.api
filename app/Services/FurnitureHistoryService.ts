@@ -63,13 +63,13 @@ export default class FurnitureHistoryService
         } else if (key === "activeOwner") {
           genericData =
             await this.genericMasterService.getGenericItemDescriptionByItemCode(
-              GENERIC_LIST.CLERK,
+              GENERIC_LIST.ACTIVE_OWNER,
               Number(value)
             );
         } else if (key === "clerk") {
           genericData =
             await this.genericMasterService.getGenericItemDescriptionByItemCode(
-              GENERIC_LIST.ACTIVE_OWNER,
+              GENERIC_LIST.CLERK,
               Number(value)
             );
         } else if (key === "acquisitionDate") {
@@ -105,13 +105,13 @@ export default class FurnitureHistoryService
         } else if (key === "activeOwner") {
           genericData =
             await this.genericMasterService.getGenericItemDescriptionByItemCode(
-              GENERIC_LIST.CLERK,
+              GENERIC_LIST.ACTIVE_OWNER,
               Number(value)
             );
         } else if (key === "clerk") {
           genericData =
             await this.genericMasterService.getGenericItemDescriptionByItemCode(
-              GENERIC_LIST.ACTIVE_OWNER,
+              GENERIC_LIST.CLERK,
               Number(value)
             );
         } else if (key === "acquisitionDate") {
