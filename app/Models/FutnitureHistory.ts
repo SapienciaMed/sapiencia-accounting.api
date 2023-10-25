@@ -1,4 +1,5 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { IFurnitureHistoryChanges } from "App/Interfaces/FurnitureHistory";
 import { DateTime } from "luxon";
 
 export default class FurnitureHistory extends BaseModel {
@@ -25,7 +26,7 @@ export default class FurnitureHistory extends BaseModel {
     columnName: "BIH_CAMPOS_UPDATE",
     serializeAs: "changes",
   })
-  public changes: object;
+  public changes: IFurnitureHistoryChanges;
 
   @column({
     columnName: "BIH_CODBIE_CODIGO",
