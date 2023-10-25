@@ -7,6 +7,7 @@ import {
 import { IGenericItem } from "App/Interfaces/GenericMaster";
 import FurnitureHistoryRepository from "App/Repositories/FurnitureHistoryRepository";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { DateTime } from "luxon";
 import GenericMasterExternalService from "./external/GenericExternalService";
 
 export interface IFurnitureHistoryService {
@@ -71,6 +72,10 @@ export default class FurnitureHistoryService
               GENERIC_LIST.ACTIVE_OWNER,
               Number(value)
             );
+        } else if (key === "acquisitionDate") {
+          genericData.itemDescription = DateTime.fromISO(value.toString())
+            .setLocale("zh")
+            .toFormat("yyyy-MM-dd");
         }
         furnitureHistoryMutated.changes.oldChanges[key] =
           genericData.itemDescription === ""
@@ -109,6 +114,10 @@ export default class FurnitureHistoryService
               GENERIC_LIST.ACTIVE_OWNER,
               Number(value)
             );
+        } else if (key === "acquisitionDate") {
+          genericData.itemDescription = DateTime.fromISO(value.toString())
+            .setLocale("zh")
+            .toFormat("yyyy-MM-dd");
         }
         furnitureHistoryMutated.changes.newChanges[key] =
           genericData.itemDescription === ""
