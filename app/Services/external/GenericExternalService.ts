@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import { IGenericItem, IMunicipality } from "App/Interfaces/GenericMaster";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import axios, { AxiosInstance } from "axios";
@@ -18,6 +19,12 @@ export default class GenericMasterExternalService
   constructor() {
     this.urlApiCore = axios.create({
       baseURL: this.baseURL,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        permissions: Env.get("CURRENT_PERMISSIONS"),
+        authorization: Env.get("CURRENT_AUTHORIZATION"),
+      },
     });
   }
   public async getGenericItemDescriptionByItemCode(

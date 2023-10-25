@@ -22,8 +22,10 @@ export default class extends BaseSchema {
       table
         .integer("BIH_CODBIE_CODIGO")
         .unsigned()
+        .references("BIE_CODIGO")
+        .inTable("BIE_BIENES_INMUEBLE")
         .notNullable()
-        .comment("Código del bien mueble (FK BIE_BIENES_MUEBLES)");
+        .comment("Código de la razón social (FK RZO_RAZONES_SOCIALES)");
     });
   }
 

@@ -23,6 +23,9 @@ export default class AppProvider {
     const FurnitureService = await import(
       "App/Services/FurnitureService/FurnitureService"
     );
+    const FurnitureHistoryService = await import(
+      "App/Services/FurnitureHistoryService"
+    );
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
@@ -52,6 +55,9 @@ export default class AppProvider {
     );
     const FurnitureRepository = await import(
       "App/Repositories/FurnitureRepository"
+    );
+    const FurnitureHistoryRepository = await import(
+      "App/Repositories/FurnitureHistoryRepository"
     );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
@@ -100,7 +106,15 @@ export default class AppProvider {
         new FurnitureService.default(
           new FurnitureRepository.default(),
           new PayrollFurnitureService.default(),
-          new GenericMasterService.default()
+          new GenericMasterService.default(),
+          new FurnitureHistoryRepository.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.FurnitureHistoryProvider",
+      () =>
+        new FurnitureHistoryService.default(
+          new FurnitureHistoryRepository.default()
         )
     );
   }
