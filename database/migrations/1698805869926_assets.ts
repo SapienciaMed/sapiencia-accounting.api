@@ -83,7 +83,7 @@ export default class extends BaseSchema {
         .comment("Observaciones");
       table
         .string(ASSETS_TABLE.USER_MODIFIED, 15)
-        .defaultTo(process.env.CURRENT_USER_DOCUMENT || "")
+        .nullable()
         .comment(
           "Número del documento del último usuario que hizo una modificación"
         );

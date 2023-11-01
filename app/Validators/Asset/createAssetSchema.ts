@@ -6,7 +6,7 @@ export const createAssetSchema = schema.create({
   area: schema.string([rules.required(), rules.trim(), rules.maxLength(4)]),
   status: schema.string([rules.required(), rules.trim(), rules.maxLength(1)]),
   ownerId: schema.string([rules.required(), rules.trim(), rules.maxLength(15)]),
-  ownerDate: schema.date({}),
+  ownerDate: schema.date({ format: "iso" }),
   equipmentType: schema.string([
     rules.required(),
     rules.trim(),
