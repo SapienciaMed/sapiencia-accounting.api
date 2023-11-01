@@ -33,7 +33,7 @@ export default class PayrollExternalService implements IPayrollExternalService {
       );
       return resp.data;
     } catch (err) {
-      throw new Error(err);
+      throw new Error(err?.response?.data?.operation?.message);
     }
   }
   // GET WORKER BY ID
@@ -48,7 +48,7 @@ export default class PayrollExternalService implements IPayrollExternalService {
       }
       return resp.data;
     } catch (err) {
-      throw new Error(err);
+      throw new Error(err?.response?.data?.operation?.message);
     }
   }
   // GET WORKER BY DOCUMENT
@@ -67,7 +67,7 @@ export default class PayrollExternalService implements IPayrollExternalService {
       }
       return resp.data[0];
     } catch (err) {
-      throw new Error(err);
+      throw new Error(err?.response?.data?.operation?.message);
     }
   }
 }

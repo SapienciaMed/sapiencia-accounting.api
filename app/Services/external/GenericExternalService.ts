@@ -31,30 +31,38 @@ export default class GenericMasterExternalService
     grouper: string,
     code: number
   ) {
-    const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/${grouper}`;
-    const { data: resp } = await this.urlApiCore.get<
-      ApiResponse<IGenericItem[]>
-    >(endpoint);
-    const dataFound = resp.data.find(
-      ({ itemCode }) => itemCode === String(code)
-    );
-    if (dataFound === undefined) {
-      throw new Error(
-        `${grouper.toLocaleLowerCase()} con código ${code} no existe`
+    try {
+      const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/${grouper}`;
+      const { data: resp } = await this.urlApiCore.get<
+        ApiResponse<IGenericItem[]>
+      >(endpoint);
+      const dataFound = resp.data.find(
+        ({ itemCode }) => itemCode === String(code)
       );
+      if (dataFound === undefined) {
+        throw new Error(
+          `${grouper.toLocaleLowerCase()} con código ${code} no existe`
+        );
+      }
+      return dataFound;
+    } catch (err) {
+      throw new Error(err?.response?.data?.operation?.message);
     }
-    return dataFound;
   }
   // GET MUNICIPALITY NAME BY ITEM CODE
   public async getMunicipalityNameByItemCode(code: string) {
-    const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/MUNICIPIOS`;
-    const { data: resp } = await this.urlApiCore.get<
-      ApiResponse<IMunicipality[]>
-    >(endpoint);
-    const municipalityFound = resp.data.find(({ id }) => String(id) === code);
-    if (municipalityFound === undefined) {
-      throw new Error(`Municipio con código ${code} no existe`);
+    try {
+      const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/MUNICIPIOS`;
+      const { data: resp } = await this.urlApiCore.get<
+        ApiResponse<IMunicipality[]>
+      >(endpoint);
+      const municipalityFound = resp.data.find(({ id }) => String(id) === code);
+      if (municipalityFound === undefined) {
+        throw new Error(`Municipio con código ${code} no existe`);
+      }
+      return municipalityFound;
+    } catch (err) {
+      throw new Error(err?.response?.data?.operation?.message);
     }
-    return municipalityFound;
   }
 }
