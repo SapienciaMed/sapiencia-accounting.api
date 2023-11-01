@@ -1,4 +1,3 @@
-import { HttpContext } from "@adonisjs/core/build/standalone";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import FurnitureProvider from "@ioc:core.FurnitureProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
@@ -85,7 +84,7 @@ export default class ContractController {
     }
   }
   // GET ALL FURNITURES PAGINATED
-  public async getAllFurnituresPaginated(ctx: HttpContext) {
+  public async getAllFurnituresPaginated(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
     let filters: IFiltersFurnitureSchema;
     try {
@@ -105,7 +104,7 @@ export default class ContractController {
     }
   }
   // UPDATE FURNITURE BY ID
-  public async updateFurnitureById(ctx: HttpContext) {
+  public async updateFurnitureById(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
     let payload: IUpdateFurnitureSchema;
     try {
@@ -127,7 +126,7 @@ export default class ContractController {
     }
   }
   // GENERATE FURNITURE XLSX
-  public async generateFurnitureXLSX(ctx: HttpContext) {
+  public async generateFurnitureXLSX(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
     let filters: IFiltersFurnitureSchema;
     try {

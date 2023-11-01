@@ -167,5 +167,6 @@ Route.group(() => {
   Route.group(() => {
     Route.post("/create", "AssetController.createAsset");
     Route.post("get-all-paginated", "AssetController.getAllAssetsPaginated");
+    Route.get("/generate-xlsx", "AssetController.generateAssetXLSX");
   }).prefix("/asset");
 }).prefix("/api/v1");

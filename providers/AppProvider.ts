@@ -26,7 +26,7 @@ export default class AppProvider {
     const FurnitureHistoryService = await import(
       "App/Services/FurnitureHistoryService"
     );
-    const AssetService = await import("App/Services/AssetService");
+    const AssetService = await import("App/Services/AssetService/AssetService");
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
