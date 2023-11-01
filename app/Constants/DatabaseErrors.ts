@@ -21,3 +21,8 @@ export const enum CONTRACT_SQL_ERROR {
 export const enum FURNITURE_SQL_ERROR {
   PLATE_DUPLICATE = "bie_bienes_inmueble_bie_placa_activo_unique",
 }
+
+export const enum ASSET_SQL_ERROR {
+  PLATE_DUPLICATE = "act_activos_act_placa_unique",
+  SERIAL_DUPLICATE = "act_activos_act_serial_unique",
+}

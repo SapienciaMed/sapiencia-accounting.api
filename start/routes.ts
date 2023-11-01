@@ -126,7 +126,7 @@ Route.group(() => {
       .where("id", Route.matchers.number())
       .middleware(`auth:${PERMISSIONS.CONTRACT_DELETE}`);
   }).prefix("/contract");
-  // BIEN INMUEBLE
+  // FURNITURE
   Route.group(() => {
     Route.get(
       "/get-identification-users-select-info",
@@ -156,11 +156,15 @@ Route.group(() => {
     // .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
     Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
   }).prefix("/furniture");
-  // BIEN INMUEBLE HISTÓRICO
+  // FURNITURE HISTORY
   Route.group(() => {
     Route.get(
       "/:furnitureId/get-furniture-history-by-id",
       "FurnitureHistoryController.getFurnitureHistoryById"
     ).where("furnitureId", Route.matchers.number());
   }).prefix("/furniture-history");
+  // ASSET
+  Route.group(() => {
+    Route.post("/create", "AssetController.createAsset");
+  }).prefix("/asset");
 }).prefix("/api/v1");
