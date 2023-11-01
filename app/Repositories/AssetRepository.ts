@@ -3,7 +3,12 @@ import {
   DATABASE_ERRORS,
   IDatabaseError,
 } from "App/Constants/DatabaseErrors";
-import { IAsset, IAssetSchema, IAssetsFilters } from "App/Interfaces/Asset";
+import {
+  IAsset,
+  IAssetSchema,
+  IAssetsFilters,
+  IUpdateAssetSchema,
+} from "App/Interfaces/Asset";
 import Asset from "App/Models/Asset";
 import { IPagingData } from "App/Utils/ApiResponses";
 
@@ -11,6 +16,7 @@ export interface IAssetRepository {
   createAsset(payload: IAssetSchema): Promise<IAsset>;
   getAllAssetsPaginated(filters: IAssetsFilters): Promise<IPagingData<IAsset>>;
   getAssetById(id: number): Promise<IAsset>;
+  updateAssetById(id: number, payload: IUpdateAssetSchema): Promise<IAsset>;
 }
 
 export default class AssetRepository implements IAssetRepository {
@@ -72,5 +78,13 @@ export default class AssetRepository implements IAssetRepository {
           throw new Error(err);
       }
     }
+  }
+  // UPDATED ASSET BY ID
+  public async updateAssetById(id: number, payload: IUpdateAssetSchema) {
+    const assetFound = await this.getAssetById(id);
+    const currentUserId = process.env.CURRENT_USER_DOCUMENT;
+    return await assetFound
+      .merge({ ...payload, userModified: currentUserId })
+      .save();
   }
 }

@@ -4,3 +4,8 @@ export enum GENERIC_LIST {
   ACTIVE_OWNER = "PROPIETARIO_ACTIVO",
   CLERK = "FUNCIONARIO",
 }
+
+export enum TIPO_ACTIVOS {
+  COMPUTO = "Computo",
+  OTROS = "Otros",
+}

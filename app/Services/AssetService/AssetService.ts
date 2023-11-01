@@ -1,5 +1,11 @@
+import { TIPO_ACTIVOS } from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IAsset, IAssetSchema, IAssetsFilters } from "App/Interfaces/Asset";
+import {
+  IAsset,
+  IAssetSchema,
+  IAssetsFilters,
+  IUpdateAssetSchema,
+} from "App/Interfaces/Asset";
 import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
@@ -12,6 +18,10 @@ export interface IAssetService {
   ): Promise<ApiResponse<IPagingData<IAsset>>>;
   generateAssetXLSX(filters: IAssetsFilters): Promise<ApiResponse<string>>;
   getAssetById(id: number): Promise<ApiResponse<IAsset>>;
+  updateAssetById(
+    id: number,
+    payload: IUpdateAssetSchema
+  ): Promise<ApiResponse<IAsset>>;
 }
 
 export default class AssetService implements IAssetService {
@@ -43,5 +53,23 @@ export default class AssetService implements IAssetService {
   public async getAssetById(id: number) {
     const assetFound = await this.assetRepository.getAssetById(id);
     return new ApiResponse(assetFound, EResponseCodes.OK);
+  }
+  // UPDATE ASSET BY ID
+  public async updateAssetById(id: number, payload: IUpdateAssetSchema) {
+    let auxPayload: IUpdateAssetSchema = payload;
+    if (payload?.type === TIPO_ACTIVOS.OTROS) {
+      auxPayload = {
+        ...payload,
+        cpu: "",
+        ram: "",
+        storage: "",
+        os: "",
+      };
+    }
+    const updatedAsset = await this.assetRepository.updateAssetById(
+      id,
+      auxPayload
+    );
+    return new ApiResponse(updatedAsset, EResponseCodes.OK);
   }
 }

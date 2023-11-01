@@ -1,11 +1,16 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AssetProvider from "@ioc:core.AssetProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IAssetSchema, IAssetsFilters } from "App/Interfaces/Asset";
+import {
+  IAssetSchema,
+  IAssetsFilters,
+  IUpdateAssetSchema,
+} from "App/Interfaces/Asset";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { assetsPaginatedSchema } from "App/Validators/Asset/assetsPaginatedSchema";
 import { createAssetSchema } from "App/Validators/Asset/createAssetSchema";
+import { updateAssetSchema } from "App/Validators/Asset/updateAssetSchema";
 
 export default class AssetController {
   // CREATE ASSET
@@ -73,6 +78,25 @@ export default class AssetController {
       const { id } = request.params();
       const assetFound = await AssetProvider.getAssetById(id);
       return response.ok(assetFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // UPDATE ASSET BY ID
+  public async updateAssetById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let payload: IUpdateAssetSchema;
+    try {
+      payload = await request.validate({ schema: updateAssetSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const { id } = request.params();
+      const updatedAsset = await AssetProvider.updateAssetById(id, payload);
+      return response.ok(updatedAsset);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

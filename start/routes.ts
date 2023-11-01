@@ -172,5 +172,9 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.put("/:id/update", "AssetController.updateAssetById").where(
+      "id",
+      Route.matchers.number()
+    );
   }).prefix("/asset");
 }).prefix("/api/v1");

@@ -1,4 +1,5 @@
 import { rules, schema } from "@ioc:Adonis/Core/Validator";
+import { TIPO_ACTIVOS } from "App/Constants/GenericListEnum";
 
 export const createAssetSchema = schema.create({
   type: schema.enum(["Computo", "Otros"], [rules.required()]),
@@ -17,22 +18,22 @@ export const createAssetSchema = schema.create({
   plate: schema.string([rules.required(), rules.trim(), rules.maxLength(15)]),
   serial: schema.string([rules.required(), rules.trim(), rules.maxLength(50)]),
   cpu: schema.string.optional([
-    rules.requiredWhen("type", "=", "Computo"),
+    rules.requiredWhen("type", "=", TIPO_ACTIVOS.COMPUTO),
     rules.trim(),
     rules.maxLength(50),
   ]),
   ram: schema.string.optional([
-    rules.requiredWhen("type", "=", "Computo"),
+    rules.requiredWhen("type", "=", TIPO_ACTIVOS.COMPUTO),
     rules.trim(),
     rules.maxLength(50),
   ]),
   storage: schema.string.optional([
-    rules.requiredWhen("type", "=", "Computo"),
+    rules.requiredWhen("type", "=", TIPO_ACTIVOS.COMPUTO),
     rules.trim(),
     rules.maxLength(50),
   ]),
   os: schema.string.optional([
-    rules.requiredWhen("type", "=", "Computo"),
+    rules.requiredWhen("type", "=", TIPO_ACTIVOS.COMPUTO),
     rules.trim(),
     rules.maxLength(50),
   ]),
