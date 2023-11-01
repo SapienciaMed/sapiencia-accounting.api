@@ -10,6 +10,7 @@ import { IPagingData } from "App/Utils/ApiResponses";
 export interface IAssetRepository {
   createAsset(payload: IAssetSchema): Promise<IAsset>;
   getAllAssetsPaginated(filters: IAssetsFilters): Promise<IPagingData<IAsset>>;
+  getAssetById(id: number): Promise<IAsset>;
 }
 
 export default class AssetRepository implements IAssetRepository {
@@ -57,5 +58,19 @@ export default class AssetRepository implements IAssetRepository {
       await assetsQuery.paginate(page, perPage)
     ).serialize();
     return { array: data as IAsset[], meta };
+  }
+  // GET ASSET BY ID
+  public async getAssetById(id: number) {
+    try {
+      return await Asset.findOrFail(id);
+    } catch (err) {
+      const { code } = err as IDatabaseError;
+      switch (code) {
+        case DATABASE_ERRORS.E_ROW_NOT_FOUND:
+          throw new Error("Activo inexistente");
+        default:
+          throw new Error(err);
+      }
+    }
   }
 }

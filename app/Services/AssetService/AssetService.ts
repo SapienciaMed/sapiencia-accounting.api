@@ -11,6 +11,7 @@ export interface IAssetService {
     filters: IAssetsFilters
   ): Promise<ApiResponse<IPagingData<IAsset>>>;
   generateAssetXLSX(filters: IAssetsFilters): Promise<ApiResponse<string>>;
+  getAssetById(id: number): Promise<ApiResponse<IAsset>>;
 }
 
 export default class AssetService implements IAssetService {
@@ -37,5 +38,10 @@ export default class AssetService implements IAssetService {
       worksheetName: "Activos tecnológicos",
     });
     return new ApiResponse(assetXLSXFilePath, EResponseCodes.OK);
+  }
+  // GET ASSET BY ID
+  public async getAssetById(id: number) {
+    const assetFound = await this.assetRepository.getAssetById(id);
+    return new ApiResponse(assetFound, EResponseCodes.OK);
   }
 }

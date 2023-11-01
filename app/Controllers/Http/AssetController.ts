@@ -37,7 +37,7 @@ export default class AssetController {
     }
     try {
       const assetsFound = await AssetProvider.getAllAssetsPaginated(filters);
-      return response.created(assetsFound);
+      return response.ok(assetsFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
@@ -60,6 +60,19 @@ export default class AssetController {
         `attachment; filename=activos_tecnológicos.xlsx`
       );
       return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ASSET BY ID
+  public async getAssetById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const assetFound = await AssetProvider.getAssetById(id);
+      return response.ok(assetFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
