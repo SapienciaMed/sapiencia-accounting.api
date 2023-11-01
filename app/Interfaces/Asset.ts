@@ -42,3 +42,10 @@ export type IAssetSchema = {
   os?: string;
   observations?: string;
 };
+
+export type IAssetsFilters = Partial<
+  Pick<IAsset, "type" | "campus" | "ownerId" | "plate" | "serial">
+> & {
+  page: number;
+  perPage: number;
+};

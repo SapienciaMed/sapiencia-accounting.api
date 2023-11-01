@@ -3,11 +3,13 @@ import {
   DATABASE_ERRORS,
   IDatabaseError,
 } from "App/Constants/DatabaseErrors";
-import { IAsset, IAssetSchema } from "App/Interfaces/Asset";
+import { IAsset, IAssetSchema, IAssetsFilters } from "App/Interfaces/Asset";
 import Asset from "App/Models/Asset";
+import { IPagingData } from "App/Utils/ApiResponses";
 
 export interface IAssetRepository {
   createAsset(payload: IAssetSchema): Promise<IAsset>;
+  getAllAssetsPaginated(filters: IAssetsFilters): Promise<IPagingData<IAsset>>;
 }
 
 export default class AssetRepository implements IAssetRepository {
@@ -31,5 +33,29 @@ export default class AssetRepository implements IAssetRepository {
           throw new Error(err);
       }
     }
+  }
+  // GET ALL ASSETS PAGINATED
+  public async getAllAssetsPaginated(filters: IAssetsFilters) {
+    const { page, perPage, plate, serial, campus, ownerId, type } = filters;
+    const assetsQuery = Asset.query();
+    if (plate) {
+      assetsQuery.where("plate", plate);
+    }
+    if (serial) {
+      assetsQuery.where("serial", serial);
+    }
+    if (campus) {
+      assetsQuery.where("campus", campus);
+    }
+    if (ownerId) {
+      assetsQuery.where("ownerId", ownerId);
+    }
+    if (type) {
+      assetsQuery.where("type", type);
+    }
+    const { data, meta } = (
+      await assetsQuery.paginate(page, perPage)
+    ).serialize();
+    return { array: data as IAsset[], meta };
   }
 }

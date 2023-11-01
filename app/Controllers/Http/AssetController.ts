@@ -1,9 +1,10 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AssetProvider from "@ioc:core.AssetProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IAssetSchema } from "App/Interfaces/Asset";
+import { IAssetSchema, IAssetsFilters } from "App/Interfaces/Asset";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
+import { assetsPaginatedSchema } from "App/Validators/Asset/assetsPaginatedSchema";
 import { createAssetSchema } from "App/Validators/Asset/createAssetSchema";
 
 export default class AssetController {
@@ -17,8 +18,26 @@ export default class AssetController {
       return DBException.badRequest(ctx, err);
     }
     try {
-      const newBusiness = await AssetProvider.createAsset(payload);
-      return response.created(newBusiness);
+      const newAsset = await AssetProvider.createAsset(payload);
+      return response.created(newAsset);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ALL ASSETS PAGINATED
+  public async getAllAssetsPaginated(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IAssetsFilters;
+    try {
+      filters = await request.validate({ schema: assetsPaginatedSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const assetsFound = await AssetProvider.getAllAssetsPaginated(filters);
+      return response.created(assetsFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
