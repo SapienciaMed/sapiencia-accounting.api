@@ -40,9 +40,7 @@ export default class AccountStatementRepository
     const { accountNum, contractCode, expeditionDate, nit, page, perPage } =
       filters;
     const accountStatementQuery = AccountStatement.query();
-    accountStatementQuery.preload("tracking", (trackingQuery) => {
-      trackingQuery.preload("status");
-    });
+    accountStatementQuery.preload("tracking");
     accountStatementQuery.preload("contract", (contractQuery) => {
       contractQuery.preload("business");
     });
@@ -118,9 +116,7 @@ export default class AccountStatementRepository
   // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
   public async getAccountStatementByAccountNum(accountNum: number) {
     const accountStatementQuery = AccountStatement.query();
-    accountStatementQuery.preload("tracking", (trackingQuery) => {
-      trackingQuery.preload("status");
-    });
+    accountStatementQuery.preload("tracking");
     accountStatementQuery.preload("contract", (contractQuery) => {
       contractQuery.preload("business");
     });

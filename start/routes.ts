@@ -24,7 +24,8 @@ import { PERMISSIONS } from "App/Constants/Permissions";
 Route.get("/", () => "SAPIENCIA ACCOUNTING API");
 
 Route.group(() => {
-  // ACCOUNT STATEMENT
+  // ==================================================================
+  // ======================= ACCOUNT STATEMENT ========================
   Route.group(() => {
     Route.post(
       "/",
@@ -64,14 +65,8 @@ Route.group(() => {
     Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
     // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
   }).prefix("/account-statement");
-  // ACCOUNT STATEMENT STATUS
-  Route.group(() => {
-    Route.get(
-      "/get-all",
-      "AccountStatementStatusController.getAllAccountStatementStatus"
-    ).middleware("auth");
-  }).prefix("/account-statement-status");
-  // ACCOUNT STATEMENT TRACKING
+  // ==================================================================
+  // =================== ACCOUNT STATEMENT TRACKING ===================
   Route.group(() => {
     Route.put(
       "/:accountStatementId/update-or-create",
@@ -80,7 +75,8 @@ Route.group(() => {
   })
     .prefix("/account-statement-tracking")
     .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_TRACKING_UPDATE}`);
-  // BUSINESS
+  // ==================================================================
+  // ============================ BUSINESS ============================
   Route.group(() => {
     Route.post("/", "BusinessController.createBusiness").middleware(
       `auth:${PERMISSIONS.BUSINESS_CREATE}`
@@ -103,7 +99,8 @@ Route.group(() => {
       .where("id", Route.matchers.number())
       .middleware(`auth:${PERMISSIONS.BUSINESS_DELETE}`);
   }).prefix("/business");
-  // CONTRACT
+  // ==================================================================
+  // ============================ CONTRACT ============================
   Route.group(() => {
     Route.post("/create", "ContractController.createContract").middleware(
       `auth:${PERMISSIONS.CONTRACT_CREATE}`
@@ -126,7 +123,8 @@ Route.group(() => {
       .where("id", Route.matchers.number())
       .middleware(`auth:${PERMISSIONS.CONTRACT_DELETE}`);
   }).prefix("/contract");
-  // FURNITURE
+  // ==================================================================
+  // =========================== FURNITURE ============================
   Route.group(() => {
     Route.get(
       "/get-identification-users-select-info",
@@ -156,14 +154,16 @@ Route.group(() => {
     // .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
     Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
   }).prefix("/furniture");
-  // FURNITURE HISTORY
+  // ==================================================================
+  // ======================= FURNITURE HISTORY ========================
   Route.group(() => {
     Route.get(
       "/:furnitureId/get-furniture-history-by-id",
       "FurnitureHistoryController.getFurnitureHistoryById"
     ).where("furnitureId", Route.matchers.number());
   }).prefix("/furniture-history");
-  // ASSET
+  // ==================================================================
+  // ============================= ASSET ==============================
   Route.group(() => {
     Route.get(
       "/get-workers-info-select",

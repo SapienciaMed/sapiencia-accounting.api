@@ -99,9 +99,7 @@ export default class AccountStatementService
     return new ApiResponse(lastAccountStatement, EResponseCodes.OK);
   }
   // GET ACCOUNT STATEMENT BY ACCOUNT NUM
-  public async getAccountStatementByAccountNum(
-    accountNum: number
-  ): Promise<ApiResponse<IAccountStatement>> {
+  public async getAccountStatementByAccountNum(accountNum: number) {
     const accountStatementFound =
       await this.accountStatementRepository.getAccountStatementByAccountNum(
         accountNum
