@@ -22,13 +22,6 @@ export default class extends BaseSchema {
         .nullable()
         .comment("Fecha de seguimiento de la cuenta de cobro");
       table
-        .integer("SCC_CODETO_ESTADO")
-        .unsigned()
-        .references("ETO_CODIGO")
-        .inTable("ETO_ESTADO")
-        .notNullable()
-        .comment("Código del estado (FK ETO_ESTADO)");
-      table
         .integer("SCC_CODCTC_CUENTAS_COBRO")
         .unsigned()
         .references("CTC_CODIGO")

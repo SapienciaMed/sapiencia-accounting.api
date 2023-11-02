@@ -1,5 +1,5 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
-import { ASSETS_TABLE } from "App/Constants/Tables/AssetsTable";
+import { ASSETS_TABLE } from "App/Constants/Tables/Assets/AssetsTable";
 import { DateTime } from "luxon";
 
 export default class Asset extends BaseModel {

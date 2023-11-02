@@ -1,5 +1,5 @@
 import BaseSchema from "@ioc:Adonis/Lucid/Schema";
-import { ASSETS_TABLE } from "App/Constants/Tables/AssetsTable";
+import { ASSETS_TABLE } from "App/Constants/Tables/Assets/AssetsTable";
 
 export default class extends BaseSchema {
   protected tableName = ASSETS_TABLE.TABLE_NAME;

@@ -55,6 +55,9 @@ export default class AppProvider {
       "App/Repositories/FurnitureHistoryRepository"
     );
     const AssetRepository = await import("App/Repositories/AssetRepository");
+    const AssetHistoryRepository = await import(
+      "App/Repositories/AssetHistoryRepository"
+    );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
     /**************************************************************************/
@@ -112,7 +115,8 @@ export default class AppProvider {
       () =>
         new AssetService.default(
           new AssetRepository.default(),
-          new PayrollService.default()
+          new PayrollService.default(),
+          new AssetHistoryRepository.default()
         )
     );
   }

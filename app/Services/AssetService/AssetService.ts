@@ -7,6 +7,7 @@ import {
   IUpdateAssetSchema,
 } from "App/Interfaces/Asset";
 import { IWorkerSelectInfo } from "App/Interfaces/Worker";
+import AssetHistoryRepository from "App/Repositories/AssetHistoryRepository";
 import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
@@ -30,7 +31,8 @@ export interface IAssetService {
 export default class AssetService implements IAssetService {
   constructor(
     private assetRepository: AssetRepository,
-    private payrollService: PayrollExternalService
+    private payrollService: PayrollExternalService,
+    private assetHistoryRepository: AssetHistoryRepository
   ) {}
   // GET WORKERS INFO SELECT
   public async getWorkersInfoSelect() {
@@ -94,6 +96,14 @@ export default class AssetService implements IAssetService {
       id,
       auxPayload
     );
+    this.assetHistoryRepository.createAssetHistory({
+      assetId: id,
+      changes: {
+        oldChanges: {},
+        newChanges: {},
+      },
+    });
+
     return new ApiResponse(updatedAsset, EResponseCodes.OK);
   }
 }
