@@ -21,7 +21,7 @@ export default class AssetController {
       return response.ok(workersInfoSelect);
     } catch (err) {
       logger.error(err);
-      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      const apiResp = new ApiResponse([], EResponseCodes.FAIL, err.message);
       return response.badRequest(apiResp);
     }
   }
