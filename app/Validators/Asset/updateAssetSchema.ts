@@ -1,7 +1,7 @@
 import { rules, schema } from "@ioc:Adonis/Core/Validator";
 
 export const updateAssetSchema = schema.create({
-  type: schema.enum.optional(["Computo", "Otros"], [rules.required()]),
+  type: schema.enum.optional(["Computo", "Otros"]),
   campus: schema.string.optional([rules.trim(), rules.maxLength(4)]),
   area: schema.string.optional([rules.trim(), rules.maxLength(4)]),
   status: schema.string.optional([rules.trim(), rules.maxLength(1)]),

@@ -11,6 +11,7 @@ import AssetHistoryRepository from "App/Repositories/AssetHistoryRepository";
 import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
+import { getChangesBetweenTwoObjects } from "App/Utils/helpers";
 import PayrollExternalService from "../external/PayrollExternalService";
 import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
@@ -83,7 +84,13 @@ export default class AssetService implements IAssetService {
   // UPDATE ASSET BY ID
   public async updateAssetById(id: number, payload: IUpdateAssetSchema) {
     let auxPayload: IUpdateAssetSchema = payload;
-    if (payload?.type === TIPO_ACTIVOS.OTROS) {
+    const assetFound = await this.getAssetById(id);
+    const assetFoundSerialized =
+      assetFound.data.serializeAttributes() as IAsset;
+    if (
+      payload?.type === TIPO_ACTIVOS.OTROS ||
+      assetFoundSerialized.type === TIPO_ACTIVOS.OTROS
+    ) {
       auxPayload = {
         ...payload,
         cpu: "",
@@ -96,14 +103,17 @@ export default class AssetService implements IAssetService {
       id,
       auxPayload
     );
-    this.assetHistoryRepository.createAssetHistory({
-      assetId: id,
-      changes: {
-        oldChanges: {},
-        newChanges: {},
-      },
-    });
-
+    const { changes, thereAreChanges } =
+      getChangesBetweenTwoObjects<IUpdateAssetSchema>(
+        assetFound.data.serializeAttributes(),
+        auxPayload
+      );
+    if (thereAreChanges) {
+      await this.assetHistoryRepository.createAssetHistory({
+        assetId: id,
+        changes,
+      });
+    }
     return new ApiResponse(updatedAsset, EResponseCodes.OK);
   }
 }
