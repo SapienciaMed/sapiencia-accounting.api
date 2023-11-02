@@ -12,9 +12,6 @@ export default class AppProvider {
     const AccountStatementService = await import(
       "App/Services/AccountStatementService/AccountStatementService"
     );
-    const AccountStatementStatusService = await import(
-      "App/Services/AccountStatementStatusService"
-    );
     const AccountStatementTrackingService = await import(
       "App/Services/AccountStatementTrackingService"
     );
@@ -42,9 +39,6 @@ export default class AppProvider {
     const AccountStatementRepository = await import(
       "App/Repositories/AccountStatementRepository"
     );
-    const AccountStatementStatusRepository = await import(
-      "App/Repositories/AccountStatementStatusRepository"
-    );
     const AccountStatementTrackingRepository = await import(
       "App/Repositories/AccountStatementTrackingRepository"
     );
@@ -70,13 +64,6 @@ export default class AppProvider {
         new AccountStatementService.default(
           new AccountStatementRepository.default(),
           new GenericMasterService.default()
-        )
-    );
-    this.app.container.singleton(
-      "core.AccountStatementStatusProvider",
-      () =>
-        new AccountStatementStatusService.default(
-          new AccountStatementStatusRepository.default()
         )
     );
     this.app.container.singleton(

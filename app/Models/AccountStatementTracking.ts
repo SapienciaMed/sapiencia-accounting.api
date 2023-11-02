@@ -1,6 +1,5 @@
-import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
 import { DateTime } from "luxon";
-import AccountStatementStatus from "./AccountStatementStatus";
 
 export default class AccountStatementTracking extends BaseModel {
   public static table = "SCC_SEGUIMIENTO_CUENTA_COBRO";
@@ -34,10 +33,4 @@ export default class AccountStatementTracking extends BaseModel {
     serializeAs: "accountStatementId",
   })
   public accountStatementId: number;
-
-  @hasOne(() => AccountStatementStatus, {
-    localKey: "statusId",
-    foreignKey: "id",
-  })
-  public status: HasOne<typeof AccountStatementStatus>;
 }

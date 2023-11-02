@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import { IAccountStatementStatus } from "./AccountStatementStatus";
 
 export type IAccountStatementTracking = {
   id: number;
@@ -7,7 +6,6 @@ export type IAccountStatementTracking = {
   trackingDate: DateTime;
   statusId: number;
   accountStatementId: number;
-  status: IAccountStatementStatus;
 };
 
 export type IAccountStatementTrackingPayload = Pick<
