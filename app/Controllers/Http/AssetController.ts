@@ -13,6 +13,18 @@ import { createAssetSchema } from "App/Validators/Asset/createAssetSchema";
 import { updateAssetSchema } from "App/Validators/Asset/updateAssetSchema";
 
 export default class AssetController {
+  // GET WORKERS INFO SELECT
+  public async getWorkersInfoSelect(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+    try {
+      const workersInfoSelect = await AssetProvider.getWorkersInfoSelect();
+      return response.ok(workersInfoSelect);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
   // CREATE ASSET
   public async createAsset(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;

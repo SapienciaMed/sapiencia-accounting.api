@@ -165,6 +165,10 @@ Route.group(() => {
   }).prefix("/furniture-history");
   // ASSET
   Route.group(() => {
+    Route.get(
+      "/get-workers-info-select",
+      "AssetController.getWorkersInfoSelect"
+    ).middleware("auth");
     Route.post("/create", "AssetController.createAsset");
     Route.post("get-all-paginated", "AssetController.getAllAssetsPaginated");
     Route.get("/generate-xlsx", "AssetController.generateAssetXLSX");

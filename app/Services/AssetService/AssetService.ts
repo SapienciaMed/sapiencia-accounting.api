@@ -6,9 +6,11 @@ import {
   IAssetsFilters,
   IUpdateAssetSchema,
 } from "App/Interfaces/Asset";
+import { IWorkerSelectInfo } from "App/Interfaces/Worker";
 import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
+import PayrollExternalService from "../external/PayrollExternalService";
 import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
 export interface IAssetService {
@@ -22,10 +24,32 @@ export interface IAssetService {
     id: number,
     payload: IUpdateAssetSchema
   ): Promise<ApiResponse<IAsset>>;
+  getWorkersInfoSelect(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
 }
 
 export default class AssetService implements IAssetService {
-  constructor(private assetRepository: AssetRepository) {}
+  constructor(
+    private assetRepository: AssetRepository,
+    private payrollService: PayrollExternalService
+  ) {}
+  // GET WORKERS INFO SELECT
+  public async getWorkersInfoSelect() {
+    const workersInfo = await this.payrollService.getAllWorkers();
+    const workersInfoSelect = workersInfo.map((worker) => {
+      const {
+        firstName,
+        secondName = "",
+        surname,
+        secondSurname = "",
+        numberDocument,
+      } = worker;
+      return {
+        value: Number(numberDocument),
+        name: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
+      };
+    });
+    return new ApiResponse(workersInfoSelect, EResponseCodes.OK);
+  }
   // CREATE ASSET
   public async createAsset(payload: IAssetSchema) {
     const newAsset = await this.assetRepository.createAsset(payload);

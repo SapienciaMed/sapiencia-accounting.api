@@ -33,7 +33,7 @@ export default class AppProvider {
     const GenericMasterService = await import(
       "App/Services/external/GenericExternalService"
     );
-    const PayrollFurnitureService = await import(
+    const PayrollService = await import(
       "App/Services/external/PayrollExternalService"
     );
     /**************************************************************************/
@@ -107,7 +107,7 @@ export default class AppProvider {
       () =>
         new FurnitureService.default(
           new FurnitureRepository.default(),
-          new PayrollFurnitureService.default(),
+          new PayrollService.default(),
           new GenericMasterService.default(),
           new FurnitureHistoryRepository.default()
         )
@@ -122,7 +122,11 @@ export default class AppProvider {
     );
     this.app.container.singleton(
       "core.AssetProvider",
-      () => new AssetService.default(new AssetRepository.default())
+      () =>
+        new AssetService.default(
+          new AssetRepository.default(),
+          new PayrollService.default()
+        )
     );
   }
 
