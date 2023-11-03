@@ -1,0 +1,66 @@
+paths:
+  /api/v1/account-statement/generate-xlsx/:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: number
+          required: true
+          description: Número de página
+        - in: query
+          name: perPage
+          schema:
+            type: number
+          required: true
+          description: Cantidad de registros por página
+        - in: query
+          name: accountNum
+          schema:
+            type: number
+          description: Número consecutivo de la cuenta de cobro
+        - in: query
+          name: contractCode
+          schema:
+            type: number
+          description: Número de contrato de la cuenta de cobro
+        - in: query
+          name: nit
+          schema:
+            type: number
+          description: Nit de la cuenta de cobro
+        - in: query
+          name: expeditionDate
+          schema:
+            type: date
+          description: Fecha de expedición de la cuenta de cobro
+      tags:
+        - Cuenta de cobro
+      summary: Permite generar el XLSX de una cuenta de cobro paginado
+      description: Con este endpoint puedes generar un XLSX con toda la información de una cuenta de cobro paginado
+      operationId: generate-account-statement-xlsx
+      produces:
+        - application/json
+      responses:
+        200:
+          description: XLSX de cuenta de cobro generado exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value: {}
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
