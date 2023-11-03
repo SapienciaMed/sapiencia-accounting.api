@@ -1,0 +1,89 @@
+paths:
+  /api/v1/account-statement/:
+    post:
+      tags:
+        - Cuenta de cobro
+      summary: Permite la creación de una cuenta cobro
+      description: Con este endpoint puedes crear una cuenta de cobro
+      operationId: create-account-statement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createAccountStatementSchema"
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Cuenta de cobro creada exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "contractCode": 1,
+                          "accountNum": 52033,
+                          "expeditionDate": "2023/08/11",
+                          "expirationDate": "2023-01-04T00:00:00.000-05:00",
+                          "paymentType": "3",
+                          "valuePay": 985623542,
+                          "concept": "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
+                          "userCreate": "797940",
+                          "updatedAt": "2023-11-03T15:05:11.268-05:00",
+                          "createdAt": "2023-11-03T15:05:11.268-05:00",
+                          "id": 6,
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    createAccountStatementSchema:
+      type: object
+      required:
+        - contractCode
+        - accountNum
+        - expeditionDate
+        - expirationDate
+        - paymentType
+        - valuePay
+        - concept
+      properties:
+        contractCode:
+          type: number
+          example: 1
+        accountNum:
+          type: number
+          example: 52023
+        expeditionDate:
+          type: date
+          example: 2023-08-11
+        expirationDate:
+          type: date
+          example: 2023-01-04
+        paymentType:
+          type: string
+          example: 3
+        valuePay:
+          type: number
+          example: 1226999
+        concept:
+          type: string
+          example: Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.

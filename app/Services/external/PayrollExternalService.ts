@@ -1,7 +1,7 @@
-import Env from "@ioc:Adonis/Core/Env";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { IWorker } from "App/Interfaces/Worker";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { getAuthHeaders } from "App/Utils/helpers";
 import axios, { AxiosInstance } from "axios";
 
 export interface IPayrollExternalService {
@@ -19,8 +19,6 @@ export default class PayrollExternalService implements IPayrollExternalService {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        permissions: Env.get("CURRENT_PERMISSIONS"),
-        authorization: Env.get("CURRENT_AUTHORIZATION"),
       },
     });
   }
@@ -29,7 +27,11 @@ export default class PayrollExternalService implements IPayrollExternalService {
     try {
       const endpoint = `/vinculation/worker/get-by-filters`;
       const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
-        endpoint
+        endpoint,
+        {},
+        {
+          headers: getAuthHeaders(),
+        }
       );
       return resp.data;
     } catch (err) {
@@ -42,7 +44,9 @@ export default class PayrollExternalService implements IPayrollExternalService {
       const endpoint = `${this.baseURL}/vinculation/${id}`;
       const { data: resp } = await this.apiPayroll.get<
         ApiResponse<{ worker: IWorker }>
-      >(endpoint);
+      >(endpoint, {
+        headers: getAuthHeaders(),
+      });
       if (resp.operation.code === EResponseCodes.FAIL) {
         throw new Error(`Empleado con id ${id} no existe`);
       }
@@ -60,7 +64,10 @@ export default class PayrollExternalService implements IPayrollExternalService {
       };
       const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
         endpoint,
-        body
+        body,
+        {
+          headers: getAuthHeaders(),
+        }
       );
       if (resp.data.length === 0) {
         throw new Error(`No existen usuarios con documento ${document}`);

@@ -1,35 +1,37 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { ACCOUNT_STATEMENT_TRACKING_TABLE } from "App/Constants/Tables/AccountStatement/AccountStatementTracking";
 import { DateTime } from "luxon";
 
 export default class AccountStatementTracking extends BaseModel {
-  public static table = "SCC_SEGUIMIENTO_CUENTA_COBRO";
+  public static table = ACCOUNT_STATEMENT_TRACKING_TABLE.TABLE_NAME;
+
   @column({
     isPrimary: true,
-    columnName: "SCC_CODIGO",
+    columnName: ACCOUNT_STATEMENT_TRACKING_TABLE.ID,
     serializeAs: "id",
   })
   public id: number;
 
   @column({
-    columnName: "SCC_OBSERVACION",
+    columnName: ACCOUNT_STATEMENT_TRACKING_TABLE.OBSERVATION,
     serializeAs: "observation",
   })
   public observation: string;
 
   @column.dateTime({
-    columnName: "SCC_FECHA_SEGUIMIENTO",
+    columnName: ACCOUNT_STATEMENT_TRACKING_TABLE.TRACKING_DATE,
     serializeAs: "trackingDate",
   })
   public trackingDate: DateTime;
 
   @column({
-    columnName: "SCC_CODETO_ESTADO",
+    columnName: ACCOUNT_STATEMENT_TRACKING_TABLE.STATUS,
     serializeAs: "statusId",
   })
   public statusId: number;
 
   @column({
-    columnName: "SCC_CODCTC_CUENTAS_COBRO",
+    columnName: ACCOUNT_STATEMENT_TRACKING_TABLE.FK_ACCOUNT_STATEMENT,
     serializeAs: "accountStatementId",
   })
   public accountStatementId: number;

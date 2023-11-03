@@ -1,0 +1,86 @@
+paths:
+  /api/v1/account-statement/get-by-id/{id}/:
+    get:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id de la cuenta de cobro
+      tags:
+        - Cuenta de cobro
+      summary: Permite obtener una cuenta de cobro por id
+      description: Con este endpoint puedes obtener toda la información de una cuenta de cobro por id
+      operationId: get-account-statement-by-id
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Cuenta de cobro obtenida exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 1,
+                          "contractCode": 1,
+                          "accountNum": 42023,
+                          "expeditionDate": "2023/05/01",
+                          "expirationDate": "2023-09-02T00:00:00.000-05:00",
+                          "paymentType": "1",
+                          "valuePay": "226687971.00",
+                          "concept": "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
+                          "userModified": null,
+                          "updatedAt": "2023-11-03T14:57:02.000-05:00",
+                          "userCreate": "0000 000 000",
+                          "createdAt": "2023-11-03T14:57:02.000-05:00",
+                          "contract":
+                            {
+                              "id": 1,
+                              "contractId": "PAC ENERO 2023",
+                              "businessCode": 1,
+                              "userModified": null,
+                              "updatedAt": "2023-11-03T14:56:13.000-05:00",
+                              "userCreate": "0000 000 000",
+                              "createdAt": "2023-11-03T14:56:13.000-05:00",
+                              "debitAccount": "037670151721",
+                              "creditAccount": "037670151721",
+                              "business":
+                                {
+                                  "id": 1,
+                                  "name": "Institución Universitaria Colegio Mayor de Antioquia",
+                                  "nit": "890980134-1",
+                                  "address": "Calle 78 N°65-46",
+                                  "email": "example@email.com",
+                                  "municipalityCode": "396",
+                                  "sender": "Rubén Darío Osorio Jiménez",
+                                  "chargeSender": "Vicerrector Académico",
+                                  "userModified": null,
+                                  "updatedAt": "2023-11-03T14:56:10.000-05:00",
+                                  "userCreate": "0000-000-000",
+                                  "createdAt": "2023-11-03T14:56:10.000-05:00",
+                                  "phone": "4445611",
+                                },
+                            },
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

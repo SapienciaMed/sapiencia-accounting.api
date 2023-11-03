@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import {
   ASSET_SQL_ERROR,
   DATABASE_ERRORS,
@@ -11,7 +12,6 @@ import {
 } from "App/Interfaces/Asset";
 import Asset from "App/Models/Asset";
 import { IPagingData } from "App/Utils/ApiResponses";
-
 export interface IAssetRepository {
   createAsset(payload: IAssetSchema): Promise<IAsset>;
   getAllAssetsPaginated(filters: IAssetsFilters): Promise<IPagingData<IAsset>>;
@@ -24,7 +24,7 @@ export default class AssetRepository implements IAssetRepository {
   public async createAsset(payload: IAssetSchema) {
     try {
       const newAsset = new Asset();
-      const currentUserId = process.env.CURRENT_USER_DOCUMENT;
+      const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
       newAsset.fill({ ...payload, userCreated: currentUserId });
       return await newAsset.save();
     } catch (err) {
@@ -82,7 +82,7 @@ export default class AssetRepository implements IAssetRepository {
   // UPDATED ASSET BY ID
   public async updateAssetById(id: number, payload: IUpdateAssetSchema) {
     const assetFound = await this.getAssetById(id);
-    const currentUserId = process.env.CURRENT_USER_DOCUMENT;
+    const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
     return await assetFound
       .merge({ ...payload, userModified: currentUserId })
       .save();

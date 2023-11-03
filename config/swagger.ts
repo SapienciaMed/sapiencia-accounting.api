@@ -12,9 +12,9 @@ export default {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "Documentación API Autenticación",
+        title: "Documentación API Contabilidad",
         version: "1.0.0",
-        description: "Catalago de servicios",
+        description: "Catálago de servicios",
       },
       components: {
         securitySchemes: {

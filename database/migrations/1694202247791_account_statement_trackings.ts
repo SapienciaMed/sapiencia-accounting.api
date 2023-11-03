@@ -1,28 +1,34 @@
 import BaseSchema from "@ioc:Adonis/Lucid/Schema";
+import { ACCOUNT_STATEMENT_TRACKING_TABLE } from "App/Constants/Tables/AccountStatement/AccountStatementTracking";
 
 export default class extends BaseSchema {
-  protected tableName = "SCC_SEGUIMIENTO_CUENTA_COBRO";
+  protected tableName = ACCOUNT_STATEMENT_TRACKING_TABLE.TABLE_NAME;
+
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.comment(
         "Tabla que almacena el seguimiento de las cuentas de cobro"
       );
       table
-        .increments("SCC_CODIGO")
+        .increments(ACCOUNT_STATEMENT_TRACKING_TABLE.ID)
         .primary()
         .unique()
         .notNullable()
         .comment("Llave primaria");
       table
-        .string("SCC_OBSERVACION", 500)
+        .string(ACCOUNT_STATEMENT_TRACKING_TABLE.OBSERVATION, 500)
         .notNullable()
         .comment("Observaciones de cada estado de seguimiento");
       table
-        .dateTime("SCC_FECHA_SEGUIMIENTO")
+        .dateTime(ACCOUNT_STATEMENT_TRACKING_TABLE.TRACKING_DATE)
         .nullable()
         .comment("Fecha de seguimiento de la cuenta de cobro");
       table
-        .integer("SCC_CODCTC_CUENTAS_COBRO")
+        .integer(ACCOUNT_STATEMENT_TRACKING_TABLE.STATUS)
+        .notNullable()
+        .comment("Código del estado");
+      table
+        .integer(ACCOUNT_STATEMENT_TRACKING_TABLE.FK_ACCOUNT_STATEMENT)
         .unsigned()
         .references("CTC_CODIGO")
         .inTable("CTC_CUENTAS_COBRO")

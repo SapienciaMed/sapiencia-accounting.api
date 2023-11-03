@@ -1,0 +1,77 @@
+paths:
+  /api/v1/account-statement/update/{id}/:
+    put:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id de la cuenta de cobro
+      tags:
+        - Cuenta de cobro
+      summary: Permite la edición de una cuenta cobro
+      description: Con este endpoint puedes editar una cuenta de cobro
+      operationId: update-account-statement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateAccountStatementSchema"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Cuenta de cobro actualizada exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 1,
+                          "contractCode": 2,
+                          "accountNum": 42023,
+                          "expeditionDate": "2023/05/01",
+                          "expirationDate": "2023-09-02T00:00:00.000-05:00",
+                          "paymentType": "1",
+                          "valuePay": 12000000,
+                          "concept": "Without concept",
+                          "userModified": "797940",
+                          "updatedAt": "2023-11-03T15:26:10.266-05:00",
+                          "userCreate": "0000 000 000",
+                          "createdAt": "2023-11-03T14:57:02.000-05:00",
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    updateAccountStatementSchema:
+      type: object
+      properties:
+        contractCode:
+          type: number
+          example: 1
+        valuePay:
+          type: number
+          example: 1226999
+        concept:
+          type: string
+          example: Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.
