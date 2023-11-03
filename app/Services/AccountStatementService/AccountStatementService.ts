@@ -2,6 +2,7 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
   IAccountStatementDownloadPDF,
+  IAccountStatementSchema,
   IGetAccountStatement,
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
@@ -21,7 +22,7 @@ import {
 
 export interface IAccountStatementService {
   createAccountStatement(
-    payload: IAccountStatement
+    payload: IAccountStatementSchema
   ): Promise<ApiResponse<IAccountStatement>>;
   getAccountStatementFiltered(
     filters: IGetAccountStatement
@@ -54,11 +55,11 @@ export default class AccountStatementService
     private genericMasterExternalService: GenericMasterExternalService
   ) {}
   // CREATE ACCOUNT STATEMENT
-  public async createAccountStatement(payload: IAccountStatement) {
+  public async createAccountStatement(payload: IAccountStatementSchema) {
     // CHECK IF EXISTS ANOTHER ACCOUNT STATEMENT WITH SAME ACCOUNT NUMBER
     const existsAccountStatementId =
       await this.accountStatementRepository.getAccountStatementByAccountNumber(
-        payload
+        payload.accountNum
       );
     if (existsAccountStatementId) {
       const { accountNum: lastId } =

@@ -17,7 +17,6 @@ export const accountStatementSchema = schema.create({
   ),
   paymentType: schema.string([
     rules.required(),
-    rules.alphaNum(),
     rules.minLength(1),
     rules.maxLength(15),
     rules.trim(),
@@ -27,18 +26,6 @@ export const accountStatementSchema = schema.create({
     rules.required(),
     rules.minLength(1),
     rules.maxLength(500),
-    rules.trim(),
-  ]),
-  userCreate: schema.string([
-    rules.required(),
-    rules.minLength(1),
-    rules.maxLength(15),
-    rules.trim(),
-  ]),
-  userModified: schema.string.optional([
-    rules.alphaNum(),
-    rules.minLength(1),
-    rules.maxLength(15),
     rules.trim(),
   ]),
 });
