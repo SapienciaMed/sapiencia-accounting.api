@@ -2,8 +2,8 @@ import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AccountStatementProvider from "@ioc:core.AccountStatementProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
-  IAccountStatement,
   IAccountStatementDownloadPDF,
+  IAccountStatementSchema,
   IGetAccountStatement,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
@@ -18,7 +18,7 @@ export default class AccountStatementController {
   // CREATE AN ACCOUNT STATEMENT
   public async createAccountStatement(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
-    let payload: IAccountStatement;
+    let payload: IAccountStatementSchema;
     try {
       payload = await request.validate({ schema: accountStatementSchema });
     } catch (err) {

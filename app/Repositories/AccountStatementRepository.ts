@@ -1,6 +1,7 @@
 import Logger from "@ioc:Adonis/Core/Logger";
 import {
   IAccountStatement,
+  IAccountStatementSchema,
   IGetAccountStatement,
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
@@ -10,7 +11,7 @@ import { IPagingData } from "App/Utils/ApiResponses";
 
 export interface IAccountStatementRepository {
   createAccountStatement(
-    payload: IAccountStatement
+    payload: IAccountStatementSchema
   ): Promise<IAccountStatement>;
   getAccountStatementFiltered(
     filters: IGetAccountStatement
@@ -30,9 +31,14 @@ export default class AccountStatementRepository
   implements IAccountStatementRepository
 {
   // CREATE ACCOUNT STATEMENT
-  public async createAccountStatement(payload: IAccountStatement) {
+  public async createAccountStatement(payload: IAccountStatementSchema) {
     const newAccountStatement = new AccountStatement();
-    await newAccountStatement.fill(payload).save();
+    await newAccountStatement
+      .fill({
+        ...payload,
+        userCreate: process.env.CURRENT_USER_DOCUMENT,
+      })
+      .save();
     return newAccountStatement.serialize() as IAccountStatement;
   }
   // GET ALL ACCOUNT STATEMENT FILTERED
@@ -79,7 +85,12 @@ export default class AccountStatementRepository
     payload: IUpdateAccountStatement
   ) {
     const accountStatementFound = await AccountStatement.findOrFail(id);
-    const resp = await accountStatementFound.merge(payload).save();
+    const resp = await accountStatementFound
+      .merge({
+        ...payload,
+        userModified: process.env.CURRENT_USER_DOCUMENT,
+      })
+      .save();
     return resp as IAccountStatement;
   }
   // GET AN ACCOUNT STATEMENT BY ID
@@ -110,8 +121,8 @@ export default class AccountStatementRepository
     }
   }
   // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
-  public async getAccountStatementByAccountNumber(payload: IAccountStatement) {
-    return await AccountStatement.findBy("accountNum", payload.accountNum);
+  public async getAccountStatementByAccountNumber(accountNum: number) {
+    return await AccountStatement.findBy("accountNum", accountNum);
   }
   // GET AN ACCOUNT STATEMENT BY ACCOUNT NUMBER
   public async getAccountStatementByAccountNum(accountNum: number) {
