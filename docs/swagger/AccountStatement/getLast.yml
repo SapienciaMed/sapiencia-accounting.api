@@ -1,0 +1,66 @@
+paths:
+  /api/v1/account-statement/get-last/:
+    get:
+      tags:
+        - Cuenta de cobro
+      summary: Permite obtener el último número consecutivo de las cuentas de cobro
+      description: Con este endpoint puedes obtener el último número consecutivo
+      operationId: get-last-account-statement-consecutive
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Último consecutivo obtenido exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 6,
+                          "contractCode": 1,
+                          "accountNum": 52033,
+                          "expeditionDate": "2023/08/11",
+                          "expirationDate": "2023-01-04T00:00:00.000-05:00",
+                          "paymentType": "3",
+                          "valuePay": "985623542.00",
+                          "concept": "Transferencias para los proyectos de funcionamiento de la Agencia Sapiencia, correspondiente al mes de MAYO de 2023.",
+                          "userModified": null,
+                          "updatedAt": "2023-11-03T15:05:11.000-05:00",
+                          "userCreate": "797940",
+                          "createdAt": "2023-11-03T15:05:11.000-05:00",
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        400:
+          description: No hay cuentas de cobro creadas para generar un consecutivo
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "No hay ninguna cuenta de cobro creada para crear un consecutivo",
+                        },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

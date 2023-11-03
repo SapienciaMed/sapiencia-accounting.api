@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import {
   IAssetHistory,
   IAssetHistorySchema,
@@ -13,7 +14,7 @@ export default class AssetHistoryRepository implements IAssetHistoryRepository {
   public async createAssetHistory(payload: IAssetHistorySchema) {
     return await AssetHistory.create({
       ...payload,
-      userModified: process.env.CURRENT_USER_DOCUMENT,
+      userModified: Env.get("CURRENT_USER_DOCUMENT"),
     });
   }
 }

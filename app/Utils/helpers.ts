@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import moment from "moment";
 
 export const formaterNumberToCurrency = (value: number) => {
@@ -29,3 +30,8 @@ export const getChangesBetweenTwoObjects = <T>(oldObject: T, newObject: T) => {
   }
   return { changes, thereAreChanges };
 };
+
+export const getAuthHeaders = () => ({
+  permissions: Env.get("CURRENT_PERMISSIONS"),
+  authorization: Env.get("CURRENT_AUTHORIZATION"),
+});

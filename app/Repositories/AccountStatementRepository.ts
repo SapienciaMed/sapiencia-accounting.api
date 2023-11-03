@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import Logger from "@ioc:Adonis/Core/Logger";
 import {
   IAccountStatement,
@@ -36,7 +37,7 @@ export default class AccountStatementRepository
     await newAccountStatement
       .fill({
         ...payload,
-        userCreate: process.env.CURRENT_USER_DOCUMENT,
+        userCreate: Env.get("CURRENT_USER_DOCUMENT"),
       })
       .save();
     return newAccountStatement.serialize() as IAccountStatement;
@@ -88,7 +89,7 @@ export default class AccountStatementRepository
     const resp = await accountStatementFound
       .merge({
         ...payload,
-        userModified: process.env.CURRENT_USER_DOCUMENT,
+        userModified: Env.get("CURRENT_USER_DOCUMENT"),
       })
       .save();
     return resp as IAccountStatement;

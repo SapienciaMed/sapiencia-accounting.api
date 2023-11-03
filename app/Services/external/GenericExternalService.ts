@@ -1,6 +1,6 @@
-import Env from "@ioc:Adonis/Core/Env";
 import { IGenericItem, IMunicipality } from "App/Interfaces/GenericMaster";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { getAuthHeaders } from "App/Utils/helpers";
 import axios, { AxiosInstance } from "axios";
 
 export interface IGenericMasterExternalService {
@@ -22,8 +22,6 @@ export default class GenericMasterExternalService
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        permissions: Env.get("CURRENT_PERMISSIONS"),
-        authorization: Env.get("CURRENT_AUTHORIZATION"),
       },
     });
   }
@@ -35,7 +33,9 @@ export default class GenericMasterExternalService
       const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/${grouper}`;
       const { data: resp } = await this.urlApiCore.get<
         ApiResponse<IGenericItem[]>
-      >(endpoint);
+      >(endpoint, {
+        headers: getAuthHeaders(),
+      });
       const dataFound = resp.data.find(
         ({ itemCode }) => itemCode === String(code)
       );
@@ -55,7 +55,9 @@ export default class GenericMasterExternalService
       const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/MUNICIPIOS`;
       const { data: resp } = await this.urlApiCore.get<
         ApiResponse<IMunicipality[]>
-      >(endpoint);
+      >(endpoint, {
+        headers: getAuthHeaders(),
+      });
       const municipalityFound = resp.data.find(({ id }) => String(id) === code);
       if (municipalityFound === undefined) {
         throw new Error(`Municipio con código ${code} no existe`);
