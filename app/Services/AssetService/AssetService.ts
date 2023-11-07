@@ -49,6 +49,7 @@ export default class AssetService implements IAssetService {
       return {
         value: Number(numberDocument),
         name: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
+        clerk: "Contratista",
       };
     });
     return new ApiResponse(workersInfoSelect, EResponseCodes.OK);
