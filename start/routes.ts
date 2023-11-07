@@ -180,4 +180,12 @@ Route.group(() => {
       Route.matchers.number()
     );
   }).prefix("/asset");
+  // ==================================================================
+  // ========================= ASSET HISTORY ==========================
+  Route.group(() => {
+    Route.get(
+      "/:assetId/get-asset-history-by-id",
+      "AssetHistoryController.getAssetHistoryById"
+    );
+  }).prefix("/asset-history");
 }).prefix("/api/v1");

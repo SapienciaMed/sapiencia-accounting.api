@@ -6,10 +6,20 @@ import {
 import AssetHistory from "App/Models/AssetHistory";
 
 export interface IAssetHistoryRepository {
+  getAssetHistoryById(assetId: number): Promise<IAssetHistory[]>;
   createAssetHistory(payload: IAssetHistorySchema): Promise<IAssetHistory>;
 }
 
 export default class AssetHistoryRepository implements IAssetHistoryRepository {
+  // GET ASSET HISTORY BY ID
+  public async getAssetHistoryById(assetId: number) {
+    try {
+      const assetHistoryQuery = AssetHistory.query();
+      return await assetHistoryQuery.where("assetId", assetId);
+    } catch (err) {
+      throw err;
+    }
+  }
   // CREATE ASSET HISTORY
   public async createAssetHistory(payload: IAssetHistorySchema) {
     return await AssetHistory.create({

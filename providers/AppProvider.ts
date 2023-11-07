@@ -24,6 +24,9 @@ export default class AppProvider {
       "App/Services/FurnitureHistoryService"
     );
     const AssetService = await import("App/Services/AssetService/AssetService");
+    const AssetHistoryService = await import(
+      "App/Services/AssetHistoryService"
+    );
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
@@ -119,6 +122,11 @@ export default class AppProvider {
           new AssetHistoryRepository.default(),
           new GenericMasterService.default()
         )
+    );
+    this.app.container.singleton(
+      "core.AssetHistoryProvider",
+      () =>
+        new AssetHistoryService.default(new AssetHistoryRepository.default())
     );
   }
 
