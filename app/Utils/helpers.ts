@@ -1,4 +1,6 @@
 import Env from "@ioc:Adonis/Core/Env";
+import { TIPO_FUNCIONARIO } from "App/Constants/GenericListEnum";
+import { IWorker } from "App/Interfaces/Worker";
 import moment from "moment";
 
 export const formaterNumberToCurrency = (value: number) => {
@@ -35,3 +37,12 @@ export const getAuthHeaders = () => ({
   permissions: Env.get("CURRENT_PERMISSIONS"),
   authorization: Env.get("CURRENT_AUTHORIZATION"),
 });
+
+export const getClerkName = (worker: IWorker) => {
+  const contractNumber = worker.employment.idTypeContract;
+  // (4 prestacion de servicios) === CONTRATISTA - (1, 2 y 3) === VINCULADO
+  if (contractNumber === 4) {
+    return TIPO_FUNCIONARIO.CONTRATISTA;
+  }
+  return TIPO_FUNCIONARIO.VINCULADO;
+};
