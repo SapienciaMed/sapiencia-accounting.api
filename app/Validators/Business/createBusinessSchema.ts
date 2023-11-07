@@ -14,5 +14,5 @@ export const createBusinessSchema = schema.create({
     rules.maxLength(100),
   ]),
   municipalityCode: schema.string([rules.required(), rules.maxLength(10)]),
-  phone: schema.string([rules.required(), rules.maxLength(10)]),
+  phone: schema.string([rules.trim(), rules.required(), rules.maxLength(10)]),
 });
