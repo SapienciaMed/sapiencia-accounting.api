@@ -33,9 +33,7 @@ export default class GenericMasterExternalService
       const endpoint = `${this.baseURL}/generic-list/get-by-grouper/${grouper}`;
       const { data: resp } = await this.urlApiCore.get<
         ApiResponse<IGenericItem[]>
-      >(endpoint, {
-        headers: getAuthHeaders(),
-      });
+      >(endpoint, { headers: getAuthHeaders() });
       const dataFound = resp.data.find(
         ({ itemCode }) => itemCode === String(code)
       );
@@ -55,9 +53,7 @@ export default class GenericMasterExternalService
       const endpoint = `${this.baseURL}/generic-list/get-by-grouper/MUNICIPIOS`;
       const { data: resp } = await this.urlApiCore.get<
         ApiResponse<IMunicipality[]>
-      >(endpoint, {
-        headers: getAuthHeaders(),
-      });
+      >(endpoint, { headers: getAuthHeaders() });
       const municipalityFound = resp.data.find(({ id }) => String(id) === code);
       if (municipalityFound === undefined) {
         throw new Error(`Municipio con código ${code} no existe`);

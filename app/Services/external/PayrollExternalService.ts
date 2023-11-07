@@ -40,13 +40,8 @@ export default class PayrollExternalService implements IPayrollExternalService {
   // GET ALL ACTIVE WORKERS
   public async getAllActiveWorkers() {
     try {
-      const endpoint = `/vinculation/worker/get-by-filters`;
-      const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
-        endpoint,
-        {},
-        { headers: getAuthHeaders() }
-      );
-      return resp.data.filter((worker) => worker.employment !== null);
+      const workersData = await this.getAllWorkers();
+      return workersData.filter((worker) => worker.employment !== null);
     } catch (err) {
       throw new Error(err?.response?.data?.operation?.message);
     }
