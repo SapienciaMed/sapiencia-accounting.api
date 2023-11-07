@@ -6,6 +6,7 @@ import axios, { AxiosInstance } from "axios";
 
 export interface IPayrollExternalService {
   getAllWorkers(): Promise<IWorker[]>;
+  getAllActiveWorkers(): Promise<IWorker[]>;
   getWorkerById(id: number): Promise<{ worker: IWorker }>;
   getWorkerByDocument(document: string): Promise<IWorker>;
 }
@@ -29,11 +30,18 @@ export default class PayrollExternalService implements IPayrollExternalService {
       const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
         endpoint,
         {},
-        {
-          headers: getAuthHeaders(),
-        }
+        { headers: getAuthHeaders() }
       );
       return resp.data;
+    } catch (err) {
+      throw new Error(err?.response?.data?.operation?.message);
+    }
+  }
+  // GET ALL ACTIVE WORKERS
+  public async getAllActiveWorkers() {
+    try {
+      const workersData = await this.getAllWorkers();
+      return workersData.filter((worker) => worker.employment !== null);
     } catch (err) {
       throw new Error(err?.response?.data?.operation?.message);
     }
@@ -44,9 +52,7 @@ export default class PayrollExternalService implements IPayrollExternalService {
       const endpoint = `${this.baseURL}/vinculation/${id}`;
       const { data: resp } = await this.apiPayroll.get<
         ApiResponse<{ worker: IWorker }>
-      >(endpoint, {
-        headers: getAuthHeaders(),
-      });
+      >(endpoint, { headers: getAuthHeaders() });
       if (resp.operation.code === EResponseCodes.FAIL) {
         throw new Error(`Empleado con id ${id} no existe`);
       }
@@ -65,9 +71,7 @@ export default class PayrollExternalService implements IPayrollExternalService {
       const { data: resp } = await this.apiPayroll.post<ApiResponse<IWorker[]>>(
         endpoint,
         body,
-        {
-          headers: getAuthHeaders(),
-        }
+        { headers: getAuthHeaders() }
       );
       if (resp.data.length === 0) {
         throw new Error(`No existen usuarios con documento ${document}`);

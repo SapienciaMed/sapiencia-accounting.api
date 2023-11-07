@@ -172,13 +172,20 @@ Route.group(() => {
     Route.post("/create", "AssetController.createAsset");
     Route.post("get-all-paginated", "AssetController.getAllAssetsPaginated");
     Route.get("/generate-xlsx", "AssetController.generateAssetXLSX");
-    Route.get("/:id/get-by-id", "AssetController.getAssetById").where(
-      "id",
-      Route.matchers.number()
-    );
+    Route.get("/:id/get-by-id", "AssetController.getAssetById")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
     Route.put("/:id/update", "AssetController.updateAssetById").where(
       "id",
       Route.matchers.number()
     );
   }).prefix("/asset");
+  // ==================================================================
+  // ========================= ASSET HISTORY ==========================
+  Route.group(() => {
+    Route.get(
+      "/:assetId/get-asset-history-by-id",
+      "AssetHistoryController.getAssetHistoryById"
+    );
+  }).prefix("/asset-history");
 }).prefix("/api/v1");

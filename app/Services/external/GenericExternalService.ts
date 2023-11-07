@@ -15,7 +15,7 @@ export default class GenericMasterExternalService
   implements IGenericMasterExternalService
 {
   private urlApiCore: AxiosInstance;
-  private baseURL = process.env.urlApiCore;
+  private baseURL = process.env.urlApiCore + "/api/v1";
   constructor() {
     this.urlApiCore = axios.create({
       baseURL: this.baseURL,
@@ -27,15 +27,13 @@ export default class GenericMasterExternalService
   }
   public async getGenericItemDescriptionByItemCode(
     grouper: string,
-    code: number
+    code: number | string
   ) {
     try {
-      const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/${grouper}`;
+      const endpoint = `${this.baseURL}/generic-list/get-by-grouper/${grouper}`;
       const { data: resp } = await this.urlApiCore.get<
         ApiResponse<IGenericItem[]>
-      >(endpoint, {
-        headers: getAuthHeaders(),
-      });
+      >(endpoint, { headers: getAuthHeaders() });
       const dataFound = resp.data.find(
         ({ itemCode }) => itemCode === String(code)
       );
@@ -52,12 +50,10 @@ export default class GenericMasterExternalService
   // GET MUNICIPALITY NAME BY ITEM CODE
   public async getMunicipalityNameByItemCode(code: string) {
     try {
-      const endpoint = `${this.baseURL}/api/v1/generic-list/get-by-grouper/MUNICIPIOS`;
+      const endpoint = `${this.baseURL}/generic-list/get-by-grouper/MUNICIPIOS`;
       const { data: resp } = await this.urlApiCore.get<
         ApiResponse<IMunicipality[]>
-      >(endpoint, {
-        headers: getAuthHeaders(),
-      });
+      >(endpoint, { headers: getAuthHeaders() });
       const municipalityFound = resp.data.find(({ id }) => String(id) === code);
       if (municipalityFound === undefined) {
         throw new Error(`Municipio con código ${code} no existe`);
