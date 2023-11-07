@@ -5,6 +5,11 @@ interface IOperation {
   message?: string;
 }
 
+export type IDataPaginateFilters = {
+  page: number;
+  perPage: number;
+};
+
 interface IDataPaging {
   total: number;
   perPage?: number;

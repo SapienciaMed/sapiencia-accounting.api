@@ -1,17 +1,116 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import BusinessProvider from "@ioc:core.BusinessProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
+import {
+  IBusinessPaginateFilters,
+  IBusinessSchema,
+  IBusinessUpdateSchema,
+} from "App/Interfaces/Business";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { DBException } from "App/Utils/DbHandlerError";
+import { getBusinessPaginatedFiltersSchema } from "App/Validators/Business/businessPaginatedFiltersSchema";
+import { createBusinessSchema } from "App/Validators/Business/createBusinessSchema";
+import { updateBusinessSchema } from "App/Validators/Business/updateBusinessSchema";
 
 export default class BusinessController {
-  public async getBusinessById({ request, response }: HttpContextContract) {
+  // CREATE BUSINESS
+  public async createBusiness(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let payload: IBusinessSchema;
+    try {
+      payload = await request.validate({ schema: createBusinessSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const newBusiness = await BusinessProvider.createBusiness(payload);
+      return response.created(newBusiness);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET BUSINESS BY ID
+  public async getBusinessById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
     try {
       const { id } = request.params();
-      return response.send(await BusinessProvider.getBusinessById(id));
+      const businessFound = await BusinessProvider.getBusinessById(id);
+      return response.ok(businessFound);
     } catch (err) {
-      return response.badRequest(
-        new ApiResponse(null, EResponseCodes.FAIL, String(err))
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // UPDATE BUSINESS
+  public async updateBusiness(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let payload: IBusinessUpdateSchema;
+    try {
+      payload = await request.validate({ schema: updateBusinessSchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const { id } = request.params();
+      const businessUpdated = await BusinessProvider.updateBusiness(
+        id,
+        payload
       );
+      return response.ok(businessUpdated);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ALL BUSINESS INFO
+  public async getAllBusinessInfo(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+    try {
+      const businessInfoSelect = await BusinessProvider.getAllBusinessInfo();
+      return response.ok(businessInfoSelect);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET BUSINESS PAGINATED
+  public async getBusinessPaginated(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IBusinessPaginateFilters;
+    try {
+      filters = await request.validate({
+        schema: getBusinessPaginatedFiltersSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const businessFound = await BusinessProvider.getBusinessPaginated(
+        filters
+      );
+      return response.ok(businessFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // DELETE BUSINESS BY ID
+  public async deleteBusinessById(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { id } = request.params();
+      const resp = await BusinessProvider.deleteBusinessById(id);
+      return response.ok(resp);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
     }
   }
 }

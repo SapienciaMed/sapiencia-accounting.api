@@ -1,0 +1,46 @@
+paths:
+  /api/v1/account-statement/{id}/generate-account-statement-pdf/:
+    get:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            required: true
+            description: Id de la cuenta de cobro
+        - in: query
+          name: responsive
+          schema:
+            type: boolean
+          required: true
+          description: Boolean para decidir si quiere el PDF mode desktop o mobile
+      tags:
+        - Cuenta de cobro
+      summary: Permite generar el PDF de una cuenta de cobro por id
+      description: Con este endpoint puedes generar un PDF con toda la información de una cuenta de cobro por id
+      operationId: generate-account-statement-pdf-by-id
+      produces:
+        - application/json
+      responses:
+        200:
+          description: PDF de cuenta de cobro generado exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value: {}
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

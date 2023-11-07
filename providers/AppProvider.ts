@@ -9,26 +9,115 @@ export default class AppProvider {
     /**************************************************************************/
     /******************************** SERVICES ********************************/
     /**************************************************************************/
+    const AccountStatementService = await import(
+      "App/Services/AccountStatementService/AccountStatementService"
+    );
+    const AccountStatementTrackingService = await import(
+      "App/Services/AccountStatementTrackingService"
+    );
     const BusinessService = await import("App/Services/BusinessService");
-
+    const ContractService = await import("App/Services/ContractService");
+    const FurnitureService = await import(
+      "App/Services/FurnitureService/FurnitureService"
+    );
+    const FurnitureHistoryService = await import(
+      "App/Services/FurnitureHistoryService"
+    );
+    const AssetService = await import("App/Services/AssetService/AssetService");
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
-
+    const GenericMasterService = await import(
+      "App/Services/external/GenericExternalService"
+    );
+    const PayrollService = await import(
+      "App/Services/external/PayrollExternalService"
+    );
     /**************************************************************************/
     /******************************** REPOSITORIES ****************************/
     /**************************************************************************/
+    const AccountStatementRepository = await import(
+      "App/Repositories/AccountStatementRepository"
+    );
+    const AccountStatementTrackingRepository = await import(
+      "App/Repositories/AccountStatementTrackingRepository"
+    );
     const BusinessRepository = await import(
       "App/Repositories/BusinessRepository"
     );
-
+    const ContractRepository = await import(
+      "App/Repositories/ContractRepository"
+    );
+    const FurnitureRepository = await import(
+      "App/Repositories/FurnitureRepository"
+    );
+    const FurnitureHistoryRepository = await import(
+      "App/Repositories/FurnitureHistoryRepository"
+    );
+    const AssetRepository = await import("App/Repositories/AssetRepository");
+    const AssetHistoryRepository = await import(
+      "App/Repositories/AssetHistoryRepository"
+    );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
     /**************************************************************************/
-
+    this.app.container.singleton(
+      "core.AccountStatementProvider",
+      () =>
+        new AccountStatementService.default(
+          new AccountStatementRepository.default(),
+          new GenericMasterService.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.AccountStatementTrackingProvider",
+      () =>
+        new AccountStatementTrackingService.default(
+          new AccountStatementTrackingRepository.default()
+        )
+    );
     this.app.container.singleton(
       "core.BusinessProvider",
-      () => new BusinessService.default(new BusinessRepository.default())
+      () =>
+        new BusinessService.default(
+          new BusinessRepository.default(),
+          new GenericMasterService.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.ContractProvider",
+      () =>
+        new ContractService.default(
+          new ContractRepository.default(),
+          new GenericMasterService.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.FurnitureProvider",
+      () =>
+        new FurnitureService.default(
+          new FurnitureRepository.default(),
+          new PayrollService.default(),
+          new GenericMasterService.default(),
+          new FurnitureHistoryRepository.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.FurnitureHistoryProvider",
+      () =>
+        new FurnitureHistoryService.default(
+          new FurnitureHistoryRepository.default(),
+          new GenericMasterService.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.AssetProvider",
+      () =>
+        new AssetService.default(
+          new AssetRepository.default(),
+          new PayrollService.default(),
+          new AssetHistoryRepository.default()
+        )
     );
   }
 

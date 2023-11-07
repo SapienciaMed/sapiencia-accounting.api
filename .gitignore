@@ -3,4 +3,5 @@ build
 coverage
 .vscode
 .DS_STORE
-tmp
+tmp/*
+!tmp/.gitkeep
