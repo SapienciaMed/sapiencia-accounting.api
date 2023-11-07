@@ -32,9 +32,9 @@ export default class AssetRepository implements IAssetRepository {
       switch (code) {
         case DATABASE_ERRORS.ER_DUP_ENTRY:
           if (sqlMessage.includes(ASSET_SQL_ERROR.PLATE_DUPLICATE)) {
-            throw new Error("La placa ingresada ya existe");
+            throw new Error("El activo ingresado ya existe"); // PLATE DUPLICATED
           } else if (sqlMessage.includes(ASSET_SQL_ERROR.SERIAL_DUPLICATE)) {
-            throw new Error("El serial ingresado ya existe");
+            throw new Error("El activo ingresado ya existe"); // SERIAL DUPLICATED
           }
         default:
           throw new Error(err);
