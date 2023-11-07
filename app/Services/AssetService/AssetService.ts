@@ -1,4 +1,4 @@
-import { TIPO_ACTIVOS } from "App/Constants/GenericListEnum";
+import { TIPO_ACTIVOS, TIPO_FUNCIONARIO } from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAsset,
@@ -45,11 +45,17 @@ export default class AssetService implements IAssetService {
         surname,
         secondSurname = "",
         numberDocument,
+        employment,
       } = worker;
+      const { idTypeContract } = employment;
       return {
         value: Number(numberDocument),
         name: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
-        clerk: "Contratista",
+        // (4 prestacion de servicios) === CONTRATISTA - (1, 2 y 3) === VINCULADO
+        clerk:
+          idTypeContract === 4
+            ? TIPO_FUNCIONARIO.CONTRATISTA
+            : TIPO_FUNCIONARIO.VINCULADO,
       };
     });
     return new ApiResponse(workersInfoSelect, EResponseCodes.OK);

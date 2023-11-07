@@ -9,3 +9,8 @@ export enum TIPO_ACTIVOS {
   COMPUTO = "Computo",
   OTROS = "Otros",
 }
+
+export enum TIPO_FUNCIONARIO {
+  VINCULADO = "Vinculado",
+  CONTRATISTA = "Contratista",
+}
