@@ -47,13 +47,12 @@ export default class AssetService implements IAssetService {
         numberDocument,
         employment,
       } = worker;
-      const { idTypeContract } = employment;
       return {
         value: Number(numberDocument),
         name: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
         // (4 prestacion de servicios) === CONTRATISTA - (1, 2 y 3) === VINCULADO
         clerk:
-          idTypeContract === 4
+          employment?.idTypeContract === 4
             ? TIPO_FUNCIONARIO.CONTRATISTA
             : TIPO_FUNCIONARIO.VINCULADO,
       };
