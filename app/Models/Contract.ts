@@ -24,6 +24,24 @@ export default class Contract extends BaseModel {
   public businessCode: number;
 
   @column({
+    columnName: "CTR_CORREO_ELECTRONICO",
+    serializeAs: "email",
+  })
+  public email: string;
+
+  @column({
+    columnName: "CTR_REMISOR",
+    serializeAs: "sender",
+  })
+  public sender: string;
+
+  @column({
+    columnName: "CTR_CARGO_REMISOR",
+    serializeAs: "chargeSender",
+  })
+  public chargeSender: string;
+
+  @column({
     columnName: "CTR_USUARIO_MODIFICO",
     serializeAs: "userModified",
   })

@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import {
   CONTRACT_SQL_ERROR,
   DATABASE_ERRORS,
@@ -33,7 +34,10 @@ export default class ContractRepository implements IContractRepository {
   public async createContract(payload: IContractSchema) {
     try {
       const newContract = new Contract();
-      return await newContract.fill({ ...payload, userCreate: "foo" }).save();
+      const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
+      return await newContract
+        .fill({ ...payload, userCreate: currentUserId })
+        .save();
     } catch (err) {
       const { code, sqlMessage } = err as IDatabaseError;
       switch (code) {
@@ -91,7 +95,13 @@ export default class ContractRepository implements IContractRepository {
   // UPDATE CONTRACT BY ID
   public async updateContractById(id: number, payload: IContractUpdateSchema) {
     const contractFound = await this.getContractById(id);
-    return await contractFound.merge(payload).save();
+    const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
+    return await contractFound
+      .merge({
+        ...payload,
+        userModified: currentUserId,
+      })
+      .save();
   }
   // DELETE CONTRACT BY ID
   public async deleteContractById(id: number) {
