@@ -24,21 +24,9 @@ export default class extends BaseSchema {
         .comment("Número de NIT");
       table.string("RZO_DIRECCION", 100).notNullable().comment("Dirección");
       table
-        .string("RZO_CORREO_ELECTRONICO", 50)
-        .notNullable()
-        .comment("Correo electrónico");
-      table
         .string("RZO_CODIGO_MUNICIPIO", 10)
         .notNullable()
         .comment("Código del municipio (Listados Genéricos - sapiencia-core)");
-      table
-        .string("RZO_REMISOR", 100)
-        .notNullable()
-        .comment("Persona que remite la cuenta");
-      table
-        .string("RZO_CARGO_REMISOR", 100)
-        .notNullable()
-        .comment("Cargo de la persona que remite la cuenta");
       table
         .string("RZO_USUARIO_MODIFICO", 15)
         .nullable()

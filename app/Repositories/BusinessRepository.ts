@@ -1,3 +1,4 @@
+import Env from "@ioc:Adonis/Core/Env";
 import {
   BusinessModelError,
   DATABASE_ERRORS,
@@ -33,7 +34,10 @@ export default class BusinessRepository implements IBusinessRepository {
   public async createBusiness(payload: IBusinessSchema) {
     try {
       const newUser = new Business();
-      return await newUser.fill({ ...payload, userCreate: "foo" }).save();
+      const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
+      return await newUser
+        .fill({ ...payload, userCreate: currentUserId })
+        .save();
     } catch (err) {
       const { code, sqlMessage } = err as IDatabaseError;
       switch (code) {
@@ -66,7 +70,13 @@ export default class BusinessRepository implements IBusinessRepository {
   public async updateBusiness(id: number, payload: IBusinessUpdateSchema) {
     try {
       const businessFound = await this.getBusinessById(id);
-      return await businessFound.merge(payload).save();
+      const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
+      return await businessFound
+        .merge({
+          ...payload,
+          userModified: currentUserId,
+        })
+        .save();
     } catch (err) {
       const { code, sqlMessage } = err as IDatabaseError;
       switch (code) {
@@ -83,17 +93,7 @@ export default class BusinessRepository implements IBusinessRepository {
   public async getAllBusinessInfo() {
     const businessFound = await this.getAllBusiness();
     const businessInfoSelect = businessFound.map((business) => {
-      const {
-        id,
-        name,
-        nit,
-        municipalityCode,
-        address,
-        phone,
-        email,
-        sender,
-        chargeSender,
-      } = business;
+      const { id, name, nit, municipalityCode, address, phone } = business;
       return {
         value: id,
         name: `${nit} ${name.toLocaleUpperCase()}`,
@@ -102,10 +102,7 @@ export default class BusinessRepository implements IBusinessRepository {
           name,
           address,
           phone,
-          email,
-          sender,
           nit,
-          chargeSender,
           municipality: "",
         },
       };

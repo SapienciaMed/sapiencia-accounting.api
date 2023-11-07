@@ -29,28 +29,10 @@ export default class Business extends BaseModel {
   public address: string;
 
   @column({
-    columnName: "RZO_CORREO_ELECTRONICO",
-    serializeAs: "email",
-  })
-  public email: string;
-
-  @column({
     columnName: "RZO_CODIGO_MUNICIPIO",
     serializeAs: "municipalityCode",
   })
   public municipalityCode: string;
-
-  @column({
-    columnName: "RZO_REMISOR",
-    serializeAs: "sender",
-  })
-  public sender: string;
-
-  @column({
-    columnName: "RZO_CARGO_REMISOR",
-    serializeAs: "chargeSender",
-  })
-  public chargeSender: string;
 
   @column({
     columnName: "RZO_USUARIO_MODIFICO",
