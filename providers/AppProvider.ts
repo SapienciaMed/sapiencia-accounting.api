@@ -116,7 +116,8 @@ export default class AppProvider {
         new AssetService.default(
           new AssetRepository.default(),
           new PayrollService.default(),
-          new AssetHistoryRepository.default()
+          new AssetHistoryRepository.default(),
+          new GenericMasterService.default()
         )
     );
   }

@@ -172,10 +172,9 @@ Route.group(() => {
     Route.post("/create", "AssetController.createAsset");
     Route.post("get-all-paginated", "AssetController.getAllAssetsPaginated");
     Route.get("/generate-xlsx", "AssetController.generateAssetXLSX");
-    Route.get("/:id/get-by-id", "AssetController.getAssetById").where(
-      "id",
-      Route.matchers.number()
-    );
+    Route.get("/:id/get-by-id", "AssetController.getAssetById")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
     Route.put("/:id/update", "AssetController.updateAssetById").where(
       "id",
       Route.matchers.number()

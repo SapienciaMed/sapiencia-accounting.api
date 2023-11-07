@@ -1,4 +1,8 @@
-import { TIPO_ACTIVOS, TIPO_FUNCIONARIO } from "App/Constants/GenericListEnum";
+import {
+  GENERIC_LIST,
+  TIPO_ACTIVOS,
+  TIPO_FUNCIONARIO,
+} from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAsset,
@@ -12,6 +16,7 @@ import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { getChangesBetweenTwoObjects } from "App/Utils/helpers";
+import GenericMasterExternalService from "../external/GenericExternalService";
 import PayrollExternalService from "../external/PayrollExternalService";
 import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
@@ -33,7 +38,8 @@ export default class AssetService implements IAssetService {
   constructor(
     private assetRepository: AssetRepository,
     private payrollService: PayrollExternalService,
-    private assetHistoryRepository: AssetHistoryRepository
+    private assetHistoryRepository: AssetHistoryRepository,
+    private genericMasterService: GenericMasterExternalService
   ) {}
   // GET WORKERS INFO SELECT
   public async getWorkersInfoSelect() {
@@ -84,15 +90,55 @@ export default class AssetService implements IAssetService {
   }
   // GET ASSET BY ID
   public async getAssetById(id: number) {
-    const assetFound = await this.assetRepository.getAssetById(id);
-    return new ApiResponse(assetFound, EResponseCodes.OK);
+    const assetFound = (
+      await this.assetRepository.getAssetById(id)
+    ).serializeAttributes() as IAsset;
+    const { area, campus, status, ownerId } = assetFound;
+    const areaDataPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.AREA,
+        area
+      );
+    const campusDataPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.CAMPUS,
+        campus
+      );
+    const statusInfoPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.EQUIPMENT_STATUS,
+        status
+      );
+    const workerInfoPromise = await this.payrollService.getWorkerByDocument(
+      ownerId
+    );
+    const [areaData, campusData, statusData, workerData] = await Promise.all([
+      areaDataPromise,
+      campusDataPromise,
+      statusInfoPromise,
+      workerInfoPromise,
+    ]);
+    const {
+      firstName,
+      secondName = "",
+      surname,
+      secondSurname = "",
+      numberDocument,
+    } = workerData;
+    const assetFoundMutated = {
+      ...assetFound,
+      area: areaData.itemDescription,
+      campus: campusData.itemDescription,
+      status: statusData.itemDescription,
+      ownerId: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
+    };
+    return new ApiResponse(assetFoundMutated, EResponseCodes.OK);
   }
   // UPDATE ASSET BY ID
   public async updateAssetById(id: number, payload: IUpdateAssetSchema) {
     let auxPayload: IUpdateAssetSchema = payload;
-    const assetFound = await this.getAssetById(id);
-    const assetFoundSerialized =
-      assetFound.data.serializeAttributes() as IAsset;
+    const assetFound = await this.assetRepository.getAssetById(id);
+    const assetFoundSerialized = assetFound.serializeAttributes() as IAsset;
     if (
       payload?.type === TIPO_ACTIVOS.OTROS ||
       assetFoundSerialized.type === TIPO_ACTIVOS.OTROS
@@ -111,7 +157,7 @@ export default class AssetService implements IAssetService {
     );
     const { changes, thereAreChanges } =
       getChangesBetweenTwoObjects<IUpdateAssetSchema>(
-        assetFound.data.serializeAttributes(),
+        assetFoundSerialized,
         auxPayload
       );
     if (thereAreChanges) {
