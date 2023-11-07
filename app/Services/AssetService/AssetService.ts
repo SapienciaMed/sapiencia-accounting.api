@@ -1,8 +1,4 @@
-import {
-  GENERIC_LIST,
-  TIPO_ACTIVOS,
-  TIPO_FUNCIONARIO,
-} from "App/Constants/GenericListEnum";
+import { GENERIC_LIST, TIPO_ACTIVOS } from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAsset,
@@ -15,7 +11,7 @@ import AssetHistoryRepository from "App/Repositories/AssetHistoryRepository";
 import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
-import { getChangesBetweenTwoObjects } from "App/Utils/helpers";
+import { getChangesBetweenTwoObjects, getClerkName } from "App/Utils/helpers";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import PayrollExternalService from "../external/PayrollExternalService";
 import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
@@ -26,7 +22,7 @@ export interface IAssetService {
     filters: IAssetsFilters
   ): Promise<ApiResponse<IPagingData<IAsset>>>;
   generateAssetXLSX(filters: IAssetsFilters): Promise<ApiResponse<string>>;
-  getAssetById(id: number): Promise<ApiResponse<IAsset>>;
+  getAssetById(id: number): Promise<ApiResponse<IAsset & { clerk: string }>>;
   updateAssetById(
     id: number,
     payload: IUpdateAssetSchema
@@ -43,7 +39,7 @@ export default class AssetService implements IAssetService {
   ) {}
   // GET WORKERS INFO SELECT
   public async getWorkersInfoSelect() {
-    const workersInfo = await this.payrollService.getAllWorkers();
+    const workersInfo = await this.payrollService.getAllActiveWorkers();
     const workersInfoSelect = workersInfo.map((worker) => {
       const {
         firstName,
@@ -51,16 +47,11 @@ export default class AssetService implements IAssetService {
         surname,
         secondSurname = "",
         numberDocument,
-        employment,
       } = worker;
       return {
         value: Number(numberDocument),
         name: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
-        // (4 prestacion de servicios) === CONTRATISTA - (1, 2 y 3) === VINCULADO
-        clerk:
-          employment?.idTypeContract === 4
-            ? TIPO_FUNCIONARIO.CONTRATISTA
-            : TIPO_FUNCIONARIO.VINCULADO,
+        clerk: getClerkName(worker),
       };
     });
     return new ApiResponse(workersInfoSelect, EResponseCodes.OK);
@@ -130,6 +121,7 @@ export default class AssetService implements IAssetService {
       area: areaData.itemDescription,
       campus: campusData.itemDescription,
       status: statusData.itemDescription,
+      clerk: getClerkName(workerData),
       ownerId: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
     };
     return new ApiResponse(assetFoundMutated, EResponseCodes.OK);
