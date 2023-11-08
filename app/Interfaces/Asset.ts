@@ -24,6 +24,11 @@ export type IAsset = {
   createdAt: DateTime;
 };
 
+export type IAssetFullInfo = IAsset & {
+  clerk: string;
+  ownerFullName: string;
+};
+
 export type IAssetSchema = {
   type: string;
   campus: string;
