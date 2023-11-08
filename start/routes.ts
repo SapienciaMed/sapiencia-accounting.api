@@ -175,6 +175,9 @@ Route.group(() => {
     Route.get("/:id/get-by-id", "AssetController.getAssetById")
       .where("id", Route.matchers.number())
       .middleware("auth");
+    Route.get("/:id/get-by-id-raw", "AssetController.getAssetByIdRaw")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
     Route.put("/:id/update", "AssetController.updateAssetById").where(
       "id",
       Route.matchers.number()
