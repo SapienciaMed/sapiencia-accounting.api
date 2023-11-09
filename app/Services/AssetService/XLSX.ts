@@ -5,23 +5,23 @@ import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 export const assetXLSXcolumnNames = [
   {
     name: "Tipo equipo",
-    size: 20,
+    size: 15,
   },
   {
     name: "Área",
-    size: 20,
+    size: 25,
   },
   {
     name: "Estado",
-    size: 20,
+    size: 15,
   },
   {
     name: "CC usuario",
-    size: 30,
+    size: 15,
   },
   {
     name: "Nombres y apellidos",
-    size: 30,
+    size: 35,
   },
   {
     name: "Funcionario",
@@ -29,7 +29,7 @@ export const assetXLSXcolumnNames = [
   },
   {
     name: "Fecha de adquisición",
-    size: 25,
+    size: 20,
   },
   {
     name: "Tipo equipo",
@@ -45,15 +45,15 @@ export const assetXLSXcolumnNames = [
   },
   {
     name: "Placa",
-    size: 25,
+    size: 20,
   },
   {
     name: "Serial",
-    size: 25,
+    size: 20,
   },
   {
     name: "Observaciones",
-    size: 50,
+    size: 25,
   },
   {
     name: "CPU",
@@ -93,10 +93,10 @@ export const assetXLSXRows = (
         curr.plate,
         curr.serial,
         curr.observations,
-        curr.cpu,
-        curr.ram,
-        curr.storage,
-        curr.os,
+        curr?.cpu ?? "N/A",
+        curr?.ram ?? "N/A",
+        curr?.storage ?? "N/A",
+        curr?.os ?? "N/A",
       ],
     ];
   }, []);

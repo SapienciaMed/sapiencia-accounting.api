@@ -39,10 +39,14 @@ export const getAuthHeaders = () => ({
 });
 
 export const getClerkName = (worker: IWorker) => {
+  // (4 prestacion de servicios) === CONTRATISTA
+  // (1, 2 y 3) === VINCULADO
   const contractNumber = worker?.employment?.idTypeContract;
-  // (4 prestacion de servicios) === CONTRATISTA - (1, 2 y 3) === VINCULADO
   if (contractNumber === 4) {
     return TIPO_FUNCIONARIO.CONTRATISTA;
+  } else if (contractNumber === (1 || 2 || 3)) {
+    return TIPO_FUNCIONARIO.VINCULADO;
+  } else {
+    return TIPO_FUNCIONARIO.EMPTY;
   }
-  return TIPO_FUNCIONARIO.VINCULADO;
 };

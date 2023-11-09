@@ -139,46 +139,11 @@ export default class AssetService implements IAssetService {
   }
   // GET ASSET BY ID
   public async getAssetById(id: number) {
-    const assetFound = (
-      await this.assetRepository.getAssetById(id)
-    ).serializeAttributes() as IAsset;
-    const { area, campus, status, ownerId } = assetFound;
-    const areaDataPromise =
-      this.genericMasterService.getGenericItemDescriptionByItemCode(
-        GENERIC_LIST.AREA,
-        area
-      );
-    const campusDataPromise =
-      this.genericMasterService.getGenericItemDescriptionByItemCode(
-        GENERIC_LIST.CAMPUS,
-        campus
-      );
-    const statusInfoPromise =
-      this.genericMasterService.getGenericItemDescriptionByItemCode(
-        GENERIC_LIST.EQUIPMENT_STATUS,
-        status
-      );
-    const workerInfoPromise = this.payrollService.getWorkerByDocument(ownerId);
-    const [areaData, campusData, statusData, workerData] = await Promise.all([
-      areaDataPromise,
-      campusDataPromise,
-      statusInfoPromise,
-      workerInfoPromise,
-    ]);
-    const {
-      firstName,
-      secondName = "",
-      surname,
-      secondSurname = "",
-      numberDocument,
-    } = workerData;
+    const assetFound = await this.getFullAssetInfoById(id);
+    const { ownerFullName, ownerId } = assetFound;
     const assetFoundMutated = {
       ...assetFound,
-      area: areaData.itemDescription,
-      campus: campusData.itemDescription,
-      status: statusData.itemDescription,
-      clerk: getClerkName(workerData),
-      ownerId: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
+      ownerId: `${ownerFullName} - ${ownerId}`,
     };
     return new ApiResponse(assetFoundMutated, EResponseCodes.OK);
   }

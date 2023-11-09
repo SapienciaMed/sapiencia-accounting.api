@@ -175,7 +175,7 @@ Route.group(() => {
       "AssetController.getAllAssetsPaginated"
     ).middleware("auth");
     Route.get("/generate-xlsx", "AssetController.generateAssetXLSX").middleware(
-      "authWithQueryString"
+      "auth"
     );
     Route.get("/:id/get-by-id", "AssetController.getAssetById")
       .where("id", Route.matchers.number())
