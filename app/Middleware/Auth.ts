@@ -11,7 +11,17 @@ export default class Auth {
     next: () => Promise<void>,
     guards: string[]
   ) {
-    const { authorization, permissions } = ctx.request.headers();
+    const {
+      authorization: authorizationHeader,
+      permissions: permissionsHeader,
+    } = ctx.request.headers();
+    const {
+      authorization: authorizationQueryString,
+      permissions: permissionsQueryString,
+    } = ctx.request.qs();
+    const authorization = authorizationHeader || authorizationQueryString;
+    const permissions = permissionsHeader || permissionsQueryString;
+
     const key = Env.get("APP_KEY");
 
     try {

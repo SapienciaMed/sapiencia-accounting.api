@@ -14,4 +14,5 @@ export enum TIPO_ACTIVOS {
 export enum TIPO_FUNCIONARIO {
   VINCULADO = "Vinculado",
   CONTRATISTA = "Contratista",
+  EMPTY = "----",
 }
