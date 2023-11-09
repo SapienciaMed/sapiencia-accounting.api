@@ -15,7 +15,10 @@ export default class AssetHistoryRepository implements IAssetHistoryRepository {
   public async getAssetHistoryById(assetId: number) {
     try {
       const assetHistoryQuery = AssetHistory.query();
-      return await assetHistoryQuery.where("assetId", assetId);
+      const historyFound = await assetHistoryQuery.where("assetId", assetId);
+      return historyFound.map(
+        (item) => item.serializeAttributes() as IAssetHistory
+      );
     } catch (err) {
       throw err;
     }
