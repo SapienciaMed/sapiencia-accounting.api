@@ -1,5 +1,23 @@
 import { DateTime } from "luxon";
-import { IAsset } from "./Asset";
+
+export type IAssetChanges = {
+  type: string;
+  campus: string;
+  area: string;
+  status: string;
+  ownerId: string;
+  ownerDate: DateTime;
+  equipmentType: string;
+  brand: string;
+  model: string;
+  plate: string;
+  serial: string;
+  cpu: string;
+  ram: string;
+  storage: string;
+  os: string;
+  observations: string;
+};
 
 export type IAssetHistory = {
   id: number;
@@ -15,6 +33,6 @@ export type IAssetHistorySchema = {
 };
 
 export type IAssetHistoryChanges = {
-  oldChanges: Partial<IAsset>;
-  newChanges: Partial<IAsset>;
+  oldChanges: Partial<IAssetChanges>;
+  newChanges: Partial<IAssetChanges>;
 };
