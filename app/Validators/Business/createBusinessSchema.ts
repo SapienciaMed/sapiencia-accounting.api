@@ -13,9 +13,6 @@ export const createBusinessSchema = schema.create({
     rules.trim(),
     rules.maxLength(100),
   ]),
-  email: schema.string([rules.required(), rules.email(), rules.maxLength(50)]),
   municipalityCode: schema.string([rules.required(), rules.maxLength(10)]),
-  sender: schema.string([rules.required(), rules.maxLength(100)]),
-  chargeSender: schema.string([rules.required(), rules.maxLength(100)]),
-  phone: schema.string([rules.required(), rules.maxLength(10)]),
+  phone: schema.string([rules.trim(), rules.required(), rules.maxLength(10)]),
 });

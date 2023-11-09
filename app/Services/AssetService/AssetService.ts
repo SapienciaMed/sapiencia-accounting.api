@@ -2,6 +2,7 @@ import { GENERIC_LIST, TIPO_ACTIVOS } from "App/Constants/GenericListEnum";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAsset,
+  IAssetFullInfo,
   IAssetSchema,
   IAssetsFilters,
   IUpdateAssetSchema,
@@ -18,11 +19,13 @@ import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
 export interface IAssetService {
   createAsset(payload: IAssetSchema): Promise<ApiResponse<IAsset>>;
+  getFullAssetInfoById(id: number): Promise<IAssetFullInfo>;
   getAllAssetsPaginated(
     filters: IAssetsFilters
-  ): Promise<ApiResponse<IPagingData<IAsset>>>;
+  ): Promise<ApiResponse<IPagingData<IAssetFullInfo>>>;
   generateAssetXLSX(filters: IAssetsFilters): Promise<ApiResponse<string>>;
   getAssetById(id: number): Promise<ApiResponse<IAsset & { clerk: string }>>;
+  getAssetByIdRaw(id: number): Promise<ApiResponse<IAsset & { clerk: string }>>;
   updateAssetById(
     id: number,
     payload: IUpdateAssetSchema
@@ -61,12 +64,67 @@ export default class AssetService implements IAssetService {
     const newAsset = await this.assetRepository.createAsset(payload);
     return new ApiResponse(newAsset, EResponseCodes.OK);
   }
+  // GET FULL ASSET INFO
+  public async getFullAssetInfoById(id: number) {
+    const assetFound = (
+      await this.assetRepository.getAssetById(id)
+    ).serializeAttributes() as IAsset;
+    const { area, campus, status, ownerId } = assetFound;
+    const areaDataPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.AREA,
+        area
+      );
+    const campusDataPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.CAMPUS,
+        campus
+      );
+    const statusInfoPromise =
+      this.genericMasterService.getGenericItemDescriptionByItemCode(
+        GENERIC_LIST.EQUIPMENT_STATUS,
+        status
+      );
+    const workerInfoPromise = this.payrollService.getWorkerByDocument(ownerId);
+    const [areaData, campusData, statusData, workerData] = await Promise.all([
+      areaDataPromise,
+      campusDataPromise,
+      statusInfoPromise,
+      workerInfoPromise,
+    ]);
+    const {
+      firstName,
+      secondName = "",
+      surname,
+      secondSurname = "",
+      numberDocument,
+    } = workerData;
+    const assetFoundMutated = {
+      ...assetFound,
+      ownerId: numberDocument,
+      area: areaData.itemDescription,
+      clerk: getClerkName(workerData),
+      campus: campusData.itemDescription,
+      status: statusData.itemDescription,
+      ownerFullName: `${firstName} ${secondName} ${surname} ${secondSurname}`,
+    };
+    return assetFoundMutated;
+  }
   // GET ALL ASSETS PAGINATED
   public async getAllAssetsPaginated(filters: IAssetsFilters) {
     const assetsFound = await this.assetRepository.getAllAssetsPaginated(
       filters
     );
-    return new ApiResponse(assetsFound, EResponseCodes.OK);
+    let assetsFoundMutatedPromises: Promise<IAssetFullInfo>[] = [];
+    for (let asset of assetsFound.array) {
+      const auxAssetMutatedPromise = this.getFullAssetInfoById(asset.id);
+      assetsFoundMutatedPromises.push(auxAssetMutatedPromise);
+    }
+    const assetsFoundMutated = await Promise.all(assetsFoundMutatedPromises);
+    return new ApiResponse(
+      { ...assetsFound, array: assetsFoundMutated },
+      EResponseCodes.OK
+    );
   }
   // GENERATE ASSET XLSX
   public async generateAssetXLSX(filters: IAssetsFilters) {
@@ -100,9 +158,7 @@ export default class AssetService implements IAssetService {
         GENERIC_LIST.EQUIPMENT_STATUS,
         status
       );
-    const workerInfoPromise = await this.payrollService.getWorkerByDocument(
-      ownerId
-    );
+    const workerInfoPromise = this.payrollService.getWorkerByDocument(ownerId);
     const [areaData, campusData, statusData, workerData] = await Promise.all([
       areaDataPromise,
       campusDataPromise,
@@ -123,6 +179,19 @@ export default class AssetService implements IAssetService {
       status: statusData.itemDescription,
       clerk: getClerkName(workerData),
       ownerId: `${firstName} ${secondName} ${surname} ${secondSurname} - ${numberDocument}`,
+    };
+    return new ApiResponse(assetFoundMutated, EResponseCodes.OK);
+  }
+  // GET ASSET BY ID
+  public async getAssetByIdRaw(id: number) {
+    const assetFound = (
+      await this.assetRepository.getAssetById(id)
+    ).serializeAttributes() as IAsset;
+    const { ownerId } = assetFound;
+    const workerData = await this.payrollService.getWorkerByDocument(ownerId);
+    const assetFoundMutated = {
+      ...assetFound,
+      clerk: getClerkName(workerData),
     };
     return new ApiResponse(assetFoundMutated, EResponseCodes.OK);
   }

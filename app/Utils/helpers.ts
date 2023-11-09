@@ -39,7 +39,7 @@ export const getAuthHeaders = () => ({
 });
 
 export const getClerkName = (worker: IWorker) => {
-  const contractNumber = worker.employment.idTypeContract;
+  const contractNumber = worker?.employment?.idTypeContract;
   // (4 prestacion de servicios) === CONTRATISTA - (1, 2 y 3) === VINCULADO
   if (contractNumber === 4) {
     return TIPO_FUNCIONARIO.CONTRATISTA;

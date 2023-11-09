@@ -170,9 +170,17 @@ Route.group(() => {
       "AssetController.getWorkersInfoSelect"
     ).middleware("auth");
     Route.post("/create", "AssetController.createAsset");
-    Route.post("get-all-paginated", "AssetController.getAllAssetsPaginated");
-    Route.get("/generate-xlsx", "AssetController.generateAssetXLSX");
+    Route.post(
+      "get-all-paginated",
+      "AssetController.getAllAssetsPaginated"
+    ).middleware("auth");
+    Route.get("/generate-xlsx", "AssetController.generateAssetXLSX").middleware(
+      "authWithQueryString"
+    );
     Route.get("/:id/get-by-id", "AssetController.getAssetById")
+      .where("id", Route.matchers.number())
+      .middleware("auth");
+    Route.get("/:id/get-by-id-raw", "AssetController.getAssetByIdRaw")
       .where("id", Route.matchers.number())
       .middleware("auth");
     Route.put("/:id/update", "AssetController.updateAssetById").where(

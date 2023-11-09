@@ -12,6 +12,9 @@ export default class extends BaseSeeder {
         userCreate: "0000 000 000",
         creditAccount: "037670151721",
         debitAccount: "037670151721",
+        email: "example@email.com",
+        sender: "Rubén Darío Osorio Jiménez",
+        chargeSender: "Vicerrector Académico",
       },
       {
         contractId: "338",
@@ -19,6 +22,9 @@ export default class extends BaseSeeder {
         userCreate: "0000 000 000",
         creditAccount: "037670151721",
         debitAccount: "037670151721",
+        email: "example@mail.com",
+        sender: "Juan Guillermo Rivera Berrío",
+        chargeSender: "Vicerrector de Docencia",
       },
       {
         contractId: "89",
@@ -26,6 +32,9 @@ export default class extends BaseSeeder {
         userCreate: "0000 000 000",
         creditAccount: "037670151721",
         debitAccount: "037670151721",
+        email: "example@mail.com",
+        sender: "Jorge Iván Rios Rivera",
+        chargeSender: "Vicerrector de Docencia",
       },
       {
         contractId: "12",
@@ -33,6 +42,9 @@ export default class extends BaseSeeder {
         userCreate: "0000 000 000",
         creditAccount: "037670151721",
         debitAccount: "037670151721",
+        email: "example@mail.com",
+        sender: "Felipe Alberto López García",
+        chargeSender: "Representante Legal",
       },
       {
         contractId: "300",
@@ -40,6 +52,9 @@ export default class extends BaseSeeder {
         userCreate: "0000 000 000",
         creditAccount: "037670151721",
         debitAccount: "037670151721",
+        email: "example@mail.com",
+        sender: "Sandra Patricia Vasquez Arboleda",
+        chargeSender: "Subdirectora administrativa y financiera",
       },
     ]);
   }

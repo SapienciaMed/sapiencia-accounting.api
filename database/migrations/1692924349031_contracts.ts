@@ -26,6 +26,18 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Código de la razón social (FK RZO_RAZONES_SOCIALES)");
       table
+        .string("CTR_CORREO_ELECTRONICO", 50)
+        .notNullable()
+        .comment("Correo electrónico");
+      table
+        .string("CTR_REMISOR", 100)
+        .notNullable()
+        .comment("Persona que remite la cuenta");
+      table
+        .string("CTR_CARGO_REMISOR", 100)
+        .notNullable()
+        .comment("Cargo de la persona que remite la cuenta");
+      table
         .string("CTR_USUARIO_MODIFICO", 15)
         .nullable()
         .comment(
