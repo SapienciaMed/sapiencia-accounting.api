@@ -126,7 +126,10 @@ export default class AppProvider {
     this.app.container.singleton(
       "core.AssetHistoryProvider",
       () =>
-        new AssetHistoryService.default(new AssetHistoryRepository.default())
+        new AssetHistoryService.default(
+          new AssetHistoryRepository.default(),
+          new GenericMasterService.default()
+        )
     );
   }
 
