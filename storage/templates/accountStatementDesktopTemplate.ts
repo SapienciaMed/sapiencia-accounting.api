@@ -19,10 +19,9 @@ export const accountStatementDesktopTemplate = (
   const DianaSignPath = Application.makePath(basePath, DianaSignImgName);
   const logoString = readFileSync(logoPath).toString("base64");
   const footerLogoString = readFileSync(footerPath).toString("base64");
-  const expeditionDate = dateFormatted(accountStatement.expeditionDate, "LL");
   const referralTemplateString = referralTemplate({
     logoString,
-    expeditionDate,
+    expeditionDate: dateFormatted(accountStatement.expeditionDate, "LL"),
     DaphneSignString: readFileSync(DapnheSignPath).toString("base64"),
     DianaSignString: readFileSync(DianaSignPath).toString("base64"),
     footerLogoString,
@@ -30,11 +29,8 @@ export const accountStatementDesktopTemplate = (
   });
   const accountStatementTemplateString = accountStatementTemplate({
     logoString,
-    expeditionDate,
-    expirationDate: dateFormatted(
-      accountStatement.expirationDate,
-      "DD/MM/YYYY"
-    ),
+    expeditionDate: dateFormatted(accountStatement.expeditionDate, "DD/MM/YY"),
+    expirationDate: dateFormatted(accountStatement.expirationDate, "DD/MM/YY"),
     valuePay: formaterNumberToCurrency(accountStatement.valuePay),
     valuePayWord: numberToColombianPesosWord(accountStatement.valuePay),
     footerLogoString,

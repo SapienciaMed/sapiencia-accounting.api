@@ -1,7 +1,6 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
-  IAccountStatementDownloadPDF,
   IAccountStatementSchema,
   IGetAccountStatement,
   IGetAccountStatementPaginated,
@@ -37,10 +36,7 @@ export interface IAccountStatementService {
   getAccountStatementByAccountNum(
     accountNum: number
   ): Promise<ApiResponse<IAccountStatement>>;
-  generateAccountStatementPDF(
-    id: number,
-    filters: IAccountStatementDownloadPDF
-  ): Promise<ApiResponse<string>>;
+  generateAccountStatementPDF(id: number): Promise<ApiResponse<string>>;
   generateXLSXAccountStatement(
     filters: IGetAccountStatement
   ): Promise<ApiResponse<string>>;
@@ -107,10 +103,7 @@ export default class AccountStatementService
     return new ApiResponse(accountStatementFound, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT PDF
-  public async generateAccountStatementPDF(
-    id: number,
-    filters: IAccountStatementDownloadPDF
-  ) {
+  public async generateAccountStatementPDF(id: number) {
     const accountStatementFound =
       await this.accountStatementRepository.getAccountStatementById(id);
     const municipalityName =
@@ -121,8 +114,6 @@ export default class AccountStatementService
       ...accountStatementFound,
       municipality: municipalityName.itemDescription,
     };
-    const { responsive } = filters;
-    console.log(responsive);
     const dimension = {
       top: "24px",
       right: "50px",

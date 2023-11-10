@@ -8,12 +8,6 @@ paths:
             type: number
             required: true
             description: Id de la cuenta de cobro
-        - in: query
-          name: responsive
-          schema:
-            type: boolean
-          required: true
-          description: Boolean para decidir si quiere el PDF mode desktop o mobile
       tags:
         - Cuenta de cobro
       summary: Permite generar el PDF de una cuenta de cobro por id

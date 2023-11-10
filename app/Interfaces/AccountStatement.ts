@@ -56,7 +56,3 @@ export interface IUpdateAccountStatement {
   valuePay?: number;
   concept?: string;
 }
-
-export interface IAccountStatementDownloadPDF {
-  responsive: boolean;
-}

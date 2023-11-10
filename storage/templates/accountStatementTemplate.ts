@@ -91,7 +91,7 @@ export const accountStatementTemplate = (
                             <strong>NIT:</strong>
                         </td>
                         <td>
-                            <strong>${props.accountStatement.contract.business.name}</strong>
+                            <strong>${props.accountStatement.contract.business.nit}</strong>
                         </td>
                         <td>
                             <table class="full-border">
