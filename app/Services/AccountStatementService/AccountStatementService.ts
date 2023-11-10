@@ -12,7 +12,6 @@ import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { accountStatementDesktopTemplate } from "../../../storage/templates/accountStatementDesktopTemplate";
-import { accountStatementMobileTemplate } from "../../../storage/templates/accountStatementMobileTemplate";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import {
   accountStatementXLSXColumns,
@@ -122,34 +121,20 @@ export default class AccountStatementService
       ...accountStatementFound,
       municipality: municipalityName.itemDescription,
     };
-
     const { responsive } = filters;
-    let PDF_PATH: string;
-    if (!responsive) {
-      const dimension = {
-        top: "24px",
-        right: "50px",
-        bottom: "100px",
-        left: "16px",
-      };
-      PDF_PATH = await createPDFTemplate(
-        accountStatementDesktopTemplate(accountStatementFoundMutated),
-        dimension,
-        "A4"
-      );
-    } else {
-      const dimension = {
-        top: "16px",
-        right: "50px",
-        bottom: "100px",
-        left: "50px",
-      };
-      PDF_PATH = await createPDFTemplate(
-        accountStatementMobileTemplate(accountStatementFoundMutated),
-        dimension,
-        "A5"
-      );
-    }
+    console.log(responsive);
+    const dimension = {
+      top: "24px",
+      right: "50px",
+      bottom: "100px",
+      left: "50px",
+    };
+    const PDF_PATH = await createPDFTemplate(
+      accountStatementDesktopTemplate(accountStatementFoundMutated),
+      dimension,
+      "A4"
+    );
+
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT XLSX
