@@ -1,0 +1,86 @@
+paths:
+  /api/v1/business/get-paginated/:
+    post:
+      tags:
+        - Razón social
+      summary: Permite obtener todas las razones sociales filtradas y paginadas
+      description: Con este endpoint puedes obtener las razones social filtradas y paginadas
+      operationId: get-all-business-paginated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/getAllBusinessPaginatedSchema"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Razones sociales listadas exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "array":
+                            [
+                              {
+                                "id": 1,
+                                "name": "Institución Universitaria Colegio Mayor de Antioquia",
+                                "nit": "890980134-1",
+                                "address": "Calle 78 N°65-46",
+                                "municipalityCode": "396",
+                                "phone": "4445611",
+                                "municipality": "Medellín",
+                              },
+                            ],
+                          "meta":
+                            {
+                              "total": 1,
+                              "per_page": 10,
+                              "current_page": 1,
+                              "last_page": 1,
+                              "first_page": 1,
+                              "first_page_url": "/?page=1",
+                              "last_page_url": "/?page=1",
+                              "next_page_url": null,
+                              "previous_page_url": null,
+                            },
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    getAllBusinessPaginatedSchema:
+      type: object
+      required:
+        - id
+        - page
+        - perPage
+      properties:
+        id:
+          type: number
+          example: 1
+        page:
+          type: number
+          example: 1
+        perPage:
+          type: number
+          example: 10

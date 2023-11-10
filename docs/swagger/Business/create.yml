@@ -1,0 +1,79 @@
+paths:
+  /api/v1/business/:
+    post:
+      tags:
+        - Razón social
+      summary: Permite la creación de una razón social
+      description: Con este endpoint puedes crear una razón social
+      operationId: create-business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createBusinessSchema"
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Cuenta de cobro creada exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "name": "Institución Universitaria",
+                          "nit": "900800523-1",
+                          "address": "Calle 78 N°65-46",
+                          "municipalityCode": "396",
+                          "phone": "3115269865",
+                          "userCreate": "797940",
+                          "updatedAt": "2023-11-09T21:53:24.147-05:00",
+                          "createdAt": "2023-11-09T21:53:24.147-05:00",
+                          "id": 9,
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    createBusinessSchema:
+      type: object
+      required:
+        - name
+        - nit
+        - address
+        - municipalityCode
+        - phone
+      properties:
+        name:
+          type: string
+          example: Institución Universitaria
+        nit:
+          type: string
+          example: 900800523-1
+        address:
+          type: string
+          example: Calle 78 N°65-46
+        municipalityCode:
+          type: string
+          example: 396
+        phone:
+          type: string
+          example: 3115269865
