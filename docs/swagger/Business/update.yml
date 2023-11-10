@@ -1,0 +1,81 @@
+paths:
+  /api/v1/business/{id}/update/:
+    put:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id de la razón social
+      tags:
+        - Razón social
+      summary: Permite la edición de una razón social
+      description: Con este endpoint puedes editar una razón social
+      operationId: update-business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateBusinessSchema"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Razón social actualizada exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 1,
+                          "name": "Institución Universitaria Colegio Mayor de Antioquia",
+                          "nit": "890980134-1",
+                          "address": "Calle 78 N°65-46",
+                          "municipalityCode": "396",
+                          "userModified": "797940",
+                          "updatedAt": "2023-11-09T22:09:44.631-05:00",
+                          "userCreate": "0000-000-000",
+                          "createdAt": "2023-11-07T17:47:26.000-05:00",
+                          "phone": "3025263986",
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    updateBusinessSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Institución Universitaria
+        nit:
+          type: string
+          example: 900523698-1
+        address:
+          type: string
+          example: Calle 78 N°65-46
+        municipalityCode:
+          type: string
+          example: 396
+        phone:
+          type: string
+          example: 3259638574

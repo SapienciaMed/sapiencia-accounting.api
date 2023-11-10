@@ -1,0 +1,55 @@
+paths:
+  /api/v1/contract/{id}/delete-by-id/:
+    delete:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id del contrato
+      tags:
+        - Contrato
+      summary: Permite eliminar un contrato por id
+      description: Con este endpoint puedes eliminar un contrato por id
+      operationId: delete-contract-by-id
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Contrato eliminado exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value: { "data": null, "operation": { "code": "OK" } }
+        400:
+          description: El contrato está asociado a otra entidad
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "No se puede eliminar contrato",
+                        },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

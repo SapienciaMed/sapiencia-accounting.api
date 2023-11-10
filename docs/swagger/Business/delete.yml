@@ -1,0 +1,55 @@
+paths:
+  /api/v1/business/{id}/delete/:
+    delete:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id de la razón social
+      tags:
+        - Razón social
+      summary: Permite eliminar una razón social por id
+      description: Con este endpoint puedes eliminar una razón social por id
+      operationId: delete-business-by-id
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Razón social eliminada exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value: { "data": null, "operation": { "code": "OK" } }
+        400:
+          description: La razón social está asociada a otra entidad
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "No se puede eliminar razón social",
+                        },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

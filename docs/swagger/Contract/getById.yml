@@ -1,0 +1,64 @@
+paths:
+  /api/v1/contract/{id}/get-by-id/:
+    get:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id del contrato
+      tags:
+        - Contrato
+      summary: Permite obtener la información de un contrato por su id
+      description: Con este endpoint puedes obtener toda la información de un contrato por su id
+      operationId: get-contract-by-id
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Contrato obtenido exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 1,
+                          "contractId": "PAC ENERO 2023",
+                          "businessCode": 1,
+                          "email": "example@email.com",
+                          "sender": "Rubén Darío Osorio Jiménez",
+                          "chargeSender": "Vicerrector Académico",
+                          "debitAccount": "037670151721",
+                          "creditAccount": "037670151721",
+                          "business":
+                            {
+                              "id": 1,
+                              "name": "Institución Universitaria Colegio Mayor de Antioquia",
+                              "nit": "890980134-1",
+                              "address": "Calle 78 N°65-46",
+                              "municipalityCode": "396",
+                              "phone": "3025263986",
+                              "municipality": "Medellín",
+                            },
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

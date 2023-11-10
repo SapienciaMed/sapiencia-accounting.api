@@ -1,0 +1,111 @@
+paths:
+  /api/v1/contract/get-paginated/:
+    post:
+      tags:
+        - Contrato
+      summary: Permite obtener todos los contratos filtrados y paginados
+      description: Con este endpoint puedes obtener todos los contratos filtrados y paginados
+      operationId: get-all-contracts-paginated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/getAllContractPaginatedSchema"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Contratos listados exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "array":
+                            [
+                              {
+                                "id": 1,
+                                "contractId": "PAC ENERO 2023",
+                                "businessCode": 1,
+                                "email": "example@email.com",
+                                "sender": "Rubén Darío Osorio Jiménez",
+                                "chargeSender": "Vicerrector Académico",
+                                "debitAccount": "037670151721",
+                                "creditAccount": "037670151721",
+                                "business":
+                                  {
+                                    "name": "Institución Universitaria Colegio Mayor de Antioquia",
+                                    "nit": "890980134-1",
+                                    "id": 1,
+                                  },
+                              },
+                              {
+                                "id": 2,
+                                "contractId": "338",
+                                "businessCode": 2,
+                                "email": "example@mail.com",
+                                "sender": "Juan Guillermo Rivera Berrío",
+                                "chargeSender": "Vicerrector de Docencia",
+                                "debitAccount": "037670151721",
+                                "creditAccount": "037670151721",
+                                "business":
+                                  {
+                                    "name": "Institución Universitaria Pascual Bravo",
+                                    "nit": "890980153-1",
+                                    "id": 2,
+                                  },
+                              },
+                            ],
+                          "meta":
+                            {
+                              "total": 6,
+                              "per_page": 10,
+                              "current_page": 1,
+                              "last_page": 1,
+                              "first_page": 1,
+                              "first_page_url": "/?page=1",
+                              "last_page_url": "/?page=1",
+                              "next_page_url": null,
+                              "previous_page_url": null,
+                            },
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    getAllContractPaginatedSchema:
+      type: object
+      required:
+        - page
+        - perPage
+      properties:
+        id:
+          type: number
+          example: 1
+        businessCode:
+          type: number
+          example: 1
+        page:
+          type: number
+          example: 1
+        perPage:
+          type: number
+          example: 10

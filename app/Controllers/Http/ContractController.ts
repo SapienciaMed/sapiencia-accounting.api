@@ -60,7 +60,7 @@ export default class ContractController {
     const { response, logger } = ctx;
     try {
       const newContract = await ContractProvider.getContractInfoSelect();
-      return response.created(newContract);
+      return response.ok(newContract);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
