@@ -1,0 +1,70 @@
+paths:
+  /api/v1/account-statement-tracking/{id}/update-or-create/:
+    put:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id de la cuenta de cobro
+      tags:
+        - Seguimiento cuenta de cobro
+      summary: Permite hacer seguimiento a una cuenta de cobro
+      description: Con este endpoint puedes actualizar el estado de una cuenta de cobro, (pagada, cancelada ó vencida)
+      operationId: update-or-create-account-statement-tracking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateOrCreateAccountStatementTrackingSchema"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Seguimiento de cuenta de cobro actualizado exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 2,
+                          "observation": "Without observation",
+                          "trackingDate": "2023-11-05T00:00:00.000-05:00",
+                          "statusId": 3,
+                          "accountStatementId": 2,
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    updateOrCreateAccountStatementTrackingSchema:
+      type: object
+      properties:
+        observation:
+          type: string
+          example: "N/A"
+        statusId:
+          type: number
+          example: 2
+        trackingDate:
+          type: date
+          example: 2023-11-05

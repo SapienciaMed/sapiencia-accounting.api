@@ -1,0 +1,59 @@
+paths:
+  /api/v1/contract/get-info-select/:
+    get:
+      tags:
+        - Contrato
+      summary: Permite obtener información de todos los contratos
+      description: Con este endpoint puedes obtener toda la información de los contratos, con el fin de llenar un select
+      operationId: get-contract-info-select
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Contratos obtenidos exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        [
+                          {
+                            "value": 1,
+                            "name": "PAC ENERO 2023",
+                            "data":
+                              {
+                                "name": "Institución Universitaria Colegio Mayor de Antioquia",
+                                "nit": "890980134-1",
+                                "id": 1,
+                              },
+                          },
+                          {
+                            "value": 2,
+                            "name": "338",
+                            "data":
+                              {
+                                "name": "Institución Universitaria Pascual Bravo",
+                                "nit": "890980153-1",
+                                "id": 2,
+                              },
+                          },
+                        ],
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }

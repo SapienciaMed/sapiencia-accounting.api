@@ -2,14 +2,12 @@ import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AccountStatementProvider from "@ioc:core.AccountStatementProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
-  IAccountStatementDownloadPDF,
   IAccountStatementSchema,
   IGetAccountStatement,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
-import { accountStatementDownloadPDFSchema } from "App/Validators/AccountStatement/accountStatementDownloadPDFSchema";
 import { accountStatementSchema } from "App/Validators/AccountStatement/accountStatementSchema";
 import { accountStatementUpdateSchema } from "App/Validators/AccountStatement/accountStatementUpdateSchema";
 import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatement/getAccountStatementFilteredSchema";
@@ -123,20 +121,10 @@ export default class AccountStatementController {
   // GENERATE ACCOUNT STATEMENT PDF
   public async generateAccountStatementPDF(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
-    let filters: IAccountStatementDownloadPDF;
-    try {
-      filters = await request.validate({
-        schema: accountStatementDownloadPDFSchema,
-      });
-      response.send(filters);
-    } catch (err) {
-      return DBException.badRequest(ctx, err);
-    }
     try {
       const { id } = request.params();
       const resp = await AccountStatementProvider.generateAccountStatementPDF(
-        id,
-        filters
+        id
       );
       return response.download(resp.data);
     } catch (err) {

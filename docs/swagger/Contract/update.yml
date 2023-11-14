@@ -1,0 +1,85 @@
+paths:
+  /api/v1/contract/{id}/update-by-id/:
+    put:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Id del contrato
+      tags:
+        - Contrato
+      summary: Permite la edición de un contrato
+      description: Con este endpoint puedes editar un contrato
+      operationId: update-contract
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateContractSchema"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Contrato actualizado exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        {
+                          "id": 1,
+                          "contractId": "PAC ENERO 2023",
+                          "businessCode": 1,
+                          "email": "foo@gmail.com",
+                          "sender": "Rubén Darío Osorio Jiménez",
+                          "chargeSender": "Vicerrector Académico",
+                          "debitAccount": "037670151721",
+                          "creditAccount": "037670151721",
+                        },
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
+components:
+  schemas:
+    updateContractSchema:
+      type: object
+      properties:
+        contractId:
+          type: string
+          example: 312
+        businessCode:
+          type: number
+          example: 1
+        creditAccount:
+          type: string
+          example: 037670151721
+        debitAccount:
+          type: string
+          example: 037670151721
+        email:
+          type: string
+          example: example@foo.com
+        sender:
+          type: string
+          example: Sandra Patricia Vasquez Arboleda
+        chargeSender:
+          type: string
+          example: Subdirectora administrativa y financiera

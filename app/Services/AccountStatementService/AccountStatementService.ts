@@ -1,7 +1,6 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import {
   IAccountStatement,
-  IAccountStatementDownloadPDF,
   IAccountStatementSchema,
   IGetAccountStatement,
   IGetAccountStatementPaginated,
@@ -12,7 +11,6 @@ import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { accountStatementDesktopTemplate } from "../../../storage/templates/accountStatementDesktopTemplate";
-import { accountStatementMobileTemplate } from "../../../storage/templates/accountStatementMobileTemplate";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import {
   accountStatementXLSXColumns,
@@ -38,10 +36,7 @@ export interface IAccountStatementService {
   getAccountStatementByAccountNum(
     accountNum: number
   ): Promise<ApiResponse<IAccountStatement>>;
-  generateAccountStatementPDF(
-    id: number,
-    filters: IAccountStatementDownloadPDF
-  ): Promise<ApiResponse<string>>;
+  generateAccountStatementPDF(id: number): Promise<ApiResponse<string>>;
   generateXLSXAccountStatement(
     filters: IGetAccountStatement
   ): Promise<ApiResponse<string>>;
@@ -108,10 +103,7 @@ export default class AccountStatementService
     return new ApiResponse(accountStatementFound, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT PDF
-  public async generateAccountStatementPDF(
-    id: number,
-    filters: IAccountStatementDownloadPDF
-  ) {
+  public async generateAccountStatementPDF(id: number) {
     const accountStatementFound =
       await this.accountStatementRepository.getAccountStatementById(id);
     const municipalityName =
@@ -122,34 +114,18 @@ export default class AccountStatementService
       ...accountStatementFound,
       municipality: municipalityName.itemDescription,
     };
+    const dimension = {
+      top: "24px",
+      right: "50px",
+      bottom: "100px",
+      left: "50px",
+    };
+    const PDF_PATH = await createPDFTemplate(
+      accountStatementDesktopTemplate(accountStatementFoundMutated),
+      dimension,
+      "A4"
+    );
 
-    const { responsive } = filters;
-    let PDF_PATH: string;
-    if (!responsive) {
-      const dimension = {
-        top: "24px",
-        right: "50px",
-        bottom: "100px",
-        left: "16px",
-      };
-      PDF_PATH = await createPDFTemplate(
-        accountStatementDesktopTemplate(accountStatementFoundMutated),
-        dimension,
-        "A4"
-      );
-    } else {
-      const dimension = {
-        top: "16px",
-        right: "50px",
-        bottom: "100px",
-        left: "50px",
-      };
-      PDF_PATH = await createPDFTemplate(
-        accountStatementMobileTemplate(accountStatementFoundMutated),
-        dimension,
-        "A5"
-      );
-    }
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT XLSX

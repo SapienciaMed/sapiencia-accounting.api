@@ -1,0 +1,65 @@
+paths:
+  /api/v1/business/get-all-business-info/:
+    get:
+      tags:
+        - Razón social
+      summary: Permite obtener información de todas las razones sociales
+      description: Con este endpoint puedes obtener toda la información de las razones sociales, con el fin de llenar un select
+      operationId: get-all-business-info
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Razones sociales obtenidas exitosamente
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data":
+                        [
+                          {
+                            "value": 9,
+                            "name": "89098013785 INSTITUCIÓN UNIVERSITARIA",
+                            "data":
+                              {
+                                "municipalityCode": "396",
+                                "name": "Institución Universitaria",
+                                "address": "Calle 78 N°65-46",
+                                "phone": "3212282638",
+                                "nit": "89098013785",
+                                "municipality": "Medellín",
+                              },
+                          },
+                          {
+                            "value": 6,
+                            "name": "3323-3 TESTER",
+                            "data":
+                              {
+                                "municipalityCode": "238",
+                                "name": "Tester",
+                                "address": "calle 23-45",
+                                "phone": "6045202021",
+                                "nit": "3323-3",
+                                "municipality": "Abriaquí",
+                              },
+                          },
+                        ],
+                      "operation": { "code": "OK" },
+                    }
+        401:
+          description: Error de autorización, no has enviado el token
+          content:
+            application/json:
+              examples:
+                Action:
+                  value:
+                    {
+                      "data": null,
+                      "operation":
+                        {
+                          "code": "FAIL",
+                          "message": "El token no ha sido proporcionado!.",
+                        },
+                    }
