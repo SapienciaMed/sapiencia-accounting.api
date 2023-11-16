@@ -17,6 +17,7 @@ export interface IAssetRepository {
   getAllAssetsPaginated(filters: IAssetsFilters): Promise<IPagingData<IAsset>>;
   getAssetById(id: number): Promise<IAsset>;
   updateAssetById(id: number, payload: IUpdateAssetSchema): Promise<IAsset>;
+  getAssetByPlate(plate: string): Promise<IAsset>;
 }
 
 export default class AssetRepository implements IAssetRepository {
@@ -86,5 +87,19 @@ export default class AssetRepository implements IAssetRepository {
     return await assetFound
       .merge({ ...payload, userModified: currentUserId })
       .save();
+  }
+  // GET ASSET BY PLATE
+  public async getAssetByPlate(plate: string) {
+    try {
+      return await Asset.findByOrFail("plate", plate);
+    } catch (err) {
+      const { code } = err as IDatabaseError;
+      switch (code) {
+        case DATABASE_ERRORS.E_ROW_NOT_FOUND:
+          throw new Error("Activo inexistente");
+        default:
+          throw new Error(err);
+      }
+    }
   }
 }

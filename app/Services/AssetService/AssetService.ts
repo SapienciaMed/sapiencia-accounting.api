@@ -19,7 +19,7 @@ import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
 export interface IAssetService {
   createAsset(payload: IAssetSchema): Promise<ApiResponse<IAsset>>;
-  getFullAssetInfoById(id: number): Promise<IAssetFullInfo>;
+  getJoinedAssetInfo(asset: IAsset): Promise<IAssetFullInfo>;
   getAllAssetsPaginated(
     filters: IAssetsFilters
   ): Promise<ApiResponse<IPagingData<IAssetFullInfo>>>;
@@ -31,6 +31,7 @@ export interface IAssetService {
     payload: IUpdateAssetSchema
   ): Promise<ApiResponse<IAsset>>;
   getWorkersInfoSelect(): Promise<ApiResponse<IWorkerSelectInfo[]>>;
+  getAssetByPlate(plate: string): Promise<ApiResponse<IAsset>>;
 }
 
 export default class AssetService implements IAssetService {
@@ -64,12 +65,9 @@ export default class AssetService implements IAssetService {
     const newAsset = await this.assetRepository.createAsset(payload);
     return new ApiResponse(newAsset, EResponseCodes.OK);
   }
-  // GET FULL ASSET INFO
-  public async getFullAssetInfoById(id: number) {
-    const assetFound = (
-      await this.assetRepository.getAssetById(id)
-    ).serializeAttributes() as IAsset;
-    const { area, campus, status, ownerId } = assetFound;
+  // GET JOINED ASSET INFO
+  public async getJoinedAssetInfo(asset: IAsset) {
+    const { area, campus, status, ownerId } = asset;
     const areaDataPromise =
       this.genericMasterService.getGenericItemDescriptionByItemCode(
         GENERIC_LIST.AREA,
@@ -100,7 +98,7 @@ export default class AssetService implements IAssetService {
       numberDocument,
     } = workerData;
     const assetFoundMutated = {
-      ...assetFound,
+      ...asset,
       ownerId: numberDocument,
       area: areaData.itemDescription,
       clerk: getClerkName(workerData),
@@ -117,7 +115,7 @@ export default class AssetService implements IAssetService {
     );
     let assetsFoundMutatedPromises: Promise<IAssetFullInfo>[] = [];
     for (let asset of assetsFound.array) {
-      const auxAssetMutatedPromise = this.getFullAssetInfoById(asset.id);
+      const auxAssetMutatedPromise = this.getJoinedAssetInfo(asset);
       assetsFoundMutatedPromises.push(auxAssetMutatedPromise);
     }
     const assetsFoundMutated = await Promise.all(assetsFoundMutatedPromises);
@@ -139,10 +137,12 @@ export default class AssetService implements IAssetService {
   }
   // GET ASSET BY ID
   public async getAssetById(id: number) {
-    const assetFound = await this.getFullAssetInfoById(id);
-    const { ownerFullName, ownerId } = assetFound;
+    const assetFound = await this.assetRepository.getAssetById(id);
+    const assetSerialized = assetFound.serializeAttributes() as IAsset;
+    const assetJoined = await this.getJoinedAssetInfo(assetSerialized);
+    const { ownerFullName, ownerId } = assetJoined;
     const assetFoundMutated = {
-      ...assetFound,
+      ...assetJoined,
       ownerId: `${ownerFullName} - ${ownerId}`,
     };
     return new ApiResponse(assetFoundMutated, EResponseCodes.OK);
@@ -193,5 +193,12 @@ export default class AssetService implements IAssetService {
       });
     }
     return new ApiResponse(updatedAsset, EResponseCodes.OK);
+  }
+  // GET ASSET BY PLATE
+  public async getAssetByPlate(plate: string) {
+    const assetFound = await this.assetRepository.getAssetByPlate(plate);
+    const assetSerialized = assetFound.serializeAttributes() as IAsset;
+    const assetJoind = await this.getJoinedAssetInfo(assetSerialized);
+    return new ApiResponse(assetJoind, EResponseCodes.OK);
   }
 }

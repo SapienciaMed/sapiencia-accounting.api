@@ -187,6 +187,10 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.get(
+      "/:plate/get-by-plate",
+      "AssetController.getAssetByPlate"
+    ).middleware("auth");
   }).prefix("/asset");
   // ==================================================================
   // ========================= ASSET HISTORY ==========================
