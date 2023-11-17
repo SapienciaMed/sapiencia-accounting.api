@@ -26,4 +26,28 @@ export default class AssetInventoryController {
       return response.badRequest(apiResp);
     }
   }
+  // GENERATE ASSET INVENTORY XLSX
+  public async generateAssetInventoryXLSX(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IAssetInventorySchema;
+    try {
+      filters = await request.validate({ schema: createAssetInventorySchema });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp = await AssetInventoryProvider.generateAssetInventoryXLSX(
+        filters
+      );
+      response.header(
+        "Content-Disposition",
+        `attachment; filename=control_inventario.xlsx`
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

@@ -28,7 +28,7 @@ export default class AppProvider {
       "App/Services/AssetHistoryService"
     );
     const AssetInventoryService = await import(
-      "App/Services/AssetInventoryService"
+      "App/Services/AssetInventoryService/AssetInventoryService"
     );
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
@@ -141,7 +141,14 @@ export default class AppProvider {
       "core.AssetInventoryProvider",
       () =>
         new AssetInventoryService.default(
-          new AssetInventoryRepository.default()
+          new AssetInventoryRepository.default(),
+          new AssetRepository.default(),
+          new AssetService.default(
+            new AssetRepository.default(),
+            new PayrollService.default(),
+            new AssetHistoryRepository.default(),
+            new GenericMasterService.default()
+          )
         )
     );
   }
