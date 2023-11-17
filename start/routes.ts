@@ -200,4 +200,12 @@ Route.group(() => {
       "AssetHistoryController.getAssetHistoryById"
     );
   }).prefix("/asset-history");
+  // ==================================================================
+  // ======================== ASSET INVENTORY =========================
+  Route.group(() => {
+    Route.post(
+      "/create",
+      "AssetInventoryController.createAssetInventory"
+    ).middleware("auth");
+  }).prefix("/asset-inventory");
 }).prefix("/api/v1");
