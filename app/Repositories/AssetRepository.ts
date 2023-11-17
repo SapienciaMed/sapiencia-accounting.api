@@ -18,6 +18,7 @@ export interface IAssetRepository {
   getAssetById(id: number): Promise<IAsset>;
   updateAssetById(id: number, payload: IUpdateAssetSchema): Promise<IAsset>;
   getAssetByPlate(plate: string): Promise<IAsset>;
+  getManyAssets(assetIds: Array<number>): Promise<IAsset[]>;
 }
 
 export default class AssetRepository implements IAssetRepository {
@@ -101,5 +102,11 @@ export default class AssetRepository implements IAssetRepository {
           throw new Error(err);
       }
     }
+  }
+  // GET MANY ASSETS
+  public async getManyAssets(assetIds: Array<number>) {
+    const assetQuery = Asset.query();
+    const assetsFound = await assetQuery.whereIn("id", assetIds);
+    return assetsFound.map((asset) => asset.serializeAttributes() as IAsset);
   }
 }
