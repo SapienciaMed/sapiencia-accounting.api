@@ -40,6 +40,7 @@ export interface IFurnitureService {
   generateFurnitureXLSX(
     filters: IFiltersFurnitureSchema
   ): Promise<ApiResponse<string>>;
+  getFurnitureByPlate(plate: string): Promise<ApiResponse<IFurnitureMutated>>;
 }
 
 export default class FurnitureService implements IFurnitureService {
@@ -248,5 +249,13 @@ export default class FurnitureService implements IFurnitureService {
       worksheetName: "Activos fijos",
     });
     return new ApiResponse(furnitureXLSXFilePath, EResponseCodes.OK);
+  }
+  // GET FURNITURE BY PLATE
+  public async getFurnitureByPlate(plate: string) {
+    const furnitureFound = await this.furnitureRepository.getFurnitureByPlate(
+      plate
+    );
+    const furnitureJoined = await this.getCompleteFurnitureInfo(furnitureFound);
+    return new ApiResponse(furnitureJoined, EResponseCodes.OK);
   }
 }

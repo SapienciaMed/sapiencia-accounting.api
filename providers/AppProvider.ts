@@ -30,6 +30,9 @@ export default class AppProvider {
     const AssetInventoryService = await import(
       "App/Services/AssetInventoryService/AssetInventoryService"
     );
+    const FurnitureInventoryService = await import(
+      "App/Services/FurnitureInventoryService"
+    );
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
@@ -66,6 +69,9 @@ export default class AppProvider {
     );
     const AssetInventoryRepository = await import(
       "App/Repositories/AssetInventoryRepository"
+    );
+    const FurnitureInventoryRepository = await import(
+      "App/Repositories/FurnitureInventoryRepository"
     );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
@@ -149,6 +155,13 @@ export default class AppProvider {
             new AssetHistoryRepository.default(),
             new GenericMasterService.default()
           )
+        )
+    );
+    this.app.container.singleton(
+      "core.FurnitureInventoryProvider",
+      () =>
+        new FurnitureInventoryService.default(
+          new FurnitureInventoryRepository.default()
         )
     );
   }

@@ -13,13 +13,9 @@ import AssetRepository from "App/Repositories/AssetRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { getChangesBetweenTwoObjects, getClerkName } from "App/Utils/helpers";
-import {
-  assetXLSXFilePath,
-  assetXLSXRows,
-  assetXLSXcolumnNames,
-} from "../AssetInventoryService/XLSX";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import PayrollExternalService from "../external/PayrollExternalService";
+import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
 export interface IAssetService {
   createAsset(payload: IAssetSchema): Promise<ApiResponse<IAsset>>;
