@@ -6,6 +6,7 @@ import {
 } from "App/Interfaces/AssetInventory";
 import AssetInventoryRepository from "App/Repositories/AssetInventoryRepository";
 import { ApiResponse } from "App/Utils/ApiResponses";
+import { deleteRepetitions } from "App/Utils/helpers";
 import { DateTime } from "luxon";
 
 export interface IAssetInventoryService {
@@ -18,7 +19,8 @@ export default class AssetInventoryService implements IAssetInventoryService {
   constructor(private assetInventoryRepository: AssetInventoryRepository) {}
   // CREATE ASSET INVENTORY
   public async createAssetInventory(payload: IAssetInventorySchema) {
-    const assetsDataSorted = payload.assetIds.map((assetId) => ({
+    const assetsDataCleaned = deleteRepetitions(payload.assetIds);
+    const assetsDataSorted = assetsDataCleaned.map((assetId) => ({
       assetId,
       hour: DateTime.now().hour.toString(),
       userCreated: Env.get("CURRENT_USER_DOCUMENT"),

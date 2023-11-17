@@ -50,3 +50,7 @@ export const getClerkName = (worker: IWorker) => {
     return TIPO_FUNCIONARIO.EMPTY;
   }
 };
+
+export const deleteRepetitions = (data: Array<number>) => {
+  return [...new Set(data)];
+};
