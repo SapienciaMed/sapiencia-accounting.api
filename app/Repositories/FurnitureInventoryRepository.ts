@@ -48,7 +48,7 @@ export default class FurnitureInventoryRepository
       .preload("furniture")
       .whereIn("createdAt", dates);
     return furnitureInventory.map(
-      (el) => el.serializeAttributes() as IFurnitureInventory
+      (el) => el.serialize() as IFurnitureInventory
     );
   }
 }

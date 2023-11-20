@@ -1,12 +1,21 @@
-import Furniture from "App/Models/Furniture";
 import { DateTime } from "luxon";
+import { IFurniture, IFurnitureMutated } from "./Furniture";
 
 export type IFurnitureInventory = {
   id: number;
   furnitureId: number;
   userCreated: string;
   createdAt: DateTime;
-  furniture: Furniture;
+  furniture: IFurniture;
+  hour: string;
+};
+
+export type IFurnitureInventoryMutated = {
+  id: number;
+  furnitureId: number;
+  userCreated: string;
+  createdAt: DateTime;
+  furniture: IFurnitureMutated;
   hour: string;
 };
 
