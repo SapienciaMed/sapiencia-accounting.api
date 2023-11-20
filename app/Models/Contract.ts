@@ -79,7 +79,6 @@ export default class Contract extends BaseModel {
   })
   public creditAccount: string;
 
-  // Contrato pertenece a una razón social
   @hasOne(() => Business, {
     localKey: "businessCode",
     foreignKey: "id",

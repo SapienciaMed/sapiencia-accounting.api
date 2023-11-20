@@ -1,7 +1,9 @@
 import Env from "@ioc:Adonis/Core/Env";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
+import { IInventoryDatesSchema } from "App/Interfaces/Common";
 import {
   IFurnitureInventory,
+  IFurnitureInventoryDate,
   IFurnitureInventorySchema,
 } from "App/Interfaces/FurnitureInventory";
 import FurnitureInventoryRepository from "App/Repositories/FurnitureInventoryRepository";
@@ -22,6 +24,10 @@ export interface IFurnitureInventoryService {
   ): Promise<ApiResponse<IFurnitureInventory[]>>;
   generateFurnitureInventoryXLSX(
     payload: IFurnitureInventorySchema
+  ): Promise<ApiResponse<string>>;
+  getFurnitureInventoryDates(): Promise<ApiResponse<IFurnitureInventoryDate[]>>;
+  generateFullFurnitureInventoryXLSX(
+    payload: IInventoryDatesSchema
   ): Promise<ApiResponse<string>>;
 }
 
@@ -60,5 +66,22 @@ export default class FurnitureInventoryService
       worksheetName: "Control inventario bienes muebles",
     });
     return new ApiResponse(furnitureXLSXFilePath, EResponseCodes.OK);
+  }
+  // GET FURNITURE INVENTORY DATES
+  public async getFurnitureInventoryDates() {
+    const furnitureInventoryDatesFound =
+      await this.furnitureInventoryRepository.getFurnitureInventoryDates();
+    return new ApiResponse(furnitureInventoryDatesFound, EResponseCodes.OK);
+  }
+  // GET FULL FURNITURE INVENTORY BY DATES
+  async generateFullFurnitureInventoryXLSX(payload: IInventoryDatesSchema) {
+    const datesCleared = payload.inventoryDates.map((date) => date.toSQLDate());
+    const furnitureInventory =
+      await this.furnitureInventoryRepository.getFurnitureInventoryByDates(
+        datesCleared as string[]
+      );
+    // DOWNLOAD XLSX
+    console.log(furnitureInventory);
+    return new ApiResponse("", EResponseCodes.OK);
   }
 }

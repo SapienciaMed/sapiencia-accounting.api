@@ -1,6 +1,7 @@
-import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
 import { FURNITURE_INVENTORY_TABLE } from "App/Constants/Tables/Furniture/FurnitureInventory";
 import { DateTime } from "luxon";
+import Furniture from "./Furniture";
 
 export default class FurnitureInventory extends BaseModel {
   public static table = FURNITURE_INVENTORY_TABLE.TABLE_NAME;
@@ -39,4 +40,10 @@ export default class FurnitureInventory extends BaseModel {
     serializeAs: "hour",
   })
   public hour: string;
+
+  @hasOne(() => Furniture, {
+    localKey: "furnitureId",
+    foreignKey: "id",
+  })
+  public furniture: HasOne<typeof Furniture>;
 }

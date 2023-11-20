@@ -1,3 +1,4 @@
+import Furniture from "App/Models/Furniture";
 import { DateTime } from "luxon";
 
 export type IFurnitureInventory = {
@@ -5,6 +6,7 @@ export type IFurnitureInventory = {
   furnitureId: number;
   userCreated: string;
   createdAt: DateTime;
+  furniture: Furniture;
   hour: string;
 };
 
@@ -17,3 +19,7 @@ export type IFurnitureInventoryPayload = Array<{
   hour: string;
   userCreated: string;
 }>;
+
+export type IFurnitureInventoryDate = {
+  createdAt: string;
+};

@@ -177,6 +177,14 @@ Route.group(() => {
       "/generate-xlsx",
       "FurnitureInventoryController.generateFurnitureInventoryXLSX"
     ).middleware("auth");
+    Route.get(
+      "get-inventory-dates",
+      "FurnitureInventoryController.getFurnitureInventoryDates"
+    );
+    Route.post(
+      "generate-inventory-xlsx",
+      "FurnitureInventoryController.generateFullFurnitureInventoryXLSX"
+    );
   }).prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================
