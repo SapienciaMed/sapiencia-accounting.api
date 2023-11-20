@@ -161,7 +161,13 @@ export default class AppProvider {
       "core.FurnitureInventoryProvider",
       () =>
         new FurnitureInventoryService.default(
-          new FurnitureInventoryRepository.default()
+          new FurnitureInventoryRepository.default(),
+          new FurnitureService.default(
+            new FurnitureRepository.default(),
+            new PayrollService.default(),
+            new GenericMasterService.default(),
+            new FurnitureHistoryRepository.default()
+          )
         )
     );
   }

@@ -61,7 +61,7 @@ export default class AssetInventoryService implements IAssetInventoryService {
       columns: assetXLSXcolumnNames,
       data: assetXLSXRows(assetsJoined),
       filePath: assetXLSXFilePath,
-      worksheetName: "Control inventario",
+      worksheetName: "Control inventario activos tecnológicos",
     });
     return new ApiResponse(assetXLSXFilePath, EResponseCodes.OK);
   }

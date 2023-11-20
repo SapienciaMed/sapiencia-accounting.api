@@ -173,6 +173,10 @@ Route.group(() => {
       "/create",
       "FurnitureInventoryController.createFurnitureInventory"
     ).middleware("auth");
+    Route.post(
+      "/generate-xlsx",
+      "FurnitureInventoryController.generateFurnitureInventoryXLSX"
+    ).middleware("auth");
   }).prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================

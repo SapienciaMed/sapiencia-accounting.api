@@ -28,4 +28,31 @@ export default class FurnitureInventoryController {
       return response.badRequest(apiResp);
     }
   }
+  // GENERATE FURNITURE INVENTORY XLSX
+  public async generateFurnitureInventoryXLSX(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IFurnitureInventorySchema;
+    try {
+      filters = await request.validate({
+        schema: createFurnitureInventorySchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await FurnitureInventoryProvider.generateFurnitureInventoryXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        `attachment; filename=control_inventario.xlsx`
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

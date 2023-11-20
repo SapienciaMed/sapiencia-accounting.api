@@ -22,6 +22,7 @@ export interface IFurnitureRepository {
     payload: IUpdateFurniture
   ): Promise<IFurniture>;
   getFurnitureByPlate(plate: string): Promise<IFurniture>;
+  getManyFurnituresByIds(ids: Array<number>): Promise<IFurniture[]>;
 }
 
 export default class FurnitureRepository implements IFurnitureRepository {
@@ -107,5 +108,13 @@ export default class FurnitureRepository implements IFurnitureRepository {
       }
       throw new Error(err);
     }
+  }
+  // GET MANY FURNITURES BY IDS
+  public async getManyFurnituresByIds(ids: Array<number>) {
+    const furnitureQuery = Furniture.query();
+    const furnituresFound = await furnitureQuery.whereIn("id", ids);
+    return furnituresFound.map(
+      (furniture) => furniture.serializeAttributes() as IFurniture
+    );
   }
 }
