@@ -4,6 +4,7 @@ import { IInventoryDatesSchema } from "App/Interfaces/Common";
 import {
   IFurnitureInventory,
   IFurnitureInventoryDate,
+  IFurnitureInventoryMutated,
   IFurnitureInventorySchema,
 } from "App/Interfaces/FurnitureInventory";
 import FurnitureInventoryRepository from "App/Repositories/FurnitureInventoryRepository";
@@ -17,6 +18,11 @@ import {
   furnitureXLSXRows,
   furnitureXLSXcolumnNames,
 } from "./XLSX";
+import {
+  furnitureInventoryXLSXFilePath,
+  furnitureInventoryXLSXRows,
+  furnitureInventoryXLSXcolumnNames,
+} from "./inventoryXLSX";
 
 export interface IFurnitureInventoryService {
   createFurnitureInventory(
@@ -80,8 +86,22 @@ export default class FurnitureInventoryService
       await this.furnitureInventoryRepository.getFurnitureInventoryByDates(
         datesCleared as string[]
       );
-    // DOWNLOAD XLSX
-    console.log(furnitureInventory);
-    return new ApiResponse("", EResponseCodes.OK);
+    let furnitureInventoryMutated: IFurnitureInventoryMutated[] = [];
+    for (let inventory of furnitureInventory) {
+      const { furniture } = inventory;
+      const furnitureJoined =
+        await this.furnitureService.getCompleteFurnitureInfo(furniture);
+      furnitureInventoryMutated.push({
+        ...inventory,
+        furniture: furnitureJoined,
+      });
+    }
+    await generateXLSX({
+      columns: furnitureInventoryXLSXcolumnNames,
+      data: furnitureInventoryXLSXRows(furnitureInventoryMutated),
+      filePath: furnitureInventoryXLSXFilePath,
+      worksheetName: "Control inventario bienes muebles",
+    });
+    return new ApiResponse(furnitureInventoryXLSXFilePath, EResponseCodes.OK);
   }
 }
