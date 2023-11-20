@@ -14,6 +14,7 @@ import FurnitureHistoryRepository from "App/Repositories/FurnitureHistoryReposit
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
+import { deleteRepetitions } from "App/Utils/helpers";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import PayrollExternalService from "../external/PayrollExternalService";
 import {
@@ -40,6 +41,8 @@ export interface IFurnitureService {
   generateFurnitureXLSX(
     filters: IFiltersFurnitureSchema
   ): Promise<ApiResponse<string>>;
+  getFurnitureByPlate(plate: string): Promise<ApiResponse<IFurnitureMutated>>;
+  getManyFurnituresByIds(ids: Array<number>): Promise<IFurnitureMutated[]>;
 }
 
 export default class FurnitureService implements IFurnitureService {
@@ -248,5 +251,25 @@ export default class FurnitureService implements IFurnitureService {
       worksheetName: "Activos fijos",
     });
     return new ApiResponse(furnitureXLSXFilePath, EResponseCodes.OK);
+  }
+  // GET FURNITURE BY PLATE
+  public async getFurnitureByPlate(plate: string) {
+    const furnitureFound = await this.furnitureRepository.getFurnitureByPlate(
+      plate
+    );
+    const furnitureJoined = await this.getCompleteFurnitureInfo(furnitureFound);
+    return new ApiResponse(furnitureJoined, EResponseCodes.OK);
+  }
+  // GET MANY FURNITURES BY IDS
+  public async getManyFurnituresByIds(ids: Array<number>) {
+    const idsCleared = deleteRepetitions(ids);
+    const furnituresFound =
+      await this.furnitureRepository.getManyFurnituresByIds(idsCleared);
+    let furnitureJoinedPromises: Promise<IFurnitureMutated>[] = [];
+    for (let furniture of furnituresFound) {
+      const furnitureJoined = this.getCompleteFurnitureInfo(furniture);
+      furnitureJoinedPromises.push(furnitureJoined);
+    }
+    return await Promise.all(furnitureJoinedPromises);
   }
 }

@@ -12,4 +12,8 @@ export type IAssetInventorySchema = {
   assetIds: Array<number>;
 };
 
-export type IAssetInventoryPayload = Array<{ assetId: number; hour: string }>;
+export type IAssetInventoryPayload = Array<{
+  assetId: number;
+  hour: string;
+  userCreated: string;
+}>;

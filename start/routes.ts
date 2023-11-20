@@ -152,6 +152,10 @@ Route.group(() => {
       "FurnitureController.updateFurnitureById"
     ).where("id", Route.matchers.number());
     // .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
+    Route.get(
+      "/:plate/get-by-plate",
+      "FurnitureController.getFurnitureByPlate"
+    );
     Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
   }).prefix("/furniture");
   // ==================================================================
@@ -162,6 +166,18 @@ Route.group(() => {
       "FurnitureHistoryController.getFurnitureHistoryById"
     ).where("furnitureId", Route.matchers.number());
   }).prefix("/furniture-history");
+  // ==================================================================
+  // ====================== FURNITURE INVENTORY =======================
+  Route.group(() => {
+    Route.post(
+      "/create",
+      "FurnitureInventoryController.createFurnitureInventory"
+    ).middleware("auth");
+    Route.post(
+      "/generate-xlsx",
+      "FurnitureInventoryController.generateFurnitureInventoryXLSX"
+    ).middleware("auth");
+  }).prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================
   Route.group(() => {

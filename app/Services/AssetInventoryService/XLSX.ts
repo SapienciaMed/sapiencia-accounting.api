@@ -99,5 +99,5 @@ export const assetXLSXRows = (assetsFound: IAssetFullInfo[]) =>
   }, []);
 
 export const assetXLSXFilePath = Application.tmpPath(
-  "/control_inventario.xlsx"
+  "/control_inventario_activos_tecnologicos.xlsx"
 );

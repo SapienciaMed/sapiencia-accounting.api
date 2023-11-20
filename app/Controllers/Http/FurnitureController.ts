@@ -147,4 +147,17 @@ export default class ContractController {
       return response.badRequest(apiResp);
     }
   }
+  // GET FURNITURE BY PLATE
+  public async getFurnitureByPlate(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { plate } = request.params();
+      const furnitureFound = await FurnitureProvider.getFurnitureByPlate(plate);
+      return response.ok(furnitureFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }
