@@ -23,6 +23,10 @@ export type IFurnitureInventorySchema = {
   furnitureIds: Array<number>;
 };
 
+export type IFurnitureInventoryXLSXSchema = {
+  furnitureIds: string;
+};
+
 export type IFurnitureInventoryPayload = Array<{
   furnitureId: number;
   hour: string;

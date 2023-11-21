@@ -173,7 +173,7 @@ Route.group(() => {
       "/create",
       "FurnitureInventoryController.createFurnitureInventory"
     ).middleware("auth");
-    Route.post(
+    Route.get(
       "/generate-xlsx",
       "FurnitureInventoryController.generateFurnitureInventoryXLSX"
     ).middleware("auth");
@@ -181,7 +181,7 @@ Route.group(() => {
       "get-inventory-dates",
       "FurnitureInventoryController.getFurnitureInventoryDates"
     );
-    Route.post(
+    Route.get(
       "generate-inventory-xlsx",
       "FurnitureInventoryController.generateFullFurnitureInventoryXLSX"
     );
