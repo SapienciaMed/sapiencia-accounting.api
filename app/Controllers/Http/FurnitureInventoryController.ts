@@ -2,10 +2,14 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import FurnitureInventoryProvider from "@ioc:core.FurnitureInventoryProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { IInventoryDatesSchema } from "App/Interfaces/Common";
-import { IFurnitureInventorySchema } from "App/Interfaces/FurnitureInventory";
+import {
+  IFurnitureInventorySchema,
+  IFurnitureInventoryXLSXSchema,
+} from "App/Interfaces/FurnitureInventory";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { createFurnitureInventorySchema } from "App/Validators/FurnitureInventory/create";
+import { generateXLSXFurnitureInventorySchema } from "App/Validators/FurnitureInventory/xlsxFiltersSchema";
 import { inventoryDatesSchema } from "App/Validators/common/inventoryDatesSchema";
 
 export default class FurnitureInventoryController {
@@ -33,10 +37,10 @@ export default class FurnitureInventoryController {
   // GENERATE FURNITURE INVENTORY XLSX
   public async generateFurnitureInventoryXLSX(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
-    let filters: IFurnitureInventorySchema;
+    let filters: IFurnitureInventoryXLSXSchema;
     try {
       filters = await request.validate({
-        schema: createFurnitureInventorySchema,
+        schema: generateXLSXFurnitureInventorySchema,
       });
     } catch (err) {
       return DBException.badRequest(ctx, err);
@@ -44,7 +48,7 @@ export default class FurnitureInventoryController {
     try {
       const resp =
         await FurnitureInventoryProvider.generateFurnitureInventoryXLSX(
-          filters
+          JSON.parse(filters.furnitureIds)
         );
       response.header(
         "Content-Disposition",
@@ -84,7 +88,7 @@ export default class FurnitureInventoryController {
     try {
       const resp =
         await FurnitureInventoryProvider.generateFullFurnitureInventoryXLSX(
-          filters
+          JSON.parse(filters.inventoryDates)
         );
       response.header(
         "Content-Disposition",

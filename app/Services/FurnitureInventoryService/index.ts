@@ -1,6 +1,5 @@
 import Env from "@ioc:Adonis/Core/Env";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IInventoryDatesSchema } from "App/Interfaces/Common";
 import {
   IFurnitureInventory,
   IFurnitureInventoryDate,
@@ -29,11 +28,11 @@ export interface IFurnitureInventoryService {
     payload: IFurnitureInventorySchema
   ): Promise<ApiResponse<IFurnitureInventory[]>>;
   generateFurnitureInventoryXLSX(
-    payload: IFurnitureInventorySchema
+    furnitureIds: Array<number>
   ): Promise<ApiResponse<string>>;
   getFurnitureInventoryDates(): Promise<ApiResponse<IFurnitureInventoryDate[]>>;
   generateFullFurnitureInventoryXLSX(
-    payload: IInventoryDatesSchema
+    inventoryDates: Array<string>
   ): Promise<ApiResponse<string>>;
 }
 
@@ -59,11 +58,9 @@ export default class FurnitureInventoryService
     return new ApiResponse(assetInventoryCreated, EResponseCodes.OK);
   }
   // GENERATE FURNITURE INVENTORY XLSX
-  public async generateFurnitureInventoryXLSX(
-    payload: IFurnitureInventorySchema
-  ) {
+  public async generateFurnitureInventoryXLSX(furnitureIds: Array<number>) {
     const furnituresFound = await this.furnitureService.getManyFurnituresByIds(
-      payload.furnitureIds
+      furnitureIds
     );
     await generateXLSX({
       columns: furnitureXLSXcolumnNames,
@@ -80,11 +77,10 @@ export default class FurnitureInventoryService
     return new ApiResponse(furnitureInventoryDatesFound, EResponseCodes.OK);
   }
   // GET FULL FURNITURE INVENTORY BY DATES
-  async generateFullFurnitureInventoryXLSX(payload: IInventoryDatesSchema) {
-    const datesCleared = payload.inventoryDates.map((date) => date.toSQLDate());
+  async generateFullFurnitureInventoryXLSX(inventoryDates: Array<string>) {
     const furnitureInventory =
       await this.furnitureInventoryRepository.getFurnitureInventoryByDates(
-        datesCleared as string[]
+        inventoryDates
       );
     let furnitureInventoryMutated: IFurnitureInventoryMutated[] = [];
     for (let inventory of furnitureInventory) {
