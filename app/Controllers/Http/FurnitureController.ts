@@ -140,6 +140,7 @@ export default class ContractController {
         "Content-Disposition",
         `attachment; filename=activos_fijos.xlsx`
       );
+      response.header("Content-Type", "application/octet-stream");
       return response.download(resp.data);
     } catch (err) {
       logger.error(err);
