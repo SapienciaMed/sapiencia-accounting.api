@@ -125,7 +125,6 @@ export default class AccountStatementService
       dimension,
       "A4"
     );
-
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT XLSX
