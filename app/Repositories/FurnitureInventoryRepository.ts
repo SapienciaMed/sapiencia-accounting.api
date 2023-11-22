@@ -41,7 +41,7 @@ export default class FurnitureInventoryRepository
       (furniture) => furniture.serializeAttributes() as IFurnitureInventoryDate
     );
   }
-  // FURNITURE INVENTORY BY DATE
+  // GET FURNITURE INVENTORY BY DATES
   public async getFurnitureInventoryByDates(dates: Array<string>) {
     const furnitureInventoryQuery = FurnitureInventory.query();
     const furnitureInventory = await furnitureInventoryQuery

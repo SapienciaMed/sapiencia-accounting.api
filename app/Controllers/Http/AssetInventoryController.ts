@@ -2,10 +2,12 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AssetInventoryProvider from "@ioc:core.AssetInventoryProvider";
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { IAssetInventorySchema } from "App/Interfaces/AssetInventory";
+import { IInventoryDatesSchema } from "App/Interfaces/Common";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { createAssetInventorySchema } from "App/Validators/AssetInventory/create";
 import { generateXLSXAssetInventorySchema } from "App/Validators/AssetInventory/xlsxFiltersSchema";
+import { inventoryDatesSchema } from "App/Validators/common/inventoryDatesSchema";
 
 export default class AssetInventoryController {
   // CREATE ASSET INVENTORY
@@ -60,6 +62,32 @@ export default class AssetInventoryController {
       const assetInventoryDatesFound =
         await AssetInventoryProvider.getAssetInventoryDates();
       return response.ok(assetInventoryDatesFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GENERATE ASSET INVENTORY XLSX
+  public async generateFullAssetInventoryXLSX(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    let filters: IInventoryDatesSchema;
+    try {
+      filters = await request.validate({
+        schema: inventoryDatesSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp = await AssetInventoryProvider.generateFullAssetInventoryXLSX(
+        JSON.parse(filters.inventoryDates)
+      );
+      response.header(
+        "Content-Disposition",
+        `attachment; filename=inventario_activos_tecnológicos.xlsx`
+      );
+      return response.download(resp.data);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

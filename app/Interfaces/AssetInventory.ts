@@ -1,8 +1,11 @@
+import Asset from "App/Models/Asset";
 import { DateTime } from "luxon";
+import { IAssetFullInfo } from "./Asset";
 
 export type IAssetInventory = {
   id: number;
   assetId: number;
+  asset: Asset;
   userCreated: string;
   createdAt: DateTime;
   hour: string;
@@ -20,4 +23,13 @@ export type IAssetInventoryPayload = Array<{
 
 export type IAssetInventoryDate = {
   createdAt: string;
+};
+
+export type IAssetInventoryFullInfo = {
+  id: number;
+  assetId: number;
+  asset: IAssetFullInfo;
+  userCreated: string;
+  createdAt: DateTime;
+  hour: string;
 };

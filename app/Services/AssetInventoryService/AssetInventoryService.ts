@@ -4,6 +4,7 @@ import { IAsset, IAssetFullInfo } from "App/Interfaces/Asset";
 import {
   IAssetInventory,
   IAssetInventoryDate,
+  IAssetInventoryFullInfo,
   IAssetInventorySchema,
 } from "App/Interfaces/AssetInventory";
 import { IAssetInventoryRepository } from "App/Repositories/AssetInventoryRepository";
@@ -14,6 +15,11 @@ import { deleteRepetitions } from "App/Utils/helpers";
 import { DateTime } from "luxon";
 import { IAssetService } from "../AssetService/AssetService";
 import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
+import {
+  assetInventoryXLSXFilePath,
+  assetInventoryXLSXRows,
+  assetInventoryXLSXcolumnNames,
+} from "./inventoryXLSX";
 
 export interface IAssetInventoryService {
   createAssetInventory(
@@ -23,6 +29,9 @@ export interface IAssetInventoryService {
     assetIds: Array<number>
   ): Promise<ApiResponse<string>>;
   getAssetInventoryDates(): Promise<ApiResponse<IAssetInventoryDate[]>>;
+  generateFullAssetInventoryXLSX(
+    inventoryDates: Array<string>
+  ): Promise<ApiResponse<string>>;
 }
 
 export default class AssetInventoryService implements IAssetInventoryService {
@@ -72,5 +81,28 @@ export default class AssetInventoryService implements IAssetInventoryService {
     const assetsInventoryDatesFound =
       await this.assetInventoryRepository.getAssetInventoryDates();
     return new ApiResponse(assetsInventoryDatesFound, EResponseCodes.OK);
+  }
+  // GENERATE FULL ASSET INVENTORY XLSX
+  public async generateFullAssetInventoryXLSX(inventoryDates: Array<string>) {
+    const assetInventory =
+      await this.assetInventoryRepository.getAssetInventoryByDates(
+        inventoryDates
+      );
+    let assetInventoryMutated: IAssetInventoryFullInfo[] = [];
+    for (let inventory of assetInventory) {
+      const { asset } = inventory;
+      const assetJoined = await this.assetService.getJoinedAssetInfo(asset);
+      assetInventoryMutated.push({
+        ...inventory,
+        asset: assetJoined,
+      });
+    }
+    await generateXLSX({
+      columns: assetInventoryXLSXcolumnNames,
+      data: assetInventoryXLSXRows(assetInventoryMutated),
+      filePath: assetInventoryXLSXFilePath,
+      worksheetName: "Control inventario activos tecnológicos",
+    });
+    return new ApiResponse(assetInventoryXLSXFilePath, EResponseCodes.OK);
   }
 }

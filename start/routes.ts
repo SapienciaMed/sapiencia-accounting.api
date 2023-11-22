@@ -241,7 +241,7 @@ Route.group(() => {
     ).middleware("auth");
     Route.get(
       "generate-inventory-xlsx",
-      "AssetInventoryController.generateFullAssetIn ventoryXLSX"
+      "AssetInventoryController.generateFullAssetInventoryXLSX"
     );
   }).prefix("/asset-inventory");
 }).prefix("/api/v1");

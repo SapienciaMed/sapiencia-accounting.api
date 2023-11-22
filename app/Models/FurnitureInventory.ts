@@ -19,6 +19,12 @@ export default class FurnitureInventory extends BaseModel {
   })
   public furnitureId: number;
 
+  @hasOne(() => Furniture, {
+    localKey: "furnitureId",
+    foreignKey: "id",
+  })
+  public furniture: HasOne<typeof Furniture>;
+
   @column({
     columnName: FURNITURE_INVENTORY_TABLE.USER_CREATED,
     serializeAs: "userCreated",
@@ -40,10 +46,4 @@ export default class FurnitureInventory extends BaseModel {
     serializeAs: "hour",
   })
   public hour: string;
-
-  @hasOne(() => Furniture, {
-    localKey: "furnitureId",
-    foreignKey: "id",
-  })
-  public furniture: HasOne<typeof Furniture>;
 }

@@ -11,6 +11,7 @@ export interface IAssetInventoryRepository {
     payload: IAssetInventoryPayload
   ): Promise<IAssetInventory[]>;
   getAssetInventoryDates(): Promise<IAssetInventoryDate[]>;
+  getAssetInventoryByDates(dates: Array<string>): Promise<IAssetInventory[]>;
 }
 
 export default class AssetInventoryRepository
@@ -37,5 +38,13 @@ export default class AssetInventoryRepository
     return assetsFound.map(
       (asset) => asset.serializeAttributes() as IAssetInventoryDate
     );
+  }
+  // GET ASSET INVENTORY BY DATES
+  public async getAssetInventoryByDates(dates: Array<string>) {
+    const assetInventoryQuery = AssetInventory.query();
+    const assetInventory = await assetInventoryQuery
+      .preload("asset")
+      .whereIn("createdAt", dates);
+    return assetInventory.map((el) => el.serialize() as IAssetInventory);
   }
 }
