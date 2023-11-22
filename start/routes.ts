@@ -231,9 +231,17 @@ Route.group(() => {
       "/create",
       "AssetInventoryController.createAssetInventory"
     ).middleware("auth");
-    Route.post(
+    Route.get(
       "/generate-xlsx",
       "AssetInventoryController.generateAssetInventoryXLSX"
     ).middleware("auth");
+    Route.get(
+      "get-inventory-dates",
+      "AssetInventoryController.getAssetInventoryDates"
+    ).middleware("auth");
+    Route.get(
+      "generate-inventory-xlsx",
+      "AssetInventoryController.generateFullAssetIn ventoryXLSX"
+    );
   }).prefix("/asset-inventory");
 }).prefix("/api/v1");

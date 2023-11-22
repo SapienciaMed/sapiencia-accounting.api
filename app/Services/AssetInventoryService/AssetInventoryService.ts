@@ -3,15 +3,16 @@ import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
 import { IAsset, IAssetFullInfo } from "App/Interfaces/Asset";
 import {
   IAssetInventory,
+  IAssetInventoryDate,
   IAssetInventorySchema,
 } from "App/Interfaces/AssetInventory";
-import AssetInventoryRepository from "App/Repositories/AssetInventoryRepository";
-import AssetRepository from "App/Repositories/AssetRepository";
+import { IAssetInventoryRepository } from "App/Repositories/AssetInventoryRepository";
+import { IAssetRepository } from "App/Repositories/AssetRepository";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { deleteRepetitions } from "App/Utils/helpers";
 import { DateTime } from "luxon";
-import AssetService from "../AssetService/AssetService";
+import { IAssetService } from "../AssetService/AssetService";
 import { assetXLSXFilePath, assetXLSXRows, assetXLSXcolumnNames } from "./XLSX";
 
 export interface IAssetInventoryService {
@@ -19,15 +20,16 @@ export interface IAssetInventoryService {
     payload: IAssetInventorySchema
   ): Promise<ApiResponse<IAssetInventory[]>>;
   generateAssetInventoryXLSX(
-    payload: IAssetInventorySchema
+    assetIds: Array<number>
   ): Promise<ApiResponse<string>>;
+  getAssetInventoryDates(): Promise<ApiResponse<IAssetInventoryDate[]>>;
 }
 
 export default class AssetInventoryService implements IAssetInventoryService {
   constructor(
-    private assetInventoryRepository: AssetInventoryRepository,
-    private assetRepository: AssetRepository,
-    private assetService: AssetService
+    private assetInventoryRepository: IAssetInventoryRepository,
+    private assetRepository: IAssetRepository,
+    private assetService: IAssetService
   ) {}
   // CREATE ASSET INVENTORY
   public async createAssetInventory(payload: IAssetInventorySchema) {
@@ -44,9 +46,9 @@ export default class AssetInventoryService implements IAssetInventoryService {
     return new ApiResponse(assetInventoryCreated, EResponseCodes.OK);
   }
   // GENERATE ASSET INVENTORY XLSX
-  public async generateAssetInventoryXLSX(payload: IAssetInventorySchema) {
+  public async generateAssetInventoryXLSX(assetIds: Array<number>) {
     let assetJoinPromises: Promise<IAsset>[] = [];
-    const assetIdsCleared = deleteRepetitions(payload.assetIds);
+    const assetIdsCleared = deleteRepetitions(assetIds);
     const assetsFound = await this.assetRepository.getManyAssets(
       assetIdsCleared
     );
@@ -64,5 +66,11 @@ export default class AssetInventoryService implements IAssetInventoryService {
       worksheetName: "Control inventario activos tecnológicos",
     });
     return new ApiResponse(assetXLSXFilePath, EResponseCodes.OK);
+  }
+  // GET ASSET INVENTORY DATES
+  public async getAssetInventoryDates() {
+    const assetsInventoryDatesFound =
+      await this.assetInventoryRepository.getAssetInventoryDates();
+    return new ApiResponse(assetsInventoryDatesFound, EResponseCodes.OK);
   }
 }

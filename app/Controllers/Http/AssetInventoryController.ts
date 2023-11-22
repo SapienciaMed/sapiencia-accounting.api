@@ -5,6 +5,7 @@ import { IAssetInventorySchema } from "App/Interfaces/AssetInventory";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
 import { createAssetInventorySchema } from "App/Validators/AssetInventory/create";
+import { generateXLSXAssetInventorySchema } from "App/Validators/AssetInventory/xlsxFiltersSchema";
 
 export default class AssetInventoryController {
   // CREATE ASSET INVENTORY
@@ -29,21 +30,36 @@ export default class AssetInventoryController {
   // GENERATE ASSET INVENTORY XLSX
   public async generateAssetInventoryXLSX(ctx: HttpContextContract) {
     const { request, response, logger } = ctx;
-    let filters: IAssetInventorySchema;
+    let filters: { assetIds: string };
     try {
-      filters = await request.validate({ schema: createAssetInventorySchema });
+      filters = await request.validate({
+        schema: generateXLSXAssetInventorySchema,
+      });
     } catch (err) {
       return DBException.badRequest(ctx, err);
     }
     try {
       const resp = await AssetInventoryProvider.generateAssetInventoryXLSX(
-        filters
+        JSON.parse(filters.assetIds)
       );
       response.header(
         "Content-Disposition",
         `attachment; filename=control_inventario.xlsx`
       );
       return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GET ASSET INVENTORY DATES
+  public async getAssetInventoryDates(ctx: HttpContextContract) {
+    const { response, logger } = ctx;
+    try {
+      const assetInventoryDatesFound =
+        await AssetInventoryProvider.getAssetInventoryDates();
+      return response.ok(assetInventoryDatesFound);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

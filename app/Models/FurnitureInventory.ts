@@ -30,7 +30,7 @@ export default class FurnitureInventory extends BaseModel {
     columnName: FURNITURE_INVENTORY_TABLE.CREATED_AT,
     serializeAs: "createdAt",
     serialize: (value: DateTime) => {
-      return value ? value.setLocale("zh").toFormat("dd-MM-yyyy") : value;
+      return value ? value.setLocale("zh").toFormat("yyyy-MM-dd") : value;
     },
   })
   public createdAt: DateTime;

@@ -17,3 +17,7 @@ export type IAssetInventoryPayload = Array<{
   hour: string;
   userCreated: string;
 }>;
+
+export type IAssetInventoryDate = {
+  createdAt: string;
+};

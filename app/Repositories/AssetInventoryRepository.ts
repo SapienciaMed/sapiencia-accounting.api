@@ -1,6 +1,7 @@
 import { DATABASE_ERRORS, IDatabaseError } from "App/Constants/DatabaseErrors";
 import {
   IAssetInventory,
+  IAssetInventoryDate,
   IAssetInventoryPayload,
 } from "App/Interfaces/AssetInventory";
 import AssetInventory from "App/Models/AssetInventory";
@@ -9,6 +10,7 @@ export interface IAssetInventoryRepository {
   createAssetInventory(
     payload: IAssetInventoryPayload
   ): Promise<IAssetInventory[]>;
+  getAssetInventoryDates(): Promise<IAssetInventoryDate[]>;
 }
 
 export default class AssetInventoryRepository
@@ -27,5 +29,13 @@ export default class AssetInventoryRepository
           throw new Error(err);
       }
     }
+  }
+  // GET ASSET INVENTORY DATES
+  public async getAssetInventoryDates() {
+    const assetQuery = AssetInventory.query();
+    const assetsFound = await assetQuery.distinct("createdAt");
+    return assetsFound.map(
+      (asset) => asset.serializeAttributes() as IAssetInventoryDate
+    );
   }
 }
