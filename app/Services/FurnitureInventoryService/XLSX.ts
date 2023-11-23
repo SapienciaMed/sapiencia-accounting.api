@@ -1,7 +1,12 @@
 import Application from "@ioc:Adonis/Core/Application";
 import { IFurnitureMutated } from "App/Interfaces/Furniture";
+import { DateTime } from "luxon";
 
 export const furnitureXLSXcolumnNames = [
+  {
+    name: "Fecha",
+    size: 20,
+  },
   {
     name: "Área",
     size: 20,
@@ -61,6 +66,7 @@ export const furnitureXLSXRows = (furnituresFound: IFurnitureMutated[]) =>
     return [
       ...prev,
       [
+        DateTime.now().setLocale("zh").toFormat("yyyy-MM-dd"),
         curr.area,
         curr.equipmentStatus,
         curr.userIdentification,
