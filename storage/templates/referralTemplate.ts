@@ -50,7 +50,7 @@ export const referralTemplate = (props: IReferralTemplateProps) =>
             <div class="ReferralDocument__container__sign mt-normal">
                 <span>Cordialmente,</span>
                 <div>
-                    <img src="data:image/png;base64,${props.DaphneSignString}" alt="" />
+                <img src="data:image/png;base64,${props.EmptySignString}" alt="" />
                 </div>
                 <strong>
                     <span>Daphne Morales Soto</span>
