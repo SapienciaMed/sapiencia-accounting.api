@@ -168,7 +168,7 @@ export const accountStatementTemplate = (
                         N° 0376 7015 1721, a nombre de Sapiencia, con NIT 900.602.106-0.
                         <br />
                         Agradezco enviar soporte del pago al correo electrónico
-                        marcela.suarez@sapiencia.gov.co
+                        daphne.morales@sapiencia.gov.co
                     </strong>
                 </p>
             </div>

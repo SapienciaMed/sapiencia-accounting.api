@@ -51,11 +51,11 @@ export default class FurnitureInventoryService
       hour: DateTime.now().hour.toString(),
       userCreated: Env.get("CURRENT_USER_DOCUMENT"),
     }));
-    const assetInventoryCreated =
+    const furnitureInventoryCreated =
       await this.furnitureInventoryRepository.createFurnitureInventory(
         furnitureDataSorted
       );
-    return new ApiResponse(assetInventoryCreated, EResponseCodes.OK);
+    return new ApiResponse(furnitureInventoryCreated, EResponseCodes.OK);
   }
   // GENERATE FURNITURE INVENTORY XLSX
   public async generateFurnitureInventoryXLSX(furnitureIds: Array<number>) {
