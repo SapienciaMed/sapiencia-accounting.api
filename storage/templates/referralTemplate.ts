@@ -60,7 +60,7 @@ export const referralTemplate = (props: IReferralTemplateProps) =>
                 <table class="borderTableLeft mt-large">
                     <tbody>
                         <tr>
-                            <td>Proyectó: Diana Marcela Suarez Quintero</td>
+                            <td>Proyectó:</td>
                             <td>Revisó: Daphne Morales Soto</td>
                         </tr>
                         <tr>
@@ -68,7 +68,7 @@ export const referralTemplate = (props: IReferralTemplateProps) =>
                                 <div class="ReferralDocument__container__representativesTable__col">
                                     <span>Contratista de apoyo Financiero</span>
                                     <div>
-                                        <img src="data:image/png;base64,${props.DianaSignString}" alt="" />
+                                        <img src="" alt="" />
                                     </div>
                                 </div>
                             </td>
