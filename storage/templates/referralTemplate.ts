@@ -3,6 +3,7 @@ import { IGetAccountStatementPaginated } from "App/Interfaces/AccountStatement";
 type IReferralTemplateProps = {
   logoString: string;
   expeditionDate: string;
+  EmptySignString: string;
   DaphneSignString: string;
   DianaSignString: string;
   footerLogoString: string;
@@ -68,7 +69,7 @@ export const referralTemplate = (props: IReferralTemplateProps) =>
                                 <div class="ReferralDocument__container__representativesTable__col">
                                     <span>Contratista de apoyo Financiero</span>
                                     <div>
-                                        <img src="" alt="" />
+                                    <img src="data:image/png;base64,${props.EmptySignString}" alt="" />
                                     </div>
                                 </div>
                             </td>
