@@ -7,6 +7,7 @@ import {
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
+import { IAccountStatementCausationReportFilters } from "App/Interfaces/AccountStatementReports";
 import AccountStatement from "App/Models/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
 
@@ -26,6 +27,9 @@ export interface IAccountStatementRepository {
   getAccountStatementByAccountNum(
     accountNum: number
   ): Promise<IAccountStatement>;
+  generateAccountStatementCausationReport(
+    filters: IAccountStatementCausationReportFilters
+  ): Promise<IPagingData<IGetAccountStatementPaginated>>;
 }
 
 export default class AccountStatementRepository
@@ -138,5 +142,29 @@ export default class AccountStatementRepository
       throw new Error(`No se generaron resultados con la búsqueda`);
     }
     return accountStatementFound as IAccountStatement;
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT
+  public async generateAccountStatementCausationReport(
+    filters: IAccountStatementCausationReportFilters
+  ) {
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("contract", (contractQuery) => {
+      contractQuery.preload("business");
+    });
+    const { expeditionDateFrom, expeditionDateUntil, page, perPage } = filters;
+    const auxExpeditionDateFrom = expeditionDateFrom?.toSQL();
+    const auxExpeditionDateUntil = expeditionDateUntil?.toSQL();
+    if (auxExpeditionDateFrom && auxExpeditionDateUntil) {
+      accountStatementQuery.whereBetween("expeditionDate", [
+        auxExpeditionDateFrom,
+        auxExpeditionDateUntil,
+      ]);
+    }
+    const accountStatementsFound = await accountStatementQuery.paginate(
+      page,
+      perPage
+    );
+    const { meta, data } = accountStatementsFound.serialize();
+    return { meta, array: data as IGetAccountStatementPaginated[] };
   }
 }

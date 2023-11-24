@@ -6,8 +6,10 @@ import {
   IGetAccountStatement,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
+import { IAccountStatementCausationReportFilters } from "App/Interfaces/AccountStatementReports";
 import { ApiResponse } from "App/Utils/ApiResponses";
 import { DBException } from "App/Utils/DbHandlerError";
+import { accountStatementCausationReportSchema } from "App/Validators/AccountStatement/accountStatementReportSchema";
 import { accountStatementSchema } from "App/Validators/AccountStatement/accountStatementSchema";
 import { accountStatementUpdateSchema } from "App/Validators/AccountStatement/accountStatementUpdateSchema";
 import { getAccountStatementFilteredSchema } from "App/Validators/AccountStatement/getAccountStatementFilteredSchema";
@@ -151,6 +153,60 @@ export default class AccountStatementController {
       response.header(
         "Content-Disposition",
         "attachment; filename=cuentas_cobro.xlsx"
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT
+  public async generateAccountStatementCausationReport(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementCausationReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementCausationReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const accountStatementsFound =
+        await AccountStatementProvider.generateAccountStatementCausationReport(
+          filters
+        );
+      return response.ok(accountStatementsFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT XLSX
+  public async generateAccountStatementCausationReportXLSX(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementCausationReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementCausationReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await AccountStatementProvider.generateAccountStatementCausationReportXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=informe_causacion.xlsx"
       );
       return response.download(resp.data);
     } catch (err) {

@@ -64,6 +64,18 @@ Route.group(() => {
     // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
     Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
     // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
+    Route.group(() => {
+      Route.get(
+        "causation",
+        "AccountStatementController.generateAccountStatementCausationReport"
+      );
+      Route.get(
+        "generate-causation-xlsx",
+        "AccountStatementController.generateAccountStatementCausationReportXLSX"
+      );
+    })
+      .prefix("/report")
+      .middleware("auth");
   }).prefix("/account-statement");
   // ==================================================================
   // =================== ACCOUNT STATEMENT TRACKING ===================
