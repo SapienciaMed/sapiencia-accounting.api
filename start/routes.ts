@@ -81,6 +81,10 @@ Route.group(() => {
         "/defeated-portfolio",
         "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"
       );
+      Route.post(
+        "/management",
+        "AccountStatementController.generateAccountStatementCausationReport"
+      );
     })
       .prefix("/report")
       .middleware("auth");
