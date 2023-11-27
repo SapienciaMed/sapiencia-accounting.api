@@ -6,3 +6,10 @@ export type IAccountStatementCausationReportFilters = {
   page: number;
   perPage: number;
 };
+
+export type IAccountStatementPaymentReportFilters = {
+  paymentDateFrom: DateTime;
+  paymentDateUntil: DateTime;
+  page: number;
+  perPage: number;
+};

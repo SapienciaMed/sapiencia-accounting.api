@@ -16,3 +16,7 @@ export enum TIPO_FUNCIONARIO {
   CONTRATISTA = "Contratista",
   EMPTY = "----",
 }
+
+export enum ACCOUNT_STATEMENT_STATUS {
+  PAGADA = 2,
+}

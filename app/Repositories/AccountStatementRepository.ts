@@ -1,5 +1,6 @@
 import Env from "@ioc:Adonis/Core/Env";
 import Logger from "@ioc:Adonis/Core/Logger";
+import { ACCOUNT_STATEMENT_STATUS } from "App/Constants/GenericListEnum";
 import {
   IAccountStatement,
   IAccountStatementSchema,
@@ -7,7 +8,10 @@ import {
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
-import { IAccountStatementCausationReportFilters } from "App/Interfaces/AccountStatementReports";
+import {
+  IAccountStatementCausationReportFilters,
+  IAccountStatementPaymentReportFilters,
+} from "App/Interfaces/AccountStatementReports";
 import AccountStatement from "App/Models/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
 
@@ -29,6 +33,9 @@ export interface IAccountStatementRepository {
   ): Promise<IAccountStatement>;
   generateAccountStatementCausationReport(
     filters: IAccountStatementCausationReportFilters
+  ): Promise<IPagingData<IGetAccountStatementPaginated>>;
+  generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
   ): Promise<IPagingData<IGetAccountStatementPaginated>>;
 }
 
@@ -160,6 +167,34 @@ export default class AccountStatementRepository
         auxExpeditionDateUntil,
       ]);
     }
+    const accountStatementsFound = await accountStatementQuery.paginate(
+      page,
+      perPage
+    );
+    const { meta, data } = accountStatementsFound.serialize();
+    return { meta, array: data as IGetAccountStatementPaginated[] };
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT
+  public async generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    const { paymentDateFrom, paymentDateUntil, page, perPage } = filters;
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("tracking", (trackingQuery) => {
+      const auxPaymentDateFrom = paymentDateFrom?.toSQL();
+      const auxPaymentDateUntil = paymentDateUntil?.toSQL();
+      if (auxPaymentDateFrom && auxPaymentDateUntil) {
+        trackingQuery
+          .where("statusId", ACCOUNT_STATEMENT_STATUS.PAGADA)
+          .andWhereBetween("trackingDate", [
+            auxPaymentDateFrom,
+            auxPaymentDateUntil,
+          ]);
+      }
+    });
+    // accountStatementQuery.preload("contract", (contractQuery) => {
+    //   contractQuery.preload("business");
+    // });
     const accountStatementsFound = await accountStatementQuery.paginate(
       page,
       perPage

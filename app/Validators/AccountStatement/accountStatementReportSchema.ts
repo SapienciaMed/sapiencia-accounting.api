@@ -16,3 +16,20 @@ export const accountStatementCausationReportSchema = schema.create({
   page: schema.number([rules.required(), rules.unsigned()]),
   perPage: schema.number([rules.required(), rules.unsigned()]),
 });
+
+export const accountStatementPaymentReportSchema = schema.create({
+  paymentDateFrom: schema.date(
+    {
+      format: "sql",
+    },
+    [rules.required()]
+  ),
+  paymentDateUntil: schema.date(
+    {
+      format: "sql",
+    },
+    [rules.required()]
+  ),
+  page: schema.number([rules.required(), rules.unsigned()]),
+  perPage: schema.number([rules.required(), rules.unsigned()]),
+});

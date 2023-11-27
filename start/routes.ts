@@ -65,13 +65,17 @@ Route.group(() => {
     Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
     // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
     Route.group(() => {
-      Route.get(
-        "causation",
+      Route.post(
+        "/causation",
         "AccountStatementController.generateAccountStatementCausationReport"
       );
       Route.get(
-        "generate-causation-xlsx",
+        "/generate-causation-xlsx",
         "AccountStatementController.generateAccountStatementCausationReportXLSX"
+      );
+      Route.post(
+        "/payment",
+        "AccountStatementController.generateAccountStatementPaymentReport"
       );
     })
       .prefix("/report")

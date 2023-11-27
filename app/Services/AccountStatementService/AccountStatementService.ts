@@ -6,7 +6,10 @@ import {
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
-import { IAccountStatementCausationReportFilters } from "App/Interfaces/AccountStatementReports";
+import {
+  IAccountStatementCausationReportFilters,
+  IAccountStatementPaymentReportFilters,
+} from "App/Interfaces/AccountStatementReports";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
@@ -52,6 +55,9 @@ export interface IAccountStatementService {
   generateAccountStatementCausationReportXLSX(
     filters: IAccountStatementCausationReportFilters
   ): Promise<ApiResponse<string>>;
+  generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
 }
 
 export default class AccountStatementService
@@ -178,5 +184,15 @@ export default class AccountStatementService
       worksheetName: "Cuentas de cobro",
     });
     return new ApiResponse(causationXLSXFilePath, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT PAYMENT REPORT
+  public async generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementPaymentReport(
+        filters
+      );
+    return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
   }
 }
