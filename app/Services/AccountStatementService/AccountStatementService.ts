@@ -6,6 +6,11 @@ import {
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
+import {
+  IAccountStatementCausationReportFilters,
+  IAccountStatementDefeatedPorfolioReportFilters,
+  IAccountStatementPaymentReportFilters,
+} from "App/Interfaces/AccountStatementReports";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
@@ -17,6 +22,11 @@ import {
   accountStatementXLSXFilePath,
   accountStatementXLSXRows,
 } from "./XLSX";
+import {
+  causationXLSXColumns,
+  causationXLSXFilePath,
+  causationXLSXRows,
+} from "./causationXLSX";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -40,6 +50,18 @@ export interface IAccountStatementService {
   generateXLSXAccountStatement(
     filters: IGetAccountStatement
   ): Promise<ApiResponse<string>>;
+  generateAccountStatementCausationReport(
+    filters: IAccountStatementCausationReportFilters
+  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  generateAccountStatementCausationReportXLSX(
+    filters: IAccountStatementCausationReportFilters
+  ): Promise<ApiResponse<string>>;
+  generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  generateAccountStatementDefeatedPortfolioReport(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
 }
 
 export default class AccountStatementService
@@ -125,7 +147,6 @@ export default class AccountStatementService
       dimension,
       "A4"
     );
-
     return new ApiResponse(PDF_PATH, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT XLSX
@@ -141,5 +162,51 @@ export default class AccountStatementService
       worksheetName: "Cuentas de cobro",
     });
     return new ApiResponse(accountStatementXLSXFilePath, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT
+  public async generateAccountStatementCausationReport(
+    filters: IAccountStatementCausationReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementCausationReport(
+        filters
+      );
+    return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT XLSX
+  public async generateAccountStatementCausationReportXLSX(
+    filters: IAccountStatementCausationReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementCausationReport(
+        filters
+      );
+    await generateXLSX({
+      columns: causationXLSXColumns,
+      data: causationXLSXRows(accountStatementsFound),
+      filePath: causationXLSXFilePath,
+      worksheetName: "Cuentas de cobro",
+    });
+    return new ApiResponse(causationXLSXFilePath, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT PAYMENT REPORT
+  public async generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementPaymentReport(
+        filters
+      );
+    return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORFOLIO REPORT
+  public async generateAccountStatementDefeatedPortfolioReport(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementDefeatedPortfolioReport(
+        filters
+      );
+    return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
   }
 }

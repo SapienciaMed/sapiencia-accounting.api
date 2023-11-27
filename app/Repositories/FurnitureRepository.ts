@@ -21,6 +21,8 @@ export interface IFurnitureRepository {
     id: number,
     payload: IUpdateFurniture
   ): Promise<IFurniture>;
+  getFurnitureByPlate(plate: string): Promise<IFurniture>;
+  getManyFurnituresByIds(ids: Array<number>): Promise<IFurniture[]>;
 }
 
 export default class FurnitureRepository implements IFurnitureRepository {
@@ -94,5 +96,25 @@ export default class FurnitureRepository implements IFurnitureRepository {
   ) {
     const furnitureFound = await this.getFurnitureById(id);
     return await furnitureFound.merge(payload).save();
+  }
+  // GET FURNITURE BY PLATE
+  public async getFurnitureByPlate(plate: string) {
+    try {
+      const furnitureFound = await Furniture.findByOrFail("plate", plate);
+      return furnitureFound.serializeAttributes() as IFurniture;
+    } catch (err) {
+      if (err.message?.includes(DATABASE_ERRORS.E_ROW_NOT_FOUND)) {
+        throw new Error("Bien mueble inexistente");
+      }
+      throw new Error(err);
+    }
+  }
+  // GET MANY FURNITURES BY IDS
+  public async getManyFurnituresByIds(ids: Array<number>) {
+    const furnitureQuery = Furniture.query();
+    const furnituresFound = await furnitureQuery.whereIn("id", ids);
+    return furnituresFound.map(
+      (furniture) => furniture.serializeAttributes() as IFurniture
+    );
   }
 }

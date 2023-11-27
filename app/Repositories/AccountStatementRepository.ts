@@ -1,5 +1,6 @@
 import Env from "@ioc:Adonis/Core/Env";
 import Logger from "@ioc:Adonis/Core/Logger";
+import { ACCOUNT_STATEMENT_STATUS } from "App/Constants/GenericListEnum";
 import {
   IAccountStatement,
   IAccountStatementSchema,
@@ -7,6 +8,11 @@ import {
   IGetAccountStatementPaginated,
   IUpdateAccountStatement,
 } from "App/Interfaces/AccountStatement";
+import {
+  IAccountStatementCausationReportFilters,
+  IAccountStatementDefeatedPorfolioReportFilters,
+  IAccountStatementPaymentReportFilters,
+} from "App/Interfaces/AccountStatementReports";
 import AccountStatement from "App/Models/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
 
@@ -26,6 +32,12 @@ export interface IAccountStatementRepository {
   getAccountStatementByAccountNum(
     accountNum: number
   ): Promise<IAccountStatement>;
+  generateAccountStatementCausationReport(
+    filters: IAccountStatementCausationReportFilters
+  ): Promise<IPagingData<IGetAccountStatementPaginated>>;
+  generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ): Promise<IPagingData<IGetAccountStatementPaginated>>;
 }
 
 export default class AccountStatementRepository
@@ -138,5 +150,76 @@ export default class AccountStatementRepository
       throw new Error(`No se generaron resultados con la búsqueda`);
     }
     return accountStatementFound as IAccountStatement;
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT
+  public async generateAccountStatementCausationReport(
+    filters: IAccountStatementCausationReportFilters
+  ) {
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("contract", (contractQuery) => {
+      contractQuery.preload("business");
+    });
+    const { expeditionDateFrom, expeditionDateUntil, page, perPage } = filters;
+    const auxExpeditionDateFrom = expeditionDateFrom?.toSQL();
+    const auxExpeditionDateUntil = expeditionDateUntil?.toSQL();
+    if (auxExpeditionDateFrom && auxExpeditionDateUntil) {
+      accountStatementQuery.whereBetween("expeditionDate", [
+        auxExpeditionDateFrom,
+        auxExpeditionDateUntil,
+      ]);
+    }
+    const accountStatementsFound = await accountStatementQuery.paginate(
+      page,
+      perPage
+    );
+    const { meta, data } = accountStatementsFound.serialize();
+    return { meta, array: data as IGetAccountStatementPaginated[] };
+  }
+  // GENERATE ACCOUNT STATEMENT CAUSATION REPORT
+  public async generateAccountStatementPaymentReport(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    const { paymentDateFrom, paymentDateUntil, page, perPage } = filters;
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("tracking", (trackingQuery) => {
+      const auxPaymentDateFrom = paymentDateFrom?.toSQL();
+      const auxPaymentDateUntil = paymentDateUntil?.toSQL();
+      if (auxPaymentDateFrom && auxPaymentDateUntil) {
+        trackingQuery
+          .where("statusId", ACCOUNT_STATEMENT_STATUS.PAGADA)
+          .andWhereBetween("trackingDate", [
+            auxPaymentDateFrom,
+            auxPaymentDateUntil,
+          ]);
+      }
+    });
+    // accountStatementQuery.preload("contract", (contractQuery) => {
+    //   contractQuery.preload("business");
+    // });
+    const accountStatementsFound = await accountStatementQuery.paginate(
+      page,
+      perPage
+    );
+    const { meta, data } = accountStatementsFound.serialize();
+    return { meta, array: data as IGetAccountStatementPaginated[] };
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO REPORT
+  public async generateAccountStatementDefeatedPortfolioReport(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const { statusId, page, perPage } = filters;
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("tracking", (trackingQuery) => {
+      trackingQuery.where("statusId", statusId);
+      accountStatementQuery.preload("contract", (contractQuery) => {
+        contractQuery.preload("business");
+      });
+    });
+    const accountStatementsFound = await accountStatementQuery.paginate(
+      page,
+      perPage
+    );
+    const { meta, data } = accountStatementsFound.serialize();
+    return { meta, array: data as IGetAccountStatementPaginated[] };
   }
 }

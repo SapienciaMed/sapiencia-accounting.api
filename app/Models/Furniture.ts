@@ -1,30 +1,31 @@
 import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { FURNITURE_TABLE } from "App/Constants/Tables/Furniture/FurnitureTable";
 import { DateTime } from "luxon";
 
 export default class Furniture extends BaseModel {
-  public static table = "BIE_BIENES_INMUEBLE";
+  public static table = FURNITURE_TABLE.TABLE_NAME;
 
   @column({
     isPrimary: true,
-    columnName: "BIE_CODIGO",
+    columnName: FURNITURE_TABLE.ID,
     serializeAs: "id",
   })
   public id: number;
 
   @column({
-    columnName: "BIE_PLACA_ACTIVO",
+    columnName: FURNITURE_TABLE.PLATE,
     serializeAs: "plate",
   })
   public plate: string;
 
   @column({
-    columnName: "BIE_TIPO_ACTIVO_DESCRIPCION",
+    columnName: FURNITURE_TABLE.DESCRIPTION,
     serializeAs: "description",
   })
   public description: string;
 
   @column({
-    columnName: "BIE_FECHA_ADQUISICION",
+    columnName: FURNITURE_TABLE.ACQUISITION_DATE,
     serializeAs: "acquisitionDate",
     prepare: (value: DateTime) => value.toSQLDate(),
     serialize: (value: Date) => {
@@ -37,61 +38,61 @@ export default class Furniture extends BaseModel {
   public acquisitionDate: DateTime;
 
   @column({
-    columnName: "BIE_ESTADO_EQUIPO",
+    columnName: FURNITURE_TABLE.EQUIPMENT_STATUS,
     serializeAs: "equipmentStatus",
   })
   public equipmentStatus: number;
 
   @column({
-    columnName: "BIE_CC_USUARIO",
+    columnName: FURNITURE_TABLE.OWNER_ID,
     serializeAs: "userIdentification",
   })
   public userIdentification: string;
 
   @column({
-    columnName: "BIE_AREA",
+    columnName: FURNITURE_TABLE.AREA,
     serializeAs: "area",
   })
   public area: number;
 
   @column({
-    columnName: "BIE_NOMBRE_APELLIDO",
+    columnName: FURNITURE_TABLE.OWNER_FULL_NAME,
     serializeAs: "fullName",
   })
   public fullName: string;
 
   @column({
-    columnName: "BIE_MODELO",
+    columnName: FURNITURE_TABLE.MODEL,
     serializeAs: "model",
   })
   public model: string;
 
   @column({
-    columnName: "BIE_MARCA",
+    columnName: FURNITURE_TABLE.BRAND,
     serializeAs: "brand",
   })
   public brand: string;
 
   @column({
-    columnName: "BIE_MEDIDAS",
+    columnName: FURNITURE_TABLE.MEASURE,
     serializeAs: "measure",
   })
   public measure: string;
 
   @column({
-    columnName: "BIE_PROPIETARIO_ACTIVO",
+    columnName: FURNITURE_TABLE.ACTIVE_OWNER,
     serializeAs: "activeOwner",
   })
   public activeOwner: number;
 
   @column({
-    columnName: "BIE_OBSERVACION",
+    columnName: FURNITURE_TABLE.OBSERVATIONS,
     serializeAs: "observation",
   })
   public observation: string;
 
   @column({
-    columnName: "BIE_FUNCIONARIO",
+    columnName: FURNITURE_TABLE.CLERK,
     serializeAs: "clerk",
   })
   public clerk: number;

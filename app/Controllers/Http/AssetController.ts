@@ -128,4 +128,17 @@ export default class AssetController {
       return response.badRequest(apiResp);
     }
   }
+  // GET ASSET BY PLATE
+  public async getAssetByPlate(ctx: HttpContextContract) {
+    const { request, response, logger } = ctx;
+    try {
+      const { plate } = request.params();
+      const assetFound = await AssetProvider.getAssetByPlate(plate);
+      return response.ok(assetFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

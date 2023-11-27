@@ -27,6 +27,12 @@ export default class AppProvider {
     const AssetHistoryService = await import(
       "App/Services/AssetHistoryService"
     );
+    const AssetInventoryService = await import(
+      "App/Services/AssetInventoryService/AssetInventoryService"
+    );
+    const FurnitureInventoryService = await import(
+      "App/Services/FurnitureInventoryService"
+    );
     /**************************************************************************/
     /************************ EXTERNAL SERVICES ********************************/
     /**************************************************************************/
@@ -60,6 +66,12 @@ export default class AppProvider {
     const AssetRepository = await import("App/Repositories/AssetRepository");
     const AssetHistoryRepository = await import(
       "App/Repositories/AssetHistoryRepository"
+    );
+    const AssetInventoryRepository = await import(
+      "App/Repositories/AssetInventoryRepository"
+    );
+    const FurnitureInventoryRepository = await import(
+      "App/Repositories/FurnitureInventoryRepository"
     );
     /**************************************************************************/
     /******************************** CORE  ***********************************/
@@ -129,6 +141,33 @@ export default class AppProvider {
         new AssetHistoryService.default(
           new AssetHistoryRepository.default(),
           new GenericMasterService.default()
+        )
+    );
+    this.app.container.singleton(
+      "core.AssetInventoryProvider",
+      () =>
+        new AssetInventoryService.default(
+          new AssetInventoryRepository.default(),
+          new AssetRepository.default(),
+          new AssetService.default(
+            new AssetRepository.default(),
+            new PayrollService.default(),
+            new AssetHistoryRepository.default(),
+            new GenericMasterService.default()
+          )
+        )
+    );
+    this.app.container.singleton(
+      "core.FurnitureInventoryProvider",
+      () =>
+        new FurnitureInventoryService.default(
+          new FurnitureInventoryRepository.default(),
+          new FurnitureService.default(
+            new FurnitureRepository.default(),
+            new PayrollService.default(),
+            new GenericMasterService.default(),
+            new FurnitureHistoryRepository.default()
+          )
         )
     );
   }

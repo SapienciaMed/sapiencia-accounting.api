@@ -13,6 +13,8 @@ export const accountStatementDesktopTemplate = (
   const basePath = "/storage/templates/assets";
   const logoPath = Application.makePath(basePath, "logo.png");
   const footerPath = Application.makePath(basePath, "footer.png");
+  const EmptySignPath = Application.makePath(basePath, "EmptySign.png");
+  const EmptySignString = readFileSync(EmptySignPath).toString("base64");
   const DapnheSignImgName = "DaphneMoralesSotoSign.png";
   const DianaSignImgName = "DaphneMoralesSotoSign.png";
   const DapnheSignPath = Application.makePath(basePath, DapnheSignImgName);
@@ -20,6 +22,7 @@ export const accountStatementDesktopTemplate = (
   const logoString = readFileSync(logoPath).toString("base64");
   const footerLogoString = readFileSync(footerPath).toString("base64");
   const referralTemplateString = referralTemplate({
+    EmptySignString,
     logoString,
     expeditionDate: dateFormatted(accountStatement.expeditionDate, "LL"),
     DaphneSignString: readFileSync(DapnheSignPath).toString("base64"),

@@ -64,6 +64,30 @@ Route.group(() => {
     // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
     Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
     // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
+    Route.group(() => {
+      Route.post(
+        "/causation",
+        "AccountStatementController.generateAccountStatementCausationReport"
+      );
+      Route.get(
+        "/generate-causation-xlsx",
+        "AccountStatementController.generateAccountStatementCausationReportXLSX"
+      );
+      Route.post(
+        "/payment",
+        "AccountStatementController.generateAccountStatementPaymentReport"
+      );
+      Route.post(
+        "/defeated-portfolio",
+        "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"
+      );
+      Route.post(
+        "/management",
+        "AccountStatementController.generateAccountStatementCausationReport"
+      );
+    })
+      .prefix("/report")
+      .middleware("auth");
   }).prefix("/account-statement");
   // ==================================================================
   // =================== ACCOUNT STATEMENT TRACKING ===================
@@ -152,6 +176,10 @@ Route.group(() => {
       "FurnitureController.updateFurnitureById"
     ).where("id", Route.matchers.number());
     // .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
+    Route.get(
+      "/:plate/get-by-plate",
+      "FurnitureController.getFurnitureByPlate"
+    );
     Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
   }).prefix("/furniture");
   // ==================================================================
@@ -162,6 +190,26 @@ Route.group(() => {
       "FurnitureHistoryController.getFurnitureHistoryById"
     ).where("furnitureId", Route.matchers.number());
   }).prefix("/furniture-history");
+  // ==================================================================
+  // ====================== FURNITURE INVENTORY =======================
+  Route.group(() => {
+    Route.post(
+      "/create",
+      "FurnitureInventoryController.createFurnitureInventory"
+    ).middleware("auth");
+    Route.get(
+      "/generate-xlsx",
+      "FurnitureInventoryController.generateFurnitureInventoryXLSX"
+    ).middleware("auth");
+    Route.get(
+      "get-inventory-dates",
+      "FurnitureInventoryController.getFurnitureInventoryDates"
+    );
+    Route.get(
+      "generate-inventory-xlsx",
+      "FurnitureInventoryController.generateFullFurnitureInventoryXLSX"
+    );
+  }).prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================
   Route.group(() => {
@@ -187,6 +235,10 @@ Route.group(() => {
       "id",
       Route.matchers.number()
     );
+    Route.get(
+      "/:plate/get-by-plate",
+      "AssetController.getAssetByPlate"
+    ).middleware("auth");
   }).prefix("/asset");
   // ==================================================================
   // ========================= ASSET HISTORY ==========================
@@ -196,4 +248,24 @@ Route.group(() => {
       "AssetHistoryController.getAssetHistoryById"
     );
   }).prefix("/asset-history");
+  // ==================================================================
+  // ======================== ASSET INVENTORY =========================
+  Route.group(() => {
+    Route.post(
+      "/create",
+      "AssetInventoryController.createAssetInventory"
+    ).middleware("auth");
+    Route.get(
+      "/generate-xlsx",
+      "AssetInventoryController.generateAssetInventoryXLSX"
+    ).middleware("auth");
+    Route.get(
+      "get-inventory-dates",
+      "AssetInventoryController.getAssetInventoryDates"
+    ).middleware("auth");
+    Route.get(
+      "generate-inventory-xlsx",
+      "AssetInventoryController.generateFullAssetInventoryXLSX"
+    );
+  }).prefix("/asset-inventory");
 }).prefix("/api/v1");
