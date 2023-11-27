@@ -13,3 +13,9 @@ export type IAccountStatementPaymentReportFilters = {
   page: number;
   perPage: number;
 };
+
+export type IAccountStatementDefeatedPorfolioReportFilters = {
+  statusId: number;
+  page: number;
+  perPage: number;
+};

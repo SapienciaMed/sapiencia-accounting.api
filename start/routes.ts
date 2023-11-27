@@ -77,6 +77,10 @@ Route.group(() => {
         "/payment",
         "AccountStatementController.generateAccountStatementPaymentReport"
       );
+      Route.post(
+        "/defeated-portfolio",
+        "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"
+      );
     })
       .prefix("/report")
       .middleware("auth");

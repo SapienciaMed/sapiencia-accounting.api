@@ -10,6 +10,7 @@ import {
 } from "App/Interfaces/AccountStatement";
 import {
   IAccountStatementCausationReportFilters,
+  IAccountStatementDefeatedPorfolioReportFilters,
   IAccountStatementPaymentReportFilters,
 } from "App/Interfaces/AccountStatementReports";
 import AccountStatement from "App/Models/AccountStatement";
@@ -195,6 +196,25 @@ export default class AccountStatementRepository
     // accountStatementQuery.preload("contract", (contractQuery) => {
     //   contractQuery.preload("business");
     // });
+    const accountStatementsFound = await accountStatementQuery.paginate(
+      page,
+      perPage
+    );
+    const { meta, data } = accountStatementsFound.serialize();
+    return { meta, array: data as IGetAccountStatementPaginated[] };
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO REPORT
+  public async generateAccountStatementDefeatedPortfolioReport(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const { statusId, page, perPage } = filters;
+    const accountStatementQuery = AccountStatement.query();
+    accountStatementQuery.preload("tracking", (trackingQuery) => {
+      trackingQuery.where("statusId", statusId);
+      accountStatementQuery.preload("contract", (contractQuery) => {
+        contractQuery.preload("business");
+      });
+    });
     const accountStatementsFound = await accountStatementQuery.paginate(
       page,
       perPage

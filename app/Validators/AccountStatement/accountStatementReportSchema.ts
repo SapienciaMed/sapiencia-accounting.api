@@ -33,3 +33,9 @@ export const accountStatementPaymentReportSchema = schema.create({
   page: schema.number([rules.required(), rules.unsigned()]),
   perPage: schema.number([rules.required(), rules.unsigned()]),
 });
+
+export const accountStatementDefeatedPortfolioReportSchema = schema.create({
+  statusId: schema.number([rules.required(), rules.unsigned()]),
+  page: schema.number([rules.required(), rules.unsigned()]),
+  perPage: schema.number([rules.required(), rules.unsigned()]),
+});

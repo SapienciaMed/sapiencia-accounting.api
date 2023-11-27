@@ -8,6 +8,7 @@ import {
 } from "App/Interfaces/AccountStatement";
 import {
   IAccountStatementCausationReportFilters,
+  IAccountStatementDefeatedPorfolioReportFilters,
   IAccountStatementPaymentReportFilters,
 } from "App/Interfaces/AccountStatementReports";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
@@ -57,6 +58,9 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<string>>;
   generateAccountStatementPaymentReport(
     filters: IAccountStatementPaymentReportFilters
+  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  generateAccountStatementDefeatedPortfolioReport(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
   ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
 }
 
@@ -191,6 +195,16 @@ export default class AccountStatementService
   ) {
     const accountStatementsFound =
       await this.accountStatementRepository.generateAccountStatementPaymentReport(
+        filters
+      );
+    return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORFOLIO REPORT
+  public async generateAccountStatementDefeatedPortfolioReport(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementDefeatedPortfolioReport(
         filters
       );
     return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
