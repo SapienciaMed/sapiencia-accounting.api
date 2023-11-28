@@ -13,9 +13,7 @@ import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import GenericMasterExternalService from "./external/GenericExternalService";
 
 export interface IContractService {
-  createContract(
-    payload: IContractSchema
-  ): Promise<ApiResponse<Required<IContract>>>;
+  createContract(payload: IContractSchema): Promise<ApiResponse<IContract>>;
   getContractPaginated(
     filters: IContractPaginateSchema
   ): Promise<ApiResponse<IPagingData<IContractPaginated>>>;

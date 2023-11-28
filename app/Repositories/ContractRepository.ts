@@ -16,7 +16,7 @@ import Contract from "App/Models/Contract";
 import { IPagingData } from "App/Utils/ApiResponses";
 
 export interface IContractRepository {
-  createContract(payload: IContractSchema): Promise<Required<IContract>>;
+  createContract(payload: IContractSchema): Promise<IContract>;
   getContractPaginated(
     filters: IContractPaginateSchema
   ): Promise<IPagingData<IContractPaginated>>;
