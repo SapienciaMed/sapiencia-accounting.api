@@ -33,7 +33,7 @@ export const managementReportXLSXColumns = [
   },
   {
     name: "NIT O NÚMERO DE CÉDULA DEL CLIENTE",
-    size: 30,
+    size: 50,
   },
   {
     name: "CÓDIGO DEL ASUNTO",
@@ -53,11 +53,11 @@ export const managementReportXLSXColumns = [
   },
   {
     name: "DESCRIPCIÓN DEL DOCUMENTO",
-    size: 30,
+    size: 50,
   },
   {
     name: "OBSERVACIONES",
-    size: 40,
+    size: 80,
   },
   {
     name: "RUTA IMÁGENES",
