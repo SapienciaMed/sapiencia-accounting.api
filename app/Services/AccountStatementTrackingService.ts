@@ -1,23 +1,27 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
+import { IAccountStatementPaymentReportFilters } from "App/Interfaces/AccountStatementReports";
 import {
   IAccountStatementTracking,
   IAccountStatementTrackingPayload,
 } from "App/Interfaces/AccountStatementTracking";
-import AccountStatementTrackingRepository from "App/Repositories/AccountStatementTrackingRepository";
-import { ApiResponse } from "App/Utils/ApiResponses";
+import { IAccountStatementTrackingRepository } from "App/Repositories/AccountStatementTrackingRepository";
+import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 
 export interface IAccountStatementTrackingService {
   updateOrCreateAccountStatementTracking(
     accountStatementId: number,
     payload: IAccountStatementTrackingPayload
   ): Promise<ApiResponse<IAccountStatementTracking>>;
+  getAccountStatementTrackingByDate(
+    filters: IAccountStatementPaymentReportFilters
+  ): Promise<IPagingData<IAccountStatementTracking>>;
 }
 
 export default class AccountStatementTrackingService
   implements IAccountStatementTrackingService
 {
   constructor(
-    private accountStatementTrackingRepository: AccountStatementTrackingRepository
+    private accountStatementTrackingRepository: IAccountStatementTrackingRepository
   ) {}
   // UPDATE OR CREATE ACCOUNT STATEMENT TRACKING
   async updateOrCreateAccountStatementTracking(
@@ -30,5 +34,13 @@ export default class AccountStatementTrackingService
         payload
       );
     return new ApiResponse(accountStatementTracking, EResponseCodes.OK);
+  }
+  // GET ACCOUNT STATEMENT TRACKING BY DATE
+  public async getAccountStatementTrackingByDate(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    return await this.accountStatementTrackingRepository.getAccountStatementTrackingByDate(
+      filters
+    );
   }
 }
