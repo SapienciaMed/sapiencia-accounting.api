@@ -22,6 +22,9 @@ export default class AccountStatementTracking extends BaseModel {
   @column.dateTime({
     columnName: ACCOUNT_STATEMENT_TRACKING_TABLE.TRACKING_DATE,
     serializeAs: "trackingDate",
+    serialize: (value: DateTime) => {
+      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
+    },
   })
   public trackingDate: DateTime;
 
