@@ -11,11 +11,13 @@ import {
   IAccountStatementDefeatedPorfolioReportFilters,
   IAccountStatementPaymentReportFilters,
 } from "App/Interfaces/AccountStatementReports";
+import { IAccountStatementTracking } from "App/Interfaces/AccountStatementTracking";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { accountStatementDesktopTemplate } from "../../../storage/templates/accountStatementDesktopTemplate";
+import { IAccountStatementTrackingService } from "../AccountStatementTrackingService";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import {
   accountStatementXLSXColumns,
@@ -58,7 +60,7 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<string>>;
   generateAccountStatementPaymentReport(
     filters: IAccountStatementPaymentReportFilters
-  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  ): Promise<ApiResponse<IPagingData<IAccountStatementTracking>>>;
   generateAccountStatementDefeatedPortfolioReport(
     filters: IAccountStatementDefeatedPorfolioReportFilters
   ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
@@ -69,7 +71,8 @@ export default class AccountStatementService
 {
   constructor(
     private accountStatementRepository: AccountStatementRepository,
-    private genericMasterExternalService: GenericMasterExternalService
+    private genericMasterExternalService: GenericMasterExternalService,
+    private accountStatementTrackingService: IAccountStatementTrackingService
   ) {}
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatementSchema) {
@@ -194,7 +197,7 @@ export default class AccountStatementService
     filters: IAccountStatementPaymentReportFilters
   ) {
     const accountStatementsFound =
-      await this.accountStatementRepository.generateAccountStatementPaymentReport(
+      await this.accountStatementTrackingService.getAccountStatementTrackingByDate(
         filters
       );
     return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
