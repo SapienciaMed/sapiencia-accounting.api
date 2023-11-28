@@ -30,6 +30,11 @@ import {
   causationXLSXRows,
 } from "./causationXLSX";
 import {
+  managementReportXLSXColumns,
+  managementReportXLSXFilePath,
+  managementReportXLSXRows,
+} from "./managementXLSX";
+import {
   paymentReportXLSXColumns,
   paymentReportXLSXFilePath,
   paymentReportXLSXRows,
@@ -74,6 +79,9 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<IPagingData<IAccountStatementTracking>>>;
   generateAccountStatementDefeatedPortfolioReportXLSX(
     filters: IAccountStatementDefeatedPorfolioReportFilters
+  ): Promise<ApiResponse<string>>;
+  generateAccountStatementManagementReportXLSX(
+    filters: IAccountStatementCausationReportFilters
   ): Promise<ApiResponse<string>>;
 }
 
@@ -254,5 +262,21 @@ export default class AccountStatementService
       worksheetName: "REPORTE CARTERA VENCIDA",
     });
     return new ApiResponse(paymentReportXLSXFilePath, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT MANAGEMENT REPORT XLSX
+  public async generateAccountStatementManagementReportXLSX(
+    filters: IAccountStatementCausationReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementCausationReport(
+        filters
+      );
+    await generateXLSX({
+      columns: managementReportXLSXColumns,
+      data: managementReportXLSXRows(accountStatementsFound),
+      filePath: managementReportXLSXFilePath,
+      worksheetName: "REPORTE GESTIÓN DOCUMENTAL",
+    });
+    return new ApiResponse(managementReportXLSXFilePath, EResponseCodes.OK);
   }
 }

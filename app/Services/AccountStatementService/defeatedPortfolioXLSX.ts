@@ -47,8 +47,8 @@ export const paymentReportXLSXRows = (
       [
         String(curr.accountStatement.accountNum),
         curr.trackingDate.toString(),
-        curr.accountStatement.contract?.bussiness?.nit ?? "",
-        curr.accountStatement.contract?.bussiness?.name ?? "",
+        curr.accountStatement.contract.business.nit,
+        curr.accountStatement.contract.business.name,
         curr.accountStatement.concept,
         formaterNumberToCurrency(curr.accountStatement.valuePay),
         curr.accountStatement.contract?.creditAccount ?? "",

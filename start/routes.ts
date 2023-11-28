@@ -93,6 +93,10 @@ Route.group(() => {
         "/management",
         "AccountStatementController.generateAccountStatementCausationReport"
       );
+      Route.get(
+        "/generate-management-xlsx",
+        "AccountStatementController.generateAccountStatementManagementReportXLSX"
+      );
     })
       .prefix("/report")
       .middleware("auth");
