@@ -29,6 +29,11 @@ import {
   causationXLSXFilePath,
   causationXLSXRows,
 } from "./causationXLSX";
+import {
+  paymentReportXLSXColumns,
+  paymentReportXLSXFilePath,
+  paymentReportXLSXRows,
+} from "./paymentXLSX";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -61,6 +66,9 @@ export interface IAccountStatementService {
   generateAccountStatementPaymentReport(
     filters: IAccountStatementPaymentReportFilters
   ): Promise<ApiResponse<IPagingData<IAccountStatementTracking>>>;
+  generateAccountStatementPaymentReportXLSX(
+    filters: IAccountStatementPaymentReportFilters
+  ): Promise<ApiResponse<string>>;
   generateAccountStatementDefeatedPortfolioReport(
     filters: IAccountStatementDefeatedPorfolioReportFilters
   ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
@@ -201,6 +209,22 @@ export default class AccountStatementService
         filters
       );
     return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT PAYMENT REPORT XLSX
+  public async generateAccountStatementPaymentReportXLSX(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementTrackingService.getAccountStatementTrackingByDate(
+        filters
+      );
+    await generateXLSX({
+      columns: paymentReportXLSXColumns,
+      data: paymentReportXLSXRows(accountStatementsFound),
+      filePath: paymentReportXLSXFilePath,
+      worksheetName: "REPORTE CUENTAS PAGADAS",
+    });
+    return new ApiResponse(paymentReportXLSXFilePath, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT DEFEATED PORFOLIO REPORT
   public async generateAccountStatementDefeatedPortfolioReport(

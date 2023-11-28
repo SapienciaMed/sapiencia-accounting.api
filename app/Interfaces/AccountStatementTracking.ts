@@ -1,5 +1,5 @@
-import AccountStatement from "App/Models/AccountStatement";
 import { DateTime } from "luxon";
+import { IAccountStatement } from "./AccountStatement";
 
 export type IAccountStatementTracking = {
   id: number;
@@ -7,7 +7,7 @@ export type IAccountStatementTracking = {
   trackingDate: DateTime;
   statusId: number;
   accountStatementId: number;
-  accountStatement: AccountStatement;
+  accountStatement: IAccountStatement;
 };
 
 export type IAccountStatementTrackingPayload = Pick<

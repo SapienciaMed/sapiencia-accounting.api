@@ -77,6 +77,10 @@ Route.group(() => {
         "/payment",
         "AccountStatementController.generateAccountStatementPaymentReport"
       );
+      Route.get(
+        "/generate-payment-xlsx",
+        "AccountStatementController.generateAccountStatementPaymentReportXLSX"
+      );
       Route.post(
         "/defeated-portfolio",
         "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"

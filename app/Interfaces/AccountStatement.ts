@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IGetContractPaginated } from "./Contract";
+import { IContract, IGetContractPaginated } from "./Contract";
 
 export interface IAccountStatement {
   id?: number;
@@ -14,6 +14,7 @@ export interface IAccountStatement {
   userModified?: string;
   createdAt?: DateTime;
   updatedAt?: DateTime;
+  contract?: IContract;
 }
 
 export type IAccountStatementSchema = {

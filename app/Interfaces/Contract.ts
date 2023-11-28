@@ -52,6 +52,7 @@ export type IContractInfo = {
 export interface IContract {
   id?: number;
   contractId: string;
+  bussiness?: IBusiness;
   businessCode: number;
   userModified?: string;
   userCreate: string;

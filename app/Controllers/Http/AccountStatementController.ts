@@ -246,6 +246,35 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
+  // GENERATE ACCOUNT STATEMENT PAYMENT REPORT XLSX
+  public async generateAccountStatementPaymentReportXLSX(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementPaymentReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementPaymentReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await AccountStatementProvider.generateAccountStatementPaymentReportXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=informe_pagadas.xlsx"
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
   // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO REPORT
   public async generateAccountStatementDefeatedPortfolioReport(
     ctx: HttpContextContract
