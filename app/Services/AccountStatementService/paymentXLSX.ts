@@ -30,11 +30,11 @@ export const paymentReportXLSXColumns = [
   },
   {
     name: "CUENTA CONTABLE CRÉDITO",
-    size: 20,
+    size: 30,
   },
   {
     name: "CUENTA CONTABLE DÉBITO",
-    size: 20,
+    size: 30,
   },
 ];
 
@@ -47,8 +47,8 @@ export const paymentReportXLSXRows = (
       [
         String(curr.accountStatement.accountNum),
         curr.trackingDate.toString(),
-        curr.accountStatement.contract?.bussiness?.nit ?? "",
-        curr.accountStatement.contract?.bussiness?.name ?? "",
+        curr.accountStatement.contract?.business?.nit ?? "",
+        curr.accountStatement.contract?.business?.name ?? "",
         curr.accountStatement.concept,
         formaterNumberToCurrency(curr.accountStatement.valuePay),
         curr.accountStatement.contract?.creditAccount ?? "",

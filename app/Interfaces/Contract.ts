@@ -20,7 +20,7 @@ export type IContractPaginateSchema = {
 
 export type IContractPaginated = Omit<
   IContract,
-  "userModified" | "userCreate" | "createdAt" | "updatedAt"
+  "userModified" | "userCreate" | "createdAt" | "updatedAt" | "business"
 >;
 
 export interface IContractInfoCleared extends IContractPaginated {
@@ -52,7 +52,7 @@ export type IContractInfo = {
 export interface IContract {
   id?: number;
   contractId: string;
-  bussiness?: IBusiness;
+  business: IBusiness;
   businessCode: number;
   userModified?: string;
   userCreate: string;
@@ -63,10 +63,6 @@ export interface IContract {
   email: string;
   sender: string;
   chargeSender: string;
-}
-
-export interface IGetContractPaginated extends IContract {
-  business: IBusiness;
 }
 
 export type IContractUpdateSchema = {
