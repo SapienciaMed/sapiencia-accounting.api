@@ -3,7 +3,7 @@ import { IAssetInventoryFullInfo } from "App/Interfaces/AssetInventory";
 
 export const assetInventoryXLSXcolumnNames = [
   {
-    name: "Fecha",
+    name: "Fecha inventario",
     size: 20,
   },
   {
