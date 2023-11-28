@@ -1,4 +1,7 @@
-import { IAccountStatementPaymentReportFilters } from "App/Interfaces/AccountStatementReports";
+import {
+  IAccountStatementDefeatedPorfolioReportFilters,
+  IAccountStatementPaymentReportFilters,
+} from "App/Interfaces/AccountStatementReports";
 import {
   IAccountStatementTracking,
   IAccountStatementTrackingPayload,
@@ -13,6 +16,9 @@ export interface IAccountStatementTrackingRepository {
   ): Promise<IAccountStatementTracking>;
   getAccountStatementTrackingByDate(
     filters: IAccountStatementPaymentReportFilters
+  ): Promise<IPagingData<IAccountStatementTracking>>;
+  getAccountStatementTrackingByStatus(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
   ): Promise<IPagingData<IAccountStatementTracking>>;
 }
 
@@ -29,7 +35,7 @@ export default class AccountStatementTrackingRepository
       payload
     );
   }
-  // GET ACCOUNT STATEMENTS TRACKING
+  // GET ACCOUNT STATEMENTS TRACKING BY DATE
   public async getAccountStatementTrackingByDate(
     filters: IAccountStatementPaymentReportFilters
   ) {
@@ -37,8 +43,8 @@ export default class AccountStatementTrackingRepository
     const accountStatementTrackingQuery = AccountStatementTracking.query();
     accountStatementTrackingQuery.preload(
       "accountStatement",
-      (accountStatementTrackingQuery) => {
-        accountStatementTrackingQuery.preload("contract", (contractQuery) => {
+      (accountStatementQuery) => {
+        accountStatementQuery.preload("contract", (contractQuery) => {
           contractQuery.preload("business");
         });
       }
@@ -51,6 +57,29 @@ export default class AccountStatementTrackingRepository
         auxPaymentDateUntil,
       ]);
     }
+    const accountStatementTrackingsFound =
+      await accountStatementTrackingQuery.paginate(page, perPage);
+    const { meta, data } = accountStatementTrackingsFound.serialize();
+    return {
+      meta,
+      array: data as IAccountStatementTracking[],
+    };
+  }
+  // GET ACCOUNT STATEMENTS TRACKING BY DATE
+  public async getAccountStatementTrackingByStatus(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const { statusId, page, perPage } = filters;
+    const accountStatementTrackingQuery = AccountStatementTracking.query();
+    accountStatementTrackingQuery.preload(
+      "accountStatement",
+      (accountStatementQuery) => {
+        accountStatementQuery.preload("contract", (contractQuery) => {
+          contractQuery.preload("business");
+        });
+      }
+    );
+    accountStatementTrackingQuery.where("statusId", statusId);
     const accountStatementTrackingsFound =
       await accountStatementTrackingQuery.paginate(page, perPage);
     const { meta, data } = accountStatementTrackingsFound.serialize();

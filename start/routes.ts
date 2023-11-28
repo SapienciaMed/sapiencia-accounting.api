@@ -85,6 +85,10 @@ Route.group(() => {
         "/defeated-portfolio",
         "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"
       );
+      Route.get(
+        "/generate-defeated-portfolio-xlsx",
+        "AccountStatementController.generateAccountStatementDefeatedPortfolioReportXLSX"
+      );
       Route.post(
         "/management",
         "AccountStatementController.generateAccountStatementCausationReport"

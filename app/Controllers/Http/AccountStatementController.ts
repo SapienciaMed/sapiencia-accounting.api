@@ -300,4 +300,33 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO XLSX REPORT
+  public async generateAccountStatementDefeatedPortfolioReportXLSX(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementDefeatedPorfolioReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementDefeatedPortfolioReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await AccountStatementProvider.generateAccountStatementDefeatedPortfolioReportXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=informe_cartera_vencida.xlsx"
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
 }

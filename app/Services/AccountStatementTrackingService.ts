@@ -1,5 +1,8 @@
 import { EResponseCodes } from "App/Constants/ResponseCodesEnum";
-import { IAccountStatementPaymentReportFilters } from "App/Interfaces/AccountStatementReports";
+import {
+  IAccountStatementDefeatedPorfolioReportFilters,
+  IAccountStatementPaymentReportFilters,
+} from "App/Interfaces/AccountStatementReports";
 import {
   IAccountStatementTracking,
   IAccountStatementTrackingPayload,
@@ -14,6 +17,9 @@ export interface IAccountStatementTrackingService {
   ): Promise<ApiResponse<IAccountStatementTracking>>;
   getAccountStatementTrackingByDate(
     filters: IAccountStatementPaymentReportFilters
+  ): Promise<IPagingData<IAccountStatementTracking>>;
+  getAccountStatementTrackingByStatus(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
   ): Promise<IPagingData<IAccountStatementTracking>>;
 }
 
@@ -40,6 +46,14 @@ export default class AccountStatementTrackingService
     filters: IAccountStatementPaymentReportFilters
   ) {
     return await this.accountStatementTrackingRepository.getAccountStatementTrackingByDate(
+      filters
+    );
+  }
+  // GET ACCOUNT STATEMENT TRACKING BY STATUS
+  public async getAccountStatementTrackingByStatus(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    return await this.accountStatementTrackingRepository.getAccountStatementTrackingByStatus(
       filters
     );
   }

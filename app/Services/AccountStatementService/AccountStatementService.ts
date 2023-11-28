@@ -71,7 +71,10 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<string>>;
   generateAccountStatementDefeatedPortfolioReport(
     filters: IAccountStatementDefeatedPorfolioReportFilters
-  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  ): Promise<ApiResponse<IPagingData<IAccountStatementTracking>>>;
+  generateAccountStatementDefeatedPortfolioReportXLSX(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ): Promise<ApiResponse<string>>;
 }
 
 export default class AccountStatementService
@@ -231,9 +234,25 @@ export default class AccountStatementService
     filters: IAccountStatementDefeatedPorfolioReportFilters
   ) {
     const accountStatementsFound =
-      await this.accountStatementRepository.generateAccountStatementDefeatedPortfolioReport(
+      await this.accountStatementTrackingService.getAccountStatementTrackingByStatus(
         filters
       );
     return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO REPORT XLSX
+  public async generateAccountStatementDefeatedPortfolioReportXLSX(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementTrackingService.getAccountStatementTrackingByStatus(
+        filters
+      );
+    await generateXLSX({
+      columns: paymentReportXLSXColumns,
+      data: paymentReportXLSXRows(accountStatementsFound),
+      filePath: paymentReportXLSXFilePath,
+      worksheetName: "REPORTE CARTERA VENCIDA",
+    });
+    return new ApiResponse(paymentReportXLSXFilePath, EResponseCodes.OK);
   }
 }
