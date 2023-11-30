@@ -46,7 +46,7 @@ export const paymentReportXLSXRows = (
       ...prev,
       [
         String(curr.accountStatement.accountNum),
-        curr.trackingDate.toString(),
+        curr.trackingDate,
         curr.accountStatement.contract.business.nit,
         curr.accountStatement.contract.business.name,
         curr.accountStatement.concept,
