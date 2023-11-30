@@ -19,4 +19,5 @@ export enum TIPO_FUNCIONARIO {
 
 export enum ACCOUNT_STATEMENT_STATUS {
   PAGADA = 2,
+  VENCIDA = 3,
 }

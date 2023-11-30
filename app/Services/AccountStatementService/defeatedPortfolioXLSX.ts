@@ -1,15 +1,15 @@
 import Application from "@ioc:Adonis/Core/Application";
 import { IAccountStatementTracking } from "App/Interfaces/AccountStatementTracking";
 import { IPagingData } from "App/Utils/ApiResponses";
-import { formaterNumberToCurrency } from "App/Utils/helpers";
+import moment from "moment";
 
-export const paymentReportXLSXColumns = [
+export const defeatedPortfolioReportXLSXColumns = [
   {
     name: "NO. CUENTA DE COBRO",
     size: 20,
   },
   {
-    name: "FECHA DE PAGO",
+    name: "ESTADO",
     size: 20,
   },
   {
@@ -18,45 +18,41 @@ export const paymentReportXLSXColumns = [
   },
   {
     name: "RAZÓN SOCIAL / NOMBRE",
+    size: 40,
+  },
+  {
+    name: "FECHA DE VENCIMIENTO",
     size: 30,
   },
   {
-    name: "CONCEPTO DE COBRO",
-    size: 50,
-  },
-  {
-    name: "VALOR",
+    name: "DÍAS DE VENCIMIENTO",
     size: 20,
   },
   {
-    name: "CUENTA CONTABLE CRÉDITO",
-    size: 20,
-  },
-  {
-    name: "CUENTA CONTABLE DÉBITO",
+    name: "GESTIÓN",
     size: 20,
   },
 ];
 
-export const paymentReportXLSXRows = (
+export const defeatedPortfolioReportXLSXRows = (
   accountStatementsFound: IPagingData<IAccountStatementTracking>
 ) =>
   accountStatementsFound.array.reduce((prev, curr) => {
+    moment.locale("es");
     return [
       ...prev,
       [
         String(curr.accountStatement.accountNum),
-        curr.trackingDate,
+        "VENCIDA",
         curr.accountStatement.contract.business.nit,
         curr.accountStatement.contract.business.name,
-        curr.accountStatement.concept,
-        formaterNumberToCurrency(curr.accountStatement.valuePay),
-        curr.accountStatement.contract?.creditAccount ?? "",
-        curr.accountStatement.contract?.debitAccount ?? "",
+        curr.accountStatement.expirationDate.toString(),
+        moment(curr.accountStatement.expirationDate.toString()).fromNow(),
+        "",
       ],
     ];
   }, []);
 
-export const paymentReportXLSXFilePath = Application.tmpPath(
-  "/cuentas_pagadas_reporte.xlsx"
+export const defeatedPortfolioReportXLSXFilePath = Application.tmpPath(
+  "/informe_cartera_vencida.xlsx"
 );

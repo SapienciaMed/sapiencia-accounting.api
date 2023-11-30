@@ -1,3 +1,4 @@
+import { ACCOUNT_STATEMENT_STATUS } from "App/Constants/GenericListEnum";
 import {
   IAccountStatementDefeatedPorfolioReportFilters,
   IAccountStatementPaymentReportFilters,
@@ -70,6 +71,7 @@ export default class AccountStatementTrackingRepository
     filters: IAccountStatementDefeatedPorfolioReportFilters
   ) {
     const { statusId, page, perPage } = filters;
+    console.log({ statusId });
     const accountStatementTrackingQuery = AccountStatementTracking.query();
     accountStatementTrackingQuery.preload(
       "accountStatement",
@@ -79,7 +81,10 @@ export default class AccountStatementTrackingRepository
         });
       }
     );
-    accountStatementTrackingQuery.where("statusId", statusId);
+    accountStatementTrackingQuery.where(
+      "statusId",
+      ACCOUNT_STATEMENT_STATUS.VENCIDA
+    );
     const accountStatementTrackingsFound =
       await accountStatementTrackingQuery.paginate(page, perPage);
     const { meta, data } = accountStatementTrackingsFound.serialize();

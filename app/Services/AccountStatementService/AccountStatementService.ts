@@ -39,6 +39,11 @@ import {
   paymentReportXLSXFilePath,
   paymentReportXLSXRows,
 } from "./paymentXLSX";
+import {
+  defeatedPortfolioReportXLSXColumns,
+  defeatedPortfolioReportXLSXFilePath,
+  defeatedPortfolioReportXLSXRows,
+} from "./defeatedPortfolioXLSX";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -256,12 +261,15 @@ export default class AccountStatementService
         filters
       );
     await generateXLSX({
-      columns: paymentReportXLSXColumns,
-      data: paymentReportXLSXRows(accountStatementsFound),
-      filePath: paymentReportXLSXFilePath,
+      columns: defeatedPortfolioReportXLSXColumns,
+      data: defeatedPortfolioReportXLSXRows(accountStatementsFound),
+      filePath: defeatedPortfolioReportXLSXFilePath,
       worksheetName: "REPORTE CARTERA VENCIDA",
     });
-    return new ApiResponse(paymentReportXLSXFilePath, EResponseCodes.OK);
+    return new ApiResponse(
+      defeatedPortfolioReportXLSXFilePath,
+      EResponseCodes.OK
+    );
   }
   // GENERATE ACCOUNT STATEMENT MANAGEMENT REPORT XLSX
   public async generateAccountStatementManagementReportXLSX(
