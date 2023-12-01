@@ -52,6 +52,10 @@ export default class AccountStatementTrackingRepository
     );
     const auxPaymentDateFrom = paymentDateFrom?.toSQL();
     const auxPaymentDateUntil = paymentDateUntil?.toSQL();
+    accountStatementTrackingQuery.where(
+      "statusId",
+      ACCOUNT_STATEMENT_STATUS.PAGADA
+    );
     if (auxPaymentDateFrom && auxPaymentDateUntil) {
       accountStatementTrackingQuery.whereBetween("trackingDate", [
         auxPaymentDateFrom,
