@@ -110,4 +110,16 @@ export default class Furniture extends BaseModel {
     serializeAs: "updatedAt",
   })
   public updatedAt: DateTime;
+
+  @column({
+    columnName: FURNITURE_TABLE.USER_CREATED,
+    serializeAs: "userCreated",
+  })
+  public userCreated: string;
+
+  @column({
+    columnName: FURNITURE_TABLE.USER_MODIFIED,
+    serializeAs: "userModified",
+  })
+  public userModified: string;
 }

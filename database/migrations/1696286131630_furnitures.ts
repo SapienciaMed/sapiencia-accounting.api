@@ -81,6 +81,16 @@ export default class extends BaseSchema {
         .dateTime(FURNITURE_TABLE.UPDATED_AT)
         .nullable()
         .comment("Fecha y hora de la última modificación");
+      table
+        .string(FURNITURE_TABLE.USER_CREATED, 15)
+        .notNullable()
+        .comment("Número del documento del usuario que creó el registro");
+      table
+        .string(FURNITURE_TABLE.USER_MODIFIED, 15)
+        .nullable()
+        .comment(
+          "Número del documento del último usuario que hizo una modificación"
+        );
     });
   }
 
