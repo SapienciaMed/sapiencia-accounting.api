@@ -64,8 +64,22 @@ export default class FurnitureRepository implements IFurnitureRepository {
       description,
       acquisitionDate,
       equipmentStatus,
+      createdFrom,
+      createdUntil,
     } = payload;
     const furnitureQuery = Furniture.query();
+    if (createdFrom) {
+      const createdFromSQL = createdFrom.startOf("day")?.toSQL();
+      if (createdFromSQL !== null) {
+        furnitureQuery.where("createdAt", ">=", createdFromSQL);
+      }
+    }
+    if (createdUntil) {
+      const createdUntilSQL = createdUntil.endOf("day")?.toSQL();
+      if (createdUntilSQL !== null) {
+        furnitureQuery.where("createdAt", "<=", createdUntilSQL);
+      }
+    }
     if (plate) {
       furnitureQuery.where("plate", plate);
     }

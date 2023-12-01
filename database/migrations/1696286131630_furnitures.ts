@@ -73,6 +73,14 @@ export default class extends BaseSchema {
         .integer(FURNITURE_TABLE.CLERK)
         .notNullable()
         .comment("Funcionario del bien inmueble");
+      table
+        .dateTime(FURNITURE_TABLE.CREATED_AT)
+        .notNullable()
+        .comment("Fecha y hora de creación del registro");
+      table
+        .dateTime(FURNITURE_TABLE.UPDATED_AT)
+        .nullable()
+        .comment("Fecha y hora de la última modificación");
     });
   }
 
