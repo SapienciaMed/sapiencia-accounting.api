@@ -96,4 +96,18 @@ export default class Furniture extends BaseModel {
     serializeAs: "clerk",
   })
   public clerk: number;
+
+  @column.dateTime({
+    autoCreate: true,
+    columnName: FURNITURE_TABLE.CREATED_AT,
+    serializeAs: "createdAt",
+  })
+  public createdAt: DateTime;
+
+  @column.dateTime({
+    autoUpdate: true,
+    columnName: FURNITURE_TABLE.UPDATED_AT,
+    serializeAs: "updatedAt",
+  })
+  public updatedAt: DateTime;
 }

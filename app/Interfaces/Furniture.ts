@@ -69,6 +69,8 @@ export interface IFiltersFurnitureSchema extends IDataPaginateFilters {
   description?: string;
   acquisitionDate?: DateTime;
   equipmentStatus?: number;
+  createdFrom?: DateTime;
+  createdUntil?: DateTime;
 }
 
 export type IUpdateFurnitureSchema = {
