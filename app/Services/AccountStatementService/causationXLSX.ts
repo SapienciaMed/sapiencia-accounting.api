@@ -5,8 +5,12 @@ import { formaterNumberToCurrency } from "App/Utils/helpers";
 
 export const causationXLSXColumns = [
   {
-    name: "N° CXC",
-    size: 10,
+    name: "N° CUENTA DE COBRO",
+    size: 20,
+  },
+  {
+    name: "FECHA EXPEDICIÓN",
+    size: 20,
   },
   {
     name: "NIT",
@@ -14,6 +18,10 @@ export const causationXLSXColumns = [
   },
   {
     name: "RAZÓN SOCIAL / NOMBRE",
+    size: 40,
+  },
+  {
+    name: "CONCEPTO DE COBRO",
     size: 40,
   },
   {
@@ -38,8 +46,10 @@ export const causationXLSXRows = (
       ...prev,
       [
         String(curr.accountNum),
+        curr.expeditionDate.toString(),
         curr.contract.business.nit,
         curr.contract.business.name,
+        curr.concept,
         formaterNumberToCurrency(curr.valuePay),
         curr.contract.debitAccount,
         curr.contract.creditAccount,
