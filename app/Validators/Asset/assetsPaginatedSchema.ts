@@ -8,4 +8,6 @@ export const assetsPaginatedSchema = schema.create({
   ownerId: schema.string.optional([rules.trim(), rules.maxLength(15)]),
   plate: schema.string.optional([rules.trim(), rules.maxLength(15)]),
   serial: schema.string.optional([rules.trim(), rules.maxLength(50)]),
+  createdFrom: schema.date.optional(),
+  createdUntil: schema.date.optional(),
 });

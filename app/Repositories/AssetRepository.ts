@@ -45,8 +45,30 @@ export default class AssetRepository implements IAssetRepository {
   }
   // GET ALL ASSETS PAGINATED
   public async getAllAssetsPaginated(filters: IAssetsFilters) {
-    const { page, perPage, plate, serial, campus, ownerId, type } = filters;
+    const {
+      page,
+      perPage,
+      plate,
+      serial,
+      campus,
+      ownerId,
+      type,
+      createdFrom,
+      createdUntil,
+    } = filters;
     const assetsQuery = Asset.query();
+    if (createdFrom) {
+      const createdFromSQL = createdFrom.startOf("day")?.toSQL();
+      if (createdFromSQL !== null) {
+        assetsQuery.where("createdAt", ">=", createdFromSQL);
+      }
+    }
+    if (createdUntil) {
+      const createdUntilSQL = createdUntil.endOf("day")?.toSQL();
+      if (createdUntilSQL !== null) {
+        assetsQuery.where("createdAt", "<=", createdUntilSQL);
+      }
+    }
     if (plate) {
       assetsQuery.where("plate", plate);
     }

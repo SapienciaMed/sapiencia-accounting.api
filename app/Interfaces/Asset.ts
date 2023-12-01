@@ -70,4 +70,6 @@ export type IAssetsFilters = Partial<
 > & {
   page: number;
   perPage: number;
+  createdFrom?: DateTime;
+  createdUntil?: DateTime;
 };
