@@ -38,7 +38,7 @@ export const defeatedPortfolioReportXLSXRows = (
   accountStatementsFound: IPagingData<IAccountStatementTracking>
 ) =>
   accountStatementsFound.array.reduce((prev, curr) => {
-    moment.locale("es");
+    console.log(curr.accountStatement.expirationDate);
     return [
       ...prev,
       [
@@ -47,7 +47,7 @@ export const defeatedPortfolioReportXLSXRows = (
         curr.accountStatement.contract.business.nit,
         curr.accountStatement.contract.business.name,
         curr.accountStatement.expirationDate.toString(),
-        moment(curr.accountStatement.expirationDate.toString()).fromNow(),
+        moment().diff(curr.accountStatement.expirationDate, "days").toString(),
         "",
       ],
     ];
