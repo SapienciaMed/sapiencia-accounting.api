@@ -21,6 +21,10 @@ export const paymentReportXLSXColumns = [
     size: 30,
   },
   {
+    name: "NOMBRE",
+    size: 30,
+  },
+  {
     name: "CONCEPTO DE COBRO",
     size: 50,
   },
@@ -49,6 +53,7 @@ export const paymentReportXLSXRows = (
         curr.trackingDate.toString(),
         curr.accountStatement.contract?.business?.nit ?? "",
         curr.accountStatement.contract?.business?.name ?? "",
+        curr.accountStatement.contract.sender,
         curr.accountStatement.concept,
         formaterNumberToCurrency(curr.accountStatement.valuePay),
         curr.accountStatement.contract?.creditAccount ?? "",
