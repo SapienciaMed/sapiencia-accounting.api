@@ -21,6 +21,10 @@ export const causationXLSXColumns = [
     size: 40,
   },
   {
+    name: "NOMBRE",
+    size: 30,
+  },
+  {
     name: "CONCEPTO DE COBRO",
     size: 40,
   },
@@ -49,6 +53,7 @@ export const causationXLSXRows = (
         curr.expeditionDate.toString(),
         curr.contract.business.nit,
         curr.contract.business.name,
+        curr.contract.sender,
         curr.concept,
         formaterNumberToCurrency(curr.valuePay),
         curr.contract.debitAccount,
