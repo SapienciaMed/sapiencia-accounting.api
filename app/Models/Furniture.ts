@@ -28,7 +28,7 @@ export default class Furniture extends BaseModel {
     columnName: FURNITURE_TABLE.ACQUISITION_DATE,
     serializeAs: "acquisitionDate",
     serialize: (value: DateTime) => {
-      return value ? value.setLocale("zh").toFormat("yyyy-MM-dd") : value;
+      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
     },
   })
   public acquisitionDate: DateTime;
