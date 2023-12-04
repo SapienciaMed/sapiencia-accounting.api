@@ -25,7 +25,7 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Valor que indica el tipo de activo / descripción.");
       table
-        .dateTime(FURNITURE_TABLE.ACQUISITION_DATE)
+        .date(FURNITURE_TABLE.ACQUISITION_DATE)
         .notNullable()
         .comment("Fecha de adquisición del bien inmueble.");
       table
