@@ -24,14 +24,11 @@ export default class Furniture extends BaseModel {
   })
   public description: string;
 
-  @column({
+  @column.date({
     columnName: FURNITURE_TABLE.ACQUISITION_DATE,
     serializeAs: "acquisitionDate",
-    serialize: (value: Date) => {
-      const parsedValue = DateTime.fromJSDate(value);
-      return parsedValue
-        ? parsedValue.setLocale("zh").toFormat("yyyy/MM/dd")
-        : value;
+    serialize: (value: DateTime) => {
+      return value ? value.setLocale("zh").toFormat("dd-MM-yyyy") : value;
     },
   })
   public acquisitionDate: DateTime;
