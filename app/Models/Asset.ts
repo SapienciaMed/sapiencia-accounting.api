@@ -46,7 +46,7 @@ export default class Asset extends BaseModel {
     columnName: ASSETS_TABLE.OWNER_DATE,
     serializeAs: "ownerDate",
     serialize: (value: DateTime) => {
-      return value ? value.setLocale("zh").toFormat("dd-MM-yyyy") : value;
+      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
     },
   })
   public ownerDate: DateTime;
