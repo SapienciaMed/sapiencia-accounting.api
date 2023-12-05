@@ -27,8 +27,8 @@ export const getChangesBetweenTwoObjects = <T>(oldObject: T, newObject: T) => {
   for (let key in newObject) {
     if (oldObject[key] !== newObject[key]) {
       if (newObject[key] instanceof DateTime) {
-        const auxNewObject = newObject[key] as DateTime;
-        const auxOldObject = oldObject[key] as DateTime;
+        const auxNewObject = newObject[key] as unknown as DateTime;
+        const auxOldObject = oldObject[key] as unknown as DateTime;
         if (auxOldObject.toSQL() === auxNewObject.toSQL()) continue;
       }
       if (!thereAreChanges) thereAreChanges = true;
