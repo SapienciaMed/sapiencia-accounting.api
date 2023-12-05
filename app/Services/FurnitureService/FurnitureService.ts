@@ -14,7 +14,10 @@ import FurnitureHistoryRepository from "App/Repositories/FurnitureHistoryReposit
 import FurnitureRepository from "App/Repositories/FurnitureRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { generateXLSX } from "App/Utils/generateXLSX";
-import { deleteRepetitions } from "App/Utils/helpers";
+import {
+  deleteRepetitions,
+  getChangesBetweenTwoObjects,
+} from "App/Utils/helpers";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import PayrollExternalService from "../external/PayrollExternalService";
 import {
@@ -221,24 +224,21 @@ export default class FurnitureService implements IFurnitureService {
     }
     const body = furnitureMutated ?? payload;
     const furnitureFound = await this.furnitureRepository.getFurnitureById(id);
-    const furnitureChanges = {
-      oldChanges: {},
-      newChanges: {},
-    };
-    for (const [key, value] of Object.entries(body)) {
-      if (furnitureFound[key] !== value) {
-        furnitureChanges.oldChanges[key] = furnitureFound[key];
-        furnitureChanges.newChanges[key] = value;
-      }
-    }
-    const furnitureUpdated = await this.furnitureRepository.updateFurnitureById(
-      id,
+    const { changes, thereAreChanges } = getChangesBetweenTwoObjects(
+      furnitureFound,
       body
     );
-    await this.furnitureHistoryRepository.createFurnitureHistory({
-      changes: furnitureChanges,
-      furnitureId: id,
-    });
+    let furnitureUpdated: IFurniture = {} as IFurniture;
+    if (thereAreChanges) {
+      furnitureUpdated = await this.furnitureRepository.updateFurnitureById(
+        id,
+        body
+      );
+      await this.furnitureHistoryRepository.createFurnitureHistory({
+        changes,
+        furnitureId: id,
+      });
+    }
     return new ApiResponse(furnitureUpdated, EResponseCodes.OK);
   }
   // GENERATE FURNITURE XLSX

@@ -1,6 +1,7 @@
 import Env from "@ioc:Adonis/Core/Env";
 import { TIPO_FUNCIONARIO } from "App/Constants/GenericListEnum";
 import { IWorker } from "App/Interfaces/Worker";
+import { DateTime } from "luxon";
 import moment from "moment";
 
 export const formaterNumberToCurrency = (value: number) => {
@@ -25,6 +26,11 @@ export const getChangesBetweenTwoObjects = <T>(oldObject: T, newObject: T) => {
   };
   for (let key in newObject) {
     if (oldObject[key] !== newObject[key]) {
+      if (newObject[key] instanceof DateTime) {
+        const auxNewObject = newObject[key] as unknown as DateTime;
+        const auxOldObject = oldObject[key] as unknown as DateTime;
+        if (auxOldObject.toSQL() === auxNewObject.toSQL()) continue;
+      }
       if (!thereAreChanges) thereAreChanges = true;
       changes.oldChanges[key] = oldObject[key];
       changes.newChanges[key] = newObject[key];
