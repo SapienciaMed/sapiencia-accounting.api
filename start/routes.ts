@@ -71,38 +71,36 @@ Route.group(() => {
       Route.post(
         "/causation",
         "AccountStatementController.generateAccountStatementCausationReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.get(
         "/generate-causation-xlsx",
         "AccountStatementController.generateAccountStatementCausationReportXLSX"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.post(
         "/payment",
         "AccountStatementController.generateAccountStatementPaymentReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.get(
         "/generate-payment-xlsx",
         "AccountStatementController.generateAccountStatementPaymentReportXLSX"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.post(
         "/defeated-portfolio",
         "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.get(
         "/generate-defeated-portfolio-xlsx",
         "AccountStatementController.generateAccountStatementDefeatedPortfolioReportXLSX"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.post(
         "/management",
         "AccountStatementController.generateAccountStatementCausationReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.get(
         "/generate-management-xlsx",
         "AccountStatementController.generateAccountStatementManagementReportXLSX"
-      );
-    })
-      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`)
-      .prefix("/report");
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
+    }).prefix("/report");
   }).prefix("/account-statement");
   // ==================================================================
   // =================== ACCOUNT STATEMENT TRACKING ===================
@@ -214,22 +212,21 @@ Route.group(() => {
     Route.post(
       "/create",
       "FurnitureInventoryController.createFurnitureInventory"
-    );
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
     Route.get(
       "/generate-xlsx",
       "FurnitureInventoryController.generateFurnitureInventoryXLSX"
-    );
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
     Route.get(
       "get-inventory-dates",
       "FurnitureInventoryController.getFurnitureInventoryDates"
-    );
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
     Route.get(
       "generate-inventory-xlsx",
       "FurnitureInventoryController.generateFullFurnitureInventoryXLSX"
-    );
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
   })
-    .middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`)
-    .prefix("/furniture-inventory");
+  .prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================
   Route.group(() => {
@@ -272,20 +269,21 @@ Route.group(() => {
   // ==================================================================
   // ======================== ASSET INVENTORY =========================
   Route.group(() => {
-    Route.post("/create", "AssetInventoryController.createAssetInventory");
+    Route.post(
+      "/create",
+      "AssetInventoryController.createAssetInventory"
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
     Route.get(
       "/generate-xlsx",
       "AssetInventoryController.generateAssetInventoryXLSX"
-    );
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
     Route.get(
       "get-inventory-dates",
       "AssetInventoryController.getAssetInventoryDates"
-    );
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
     Route.get(
       "generate-inventory-xlsx",
       "AssetInventoryController.generateFullAssetInventoryXLSX"
-    );
-  })
-    .middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`)
-    .prefix("/asset-inventory");
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
+  }).prefix("/asset-inventory");
 }).prefix("/api/v1");
