@@ -244,9 +244,9 @@ Route.group(() => {
       "get-all-paginated",
       "AssetController.getAllAssetsPaginated"
     ).middleware(`auth:${PERMISSIONS.ASSET_CONSULT}`);
-    Route.get("/generate-xlsx", "AssetController.generateAssetXLSX")
-      .middleware("auth")
-      .middleware(`auth:${PERMISSIONS.ASSET_XLSX}`);
+    Route.get("/generate-xlsx", "AssetController.generateAssetXLSX").middleware(
+      `auth:${PERMISSIONS.ASSET_XLSX}`
+    );
     Route.get("/:id/get-by-id", "AssetController.getAssetById")
       .where("id", Route.matchers.number())
       .middleware(`auth:${PERMISSIONS.ASSET_DETAIL}`);
