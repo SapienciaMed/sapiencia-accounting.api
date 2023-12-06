@@ -101,8 +101,8 @@ Route.group(() => {
         "AccountStatementController.generateAccountStatementManagementReportXLSX"
       );
     })
-      .prefix("/report")
-      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
+      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`)
+      .prefix("/report");
   }).prefix("/account-statement");
   // ==================================================================
   // =================== ACCOUNT STATEMENT TRACKING ===================
@@ -110,10 +110,10 @@ Route.group(() => {
     Route.put(
       "/:accountStatementId/update-or-create",
       "AccountStatementTrackingController.updateOrCreateAccountStatementTracking"
-    ).where("accountStatementId", Route.matchers.number());
-  })
-    .prefix("/account-statement-tracking")
-    .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_TRACKING_UPDATE}`);
+    )
+      .where("accountStatementId", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_TRACKING_UPDATE}`);
+  }).prefix("/account-statement-tracking");
   // ==================================================================
   // ============================ BUSINESS ============================
   Route.group(() => {
@@ -218,7 +218,7 @@ Route.group(() => {
     Route.get(
       "/generate-xlsx",
       "FurnitureInventoryController.generateFurnitureInventoryXLSX"
-    ).middleware("auth");
+    );
     Route.get(
       "get-inventory-dates",
       "FurnitureInventoryController.getFurnitureInventoryDates"
@@ -272,18 +272,15 @@ Route.group(() => {
   // ==================================================================
   // ======================== ASSET INVENTORY =========================
   Route.group(() => {
-    Route.post(
-      "/create",
-      "AssetInventoryController.createAssetInventory"
-    ).middleware("auth");
+    Route.post("/create", "AssetInventoryController.createAssetInventory");
     Route.get(
       "/generate-xlsx",
       "AssetInventoryController.generateAssetInventoryXLSX"
-    ).middleware("auth");
+    );
     Route.get(
       "get-inventory-dates",
       "AssetInventoryController.getAssetInventoryDates"
-    ).middleware("auth");
+    );
     Route.get(
       "generate-inventory-xlsx",
       "AssetInventoryController.generateFullAssetInventoryXLSX"
