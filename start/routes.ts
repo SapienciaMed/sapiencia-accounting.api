@@ -225,8 +225,7 @@ Route.group(() => {
       "generate-inventory-xlsx",
       "FurnitureInventoryController.generateFullFurnitureInventoryXLSX"
     ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
-  })
-  .prefix("/furniture-inventory");
+  }).prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================
   Route.group(() => {
@@ -256,7 +255,7 @@ Route.group(() => {
     Route.get(
       "/:plate/get-by-plate",
       "AssetController.getAssetByPlate"
-    ).middleware(`auth:${PERMISSIONS.ASSET_DETAIL}`);
+    ).middleware(`auth`);
   }).prefix("/asset");
   // ==================================================================
   // ========================= ASSET HISTORY ==========================
