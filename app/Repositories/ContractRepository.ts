@@ -94,14 +94,26 @@ export default class ContractRepository implements IContractRepository {
   }
   // UPDATE CONTRACT BY ID
   public async updateContractById(id: number, payload: IContractUpdateSchema) {
-    const contractFound = await this.getContractById(id);
-    const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
-    return await contractFound
-      .merge({
-        ...payload,
-        userModified: currentUserId,
-      })
-      .save();
+    try {
+      const contractFound = await this.getContractById(id);
+      const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
+      return await contractFound
+        .merge({
+          ...payload,
+          userModified: currentUserId,
+        })
+        .save();
+    } catch (err) {
+      const { code, sqlMessage } = err as IDatabaseError;
+      switch (code) {
+        case DATABASE_ERRORS.ER_DUP_ENTRY:
+          if (sqlMessage.includes(CONTRACT_SQL_ERROR.NUM_CONTRACT_DUPLICATE)) {
+            throw new Error("El contrato ingresado ya existe");
+          }
+        default:
+          throw new Error(err);
+      }
+    }
   }
   // DELETE CONTRACT BY ID
   public async deleteContractById(id: number) {
