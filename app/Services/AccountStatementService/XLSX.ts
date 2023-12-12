@@ -49,7 +49,7 @@ export const accountStatementXLSXRows = (
         curr.contract.contractId,
         String(curr.accountNum),
         curr.expeditionDate.replace(/\//g, "-") ?? "",
-        DateTime.fromISO(curr.expirationDate).toSQLDate() ?? "",
+        curr.expirationDate.toString(),
         curr.contract.business.nit,
         curr.contract.business.name,
         curr.concept,
