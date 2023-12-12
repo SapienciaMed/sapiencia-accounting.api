@@ -47,7 +47,7 @@ export const accountStatementXLSXRows = (
       [
         curr.contract.contractId,
         String(curr.accountNum),
-        curr.expeditionDate.replace(/\//g, "-") ?? "",
+        curr.expeditionDate.toString(),
         curr.expirationDate.toString(),
         curr.contract.business.nit,
         curr.contract.business.name,
