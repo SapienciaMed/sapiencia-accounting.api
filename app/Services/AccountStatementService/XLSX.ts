@@ -2,7 +2,6 @@ import Application from "@ioc:Adonis/Core/Application";
 import { IGetAccountStatementPaginated } from "App/Interfaces/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
 import { formaterNumberToCurrency } from "App/Utils/helpers";
-import { DateTime } from "luxon";
 
 export const accountStatementXLSXColumns = [
   {
