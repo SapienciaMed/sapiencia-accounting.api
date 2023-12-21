@@ -246,6 +246,35 @@ export default class AccountStatementController {
       return response.badRequest(apiResp);
     }
   }
+  // GENERATE ACCOUNT STATEMENT PAYMENT REPORT XLSX
+  public async generateAccountStatementPaymentReportXLSX(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementPaymentReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementPaymentReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await AccountStatementProvider.generateAccountStatementPaymentReportXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=informe_pagadas.xlsx"
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
   // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO REPORT
   public async generateAccountStatementDefeatedPortfolioReport(
     ctx: HttpContextContract
@@ -265,6 +294,64 @@ export default class AccountStatementController {
           filters
         );
       return response.ok(accountStatementsFound);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO XLSX REPORT
+  public async generateAccountStatementDefeatedPortfolioReportXLSX(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementDefeatedPorfolioReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementDefeatedPortfolioReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await AccountStatementProvider.generateAccountStatementDefeatedPortfolioReportXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=informe_cartera_vencida.xlsx"
+      );
+      return response.download(resp.data);
+    } catch (err) {
+      logger.error(err);
+      const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);
+      return response.badRequest(apiResp);
+    }
+  }
+  // GENERATE ACCOUNT STATEMENT MANAGEMENT XLSX REPORT
+  public async generateAccountStatementManagementReportXLSX(
+    ctx: HttpContextContract
+  ) {
+    const { request, response, logger } = ctx;
+    let filters: IAccountStatementCausationReportFilters;
+    try {
+      filters = await request.validate({
+        schema: accountStatementCausationReportSchema,
+      });
+    } catch (err) {
+      return DBException.badRequest(ctx, err);
+    }
+    try {
+      const resp =
+        await AccountStatementProvider.generateAccountStatementManagementReportXLSX(
+          filters
+        );
+      response.header(
+        "Content-Disposition",
+        "attachment; filename=informe_gestion_documental.xlsx"
+      );
+      return response.download(resp.data);
     } catch (err) {
       logger.error(err);
       const apiResp = new ApiResponse(null, EResponseCodes.FAIL, err.message);

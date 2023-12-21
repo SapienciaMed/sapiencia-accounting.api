@@ -164,7 +164,7 @@ export default class AssetService implements IAssetService {
   public async updateAssetById(id: number, payload: IUpdateAssetSchema) {
     let auxPayload: IUpdateAssetSchema = payload;
     const assetFound = await this.assetRepository.getAssetById(id);
-    const assetFoundSerialized = assetFound.serializeAttributes() as IAsset;
+    const assetFoundSerialized = assetFound.$attributes;
     if (
       payload?.type === TIPO_ACTIVOS.OTROS ||
       assetFoundSerialized.type === TIPO_ACTIVOS.OTROS
@@ -177,16 +177,14 @@ export default class AssetService implements IAssetService {
         os: "",
       };
     }
-    const updatedAsset = await this.assetRepository.updateAssetById(
-      id,
-      auxPayload
-    );
     const { changes, thereAreChanges } =
       getChangesBetweenTwoObjects<IUpdateAssetSchema>(
         assetFoundSerialized,
         auxPayload
       );
+    let updatedAsset: IAsset = {} as IAsset;
     if (thereAreChanges) {
+      updatedAsset = await this.assetRepository.updateAssetById(id, auxPayload);
       await this.assetHistoryRepository.createAssetHistory({
         assetId: id,
         changes,

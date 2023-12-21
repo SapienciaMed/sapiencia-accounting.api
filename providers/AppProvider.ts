@@ -81,7 +81,10 @@ export default class AppProvider {
       () =>
         new AccountStatementService.default(
           new AccountStatementRepository.default(),
-          new GenericMasterService.default()
+          new GenericMasterService.default(),
+          new AccountStatementTrackingService.default(
+            new AccountStatementTrackingRepository.default()
+          )
         )
     );
     this.app.container.singleton(

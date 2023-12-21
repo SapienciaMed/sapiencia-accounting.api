@@ -3,7 +3,7 @@ import { IFurnitureInventoryMutated } from "App/Interfaces/FurnitureInventory";
 
 export const furnitureInventoryXLSXcolumnNames = [
   {
-    name: "Fecha",
+    name: "Fecha inventario",
     size: 20,
   },
   {

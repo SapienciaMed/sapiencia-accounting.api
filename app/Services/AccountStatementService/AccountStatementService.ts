@@ -11,11 +11,13 @@ import {
   IAccountStatementDefeatedPorfolioReportFilters,
   IAccountStatementPaymentReportFilters,
 } from "App/Interfaces/AccountStatementReports";
+import { IAccountStatementTracking } from "App/Interfaces/AccountStatementTracking";
 import AccountStatementRepository from "App/Repositories/AccountStatementRepository";
 import { ApiResponse, IPagingData } from "App/Utils/ApiResponses";
 import { createPDFTemplate } from "App/Utils/PDFTemplate";
 import { generateXLSX } from "App/Utils/generateXLSX";
 import { accountStatementDesktopTemplate } from "../../../storage/templates/accountStatementDesktopTemplate";
+import { IAccountStatementTrackingService } from "../AccountStatementTrackingService";
 import GenericMasterExternalService from "../external/GenericExternalService";
 import {
   accountStatementXLSXColumns,
@@ -27,6 +29,21 @@ import {
   causationXLSXFilePath,
   causationXLSXRows,
 } from "./causationXLSX";
+import {
+  managementReportXLSXColumns,
+  managementReportXLSXFilePath,
+  managementReportXLSXRows,
+} from "./managementXLSX";
+import {
+  paymentReportXLSXColumns,
+  paymentReportXLSXFilePath,
+  paymentReportXLSXRows,
+} from "./paymentXLSX";
+import {
+  defeatedPortfolioReportXLSXColumns,
+  defeatedPortfolioReportXLSXFilePath,
+  defeatedPortfolioReportXLSXRows,
+} from "./defeatedPortfolioXLSX";
 
 export interface IAccountStatementService {
   createAccountStatement(
@@ -58,10 +75,19 @@ export interface IAccountStatementService {
   ): Promise<ApiResponse<string>>;
   generateAccountStatementPaymentReport(
     filters: IAccountStatementPaymentReportFilters
-  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  ): Promise<ApiResponse<IPagingData<IAccountStatementTracking>>>;
+  generateAccountStatementPaymentReportXLSX(
+    filters: IAccountStatementPaymentReportFilters
+  ): Promise<ApiResponse<string>>;
   generateAccountStatementDefeatedPortfolioReport(
     filters: IAccountStatementDefeatedPorfolioReportFilters
-  ): Promise<ApiResponse<IPagingData<IGetAccountStatementPaginated>>>;
+  ): Promise<ApiResponse<IPagingData<IAccountStatementTracking>>>;
+  generateAccountStatementDefeatedPortfolioReportXLSX(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ): Promise<ApiResponse<string>>;
+  generateAccountStatementManagementReportXLSX(
+    filters: IAccountStatementCausationReportFilters
+  ): Promise<ApiResponse<string>>;
 }
 
 export default class AccountStatementService
@@ -69,7 +95,8 @@ export default class AccountStatementService
 {
   constructor(
     private accountStatementRepository: AccountStatementRepository,
-    private genericMasterExternalService: GenericMasterExternalService
+    private genericMasterExternalService: GenericMasterExternalService,
+    private accountStatementTrackingService: IAccountStatementTrackingService
   ) {}
   // CREATE ACCOUNT STATEMENT
   public async createAccountStatement(payload: IAccountStatementSchema) {
@@ -194,19 +221,70 @@ export default class AccountStatementService
     filters: IAccountStatementPaymentReportFilters
   ) {
     const accountStatementsFound =
-      await this.accountStatementRepository.generateAccountStatementPaymentReport(
+      await this.accountStatementTrackingService.getAccountStatementTrackingByDate(
         filters
       );
     return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT PAYMENT REPORT XLSX
+  public async generateAccountStatementPaymentReportXLSX(
+    filters: IAccountStatementPaymentReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementTrackingService.getAccountStatementTrackingByDate(
+        filters
+      );
+    await generateXLSX({
+      columns: paymentReportXLSXColumns,
+      data: paymentReportXLSXRows(accountStatementsFound),
+      filePath: paymentReportXLSXFilePath,
+      worksheetName: "REPORTE CUENTAS PAGADAS",
+    });
+    return new ApiResponse(paymentReportXLSXFilePath, EResponseCodes.OK);
   }
   // GENERATE ACCOUNT STATEMENT DEFEATED PORFOLIO REPORT
   public async generateAccountStatementDefeatedPortfolioReport(
     filters: IAccountStatementDefeatedPorfolioReportFilters
   ) {
     const accountStatementsFound =
-      await this.accountStatementRepository.generateAccountStatementDefeatedPortfolioReport(
+      await this.accountStatementTrackingService.getAccountStatementTrackingByStatus(
         filters
       );
     return new ApiResponse(accountStatementsFound, EResponseCodes.OK);
+  }
+  // GENERATE ACCOUNT STATEMENT DEFEATED PORTFOLIO REPORT XLSX
+  public async generateAccountStatementDefeatedPortfolioReportXLSX(
+    filters: IAccountStatementDefeatedPorfolioReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementTrackingService.getAccountStatementTrackingByStatus(
+        filters
+      );
+    await generateXLSX({
+      columns: defeatedPortfolioReportXLSXColumns,
+      data: defeatedPortfolioReportXLSXRows(accountStatementsFound),
+      filePath: defeatedPortfolioReportXLSXFilePath,
+      worksheetName: "REPORTE CARTERA VENCIDA",
+    });
+    return new ApiResponse(
+      defeatedPortfolioReportXLSXFilePath,
+      EResponseCodes.OK
+    );
+  }
+  // GENERATE ACCOUNT STATEMENT MANAGEMENT REPORT XLSX
+  public async generateAccountStatementManagementReportXLSX(
+    filters: IAccountStatementCausationReportFilters
+  ) {
+    const accountStatementsFound =
+      await this.accountStatementRepository.generateAccountStatementCausationReport(
+        filters
+      );
+    await generateXLSX({
+      columns: managementReportXLSXColumns,
+      data: managementReportXLSXRows(accountStatementsFound),
+      filePath: managementReportXLSXFilePath,
+      worksheetName: "REPORTE GESTIÓN DOCUMENTAL",
+    });
+    return new ApiResponse(managementReportXLSXFilePath, EResponseCodes.OK);
   }
 }

@@ -10,6 +10,7 @@ import {
 } from "App/Interfaces/Furniture";
 import Furniture from "App/Models/Furniture";
 import { IPagingData } from "App/Utils/ApiResponses";
+import Env from "@ioc:Adonis/Core/Env";
 
 export interface IFurnitureRepository {
   createFurniture(payload: IFurniture): Promise<IFurniture>;
@@ -29,8 +30,11 @@ export default class FurnitureRepository implements IFurnitureRepository {
   // CREATE FURNITURE
   public async createFurniture(payload: IFurniture) {
     try {
+      const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
       const newFurniture = new Furniture();
-      await newFurniture.fill(payload).save();
+      await newFurniture
+        .fill({ ...payload, userCreated: currentUserId })
+        .save();
       return newFurniture.serialize() as IFurniture;
     } catch (err) {
       const { code, sqlMessage } = err as IDatabaseError;
@@ -64,8 +68,22 @@ export default class FurnitureRepository implements IFurnitureRepository {
       description,
       acquisitionDate,
       equipmentStatus,
+      createdFrom,
+      createdUntil,
     } = payload;
     const furnitureQuery = Furniture.query();
+    if (createdFrom) {
+      const createdFromSQL = createdFrom.startOf("day")?.toSQL();
+      if (createdFromSQL !== null) {
+        furnitureQuery.where("createdAt", ">=", createdFromSQL);
+      }
+    }
+    if (createdUntil) {
+      const createdUntilSQL = createdUntil.endOf("day")?.toSQL();
+      if (createdUntilSQL !== null) {
+        furnitureQuery.where("createdAt", "<=", createdUntilSQL);
+      }
+    }
     if (plate) {
       furnitureQuery.where("plate", plate);
     }
@@ -95,7 +113,13 @@ export default class FurnitureRepository implements IFurnitureRepository {
     payload: Partial<Omit<IFurniture, "plate">>
   ) {
     const furnitureFound = await this.getFurnitureById(id);
-    return await furnitureFound.merge(payload).save();
+    const currentUserId = Env.get("CURRENT_USER_DOCUMENT");
+    return await furnitureFound
+      .merge({
+        ...payload,
+        userModified: currentUserId,
+      })
+      .save();
   }
   // GET FURNITURE BY PLATE
   public async getFurnitureByPlate(plate: string) {

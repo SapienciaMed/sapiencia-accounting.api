@@ -25,7 +25,7 @@ export default class extends BaseSchema {
         .notNullable()
         .comment("Valor que indica el tipo de activo / descripción.");
       table
-        .dateTime(FURNITURE_TABLE.ACQUISITION_DATE)
+        .date(FURNITURE_TABLE.ACQUISITION_DATE)
         .notNullable()
         .comment("Fecha de adquisición del bien inmueble.");
       table
@@ -73,6 +73,24 @@ export default class extends BaseSchema {
         .integer(FURNITURE_TABLE.CLERK)
         .notNullable()
         .comment("Funcionario del bien inmueble");
+      table
+        .dateTime(FURNITURE_TABLE.CREATED_AT)
+        .notNullable()
+        .comment("Fecha y hora de creación del registro");
+      table
+        .dateTime(FURNITURE_TABLE.UPDATED_AT)
+        .nullable()
+        .comment("Fecha y hora de la última modificación");
+      table
+        .string(FURNITURE_TABLE.USER_CREATED, 15)
+        .notNullable()
+        .comment("Número del documento del usuario que creó el registro");
+      table
+        .string(FURNITURE_TABLE.USER_MODIFIED, 15)
+        .nullable()
+        .comment(
+          "Número del documento del último usuario que hizo una modificación"
+        );
     });
   }
 

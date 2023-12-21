@@ -42,6 +42,9 @@ export default class AccountStatement extends BaseModel {
   @column.dateTime({
     columnName: "CTC_FECHA_VENCIMIENTO",
     serializeAs: "expirationDate",
+    serialize: (value: DateTime) => {
+      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
+    },
   })
   public expirationDate: DateTime;
 

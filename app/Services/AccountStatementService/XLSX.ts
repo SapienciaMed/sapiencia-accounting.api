@@ -2,7 +2,6 @@ import Application from "@ioc:Adonis/Core/Application";
 import { IGetAccountStatementPaginated } from "App/Interfaces/AccountStatement";
 import { IPagingData } from "App/Utils/ApiResponses";
 import { formaterNumberToCurrency } from "App/Utils/helpers";
-import { DateTime } from "luxon";
 
 export const accountStatementXLSXColumns = [
   {
@@ -48,8 +47,8 @@ export const accountStatementXLSXRows = (
       [
         curr.contract.contractId,
         String(curr.accountNum),
-        curr.expeditionDate.replace(/\//g, "-") ?? "",
-        DateTime.fromISO(curr.expirationDate).toSQLDate() ?? "",
+        curr.expeditionDate.toString(),
+        curr.expirationDate.toString(),
         curr.contract.business.nit,
         curr.contract.business.name,
         curr.concept,

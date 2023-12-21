@@ -60,34 +60,47 @@ Route.group(() => {
     Route.get(
       "/:id/generate-account-statement-pdf",
       "AccountStatementController.generateAccountStatementPDF"
-    ).where("id", Route.matchers.number());
-    // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
-    Route.get("/generate-xlsx", "AccountStatementController.generateXLSX");
-    // .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
+    )
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_PDF}`);
+    Route.get(
+      "/generate-xlsx",
+      "AccountStatementController.generateXLSX"
+    ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_EXCEL}`);
     Route.group(() => {
       Route.post(
         "/causation",
         "AccountStatementController.generateAccountStatementCausationReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.get(
         "/generate-causation-xlsx",
         "AccountStatementController.generateAccountStatementCausationReportXLSX"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.post(
         "/payment",
         "AccountStatementController.generateAccountStatementPaymentReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
+      Route.get(
+        "/generate-payment-xlsx",
+        "AccountStatementController.generateAccountStatementPaymentReportXLSX"
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.post(
         "/defeated-portfolio",
         "AccountStatementController.generateAccountStatementDefeatedPortfolioReport"
-      );
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
+      Route.get(
+        "/generate-defeated-portfolio-xlsx",
+        "AccountStatementController.generateAccountStatementDefeatedPortfolioReportXLSX"
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
       Route.post(
         "/management",
         "AccountStatementController.generateAccountStatementCausationReport"
-      );
-    })
-      .prefix("/report")
-      .middleware("auth");
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
+      Route.get(
+        "/generate-management-xlsx",
+        "AccountStatementController.generateAccountStatementManagementReportXLSX"
+      ).middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_REPORTS}`);
+    }).prefix("/report");
   }).prefix("/account-statement");
   // ==================================================================
   // =================== ACCOUNT STATEMENT TRACKING ===================
@@ -95,10 +108,10 @@ Route.group(() => {
     Route.put(
       "/:accountStatementId/update-or-create",
       "AccountStatementTrackingController.updateOrCreateAccountStatementTracking"
-    ).where("accountStatementId", Route.matchers.number());
-  })
-    .prefix("/account-statement-tracking")
-    .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_TRACKING_UPDATE}`);
+    )
+      .where("accountStatementId", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.ACCOUNT_STATEMENT_TRACKING_UPDATE}`);
+  }).prefix("/account-statement-tracking");
   // ==================================================================
   // ============================ BUSINESS ============================
   Route.group(() => {
@@ -171,16 +184,17 @@ Route.group(() => {
       "/get-all-paginated",
       "FurnitureController.getAllFurnituresPaginated"
     ).middleware(`auth:${PERMISSIONS.FURNITURE_CONSULT}`);
-    Route.put(
-      "/:id/update-by-id",
-      "FurnitureController.updateFurnitureById"
-    ).where("id", Route.matchers.number());
-    // .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
+    Route.put("/:id/update-by-id", "FurnitureController.updateFurnitureById")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.FURNITURE_UPDATE}`);
     Route.get(
       "/:plate/get-by-plate",
       "FurnitureController.getFurnitureByPlate"
-    );
-    Route.get("/generate-xlsx", "FurnitureController.generateFurnitureXLSX");
+    ).middleware("auth");
+    Route.get(
+      "/generate-xlsx",
+      "FurnitureController.generateFurnitureXLSX"
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_XLSX}`);
   }).prefix("/furniture");
   // ==================================================================
   // ======================= FURNITURE HISTORY ========================
@@ -188,7 +202,9 @@ Route.group(() => {
     Route.get(
       "/:furnitureId/get-furniture-history-by-id",
       "FurnitureHistoryController.getFurnitureHistoryById"
-    ).where("furnitureId", Route.matchers.number());
+    )
+      .where("furnitureId", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.FURNITURE_HISTORY}`);
   }).prefix("/furniture-history");
   // ==================================================================
   // ====================== FURNITURE INVENTORY =======================
@@ -196,19 +212,19 @@ Route.group(() => {
     Route.post(
       "/create",
       "FurnitureInventoryController.createFurnitureInventory"
-    ).middleware("auth");
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
     Route.get(
       "/generate-xlsx",
       "FurnitureInventoryController.generateFurnitureInventoryXLSX"
-    ).middleware("auth");
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
     Route.get(
       "get-inventory-dates",
       "FurnitureInventoryController.getFurnitureInventoryDates"
-    );
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
     Route.get(
       "generate-inventory-xlsx",
       "FurnitureInventoryController.generateFullFurnitureInventoryXLSX"
-    );
+    ).middleware(`auth:${PERMISSIONS.FURNITURE_INVENTORY}`);
   }).prefix("/furniture-inventory");
   // ==================================================================
   // ============================= ASSET ==============================
@@ -217,28 +233,29 @@ Route.group(() => {
       "/get-workers-info-select",
       "AssetController.getWorkersInfoSelect"
     ).middleware("auth");
-    Route.post("/create", "AssetController.createAsset");
+    Route.post("/create", "AssetController.createAsset").middleware(
+      `auth:${PERMISSIONS.ASSET_CREATE}`
+    );
     Route.post(
       "get-all-paginated",
       "AssetController.getAllAssetsPaginated"
-    ).middleware("auth");
+    ).middleware(`auth:${PERMISSIONS.ASSET_CONSULT}`);
     Route.get("/generate-xlsx", "AssetController.generateAssetXLSX").middleware(
-      "auth"
+      `auth:${PERMISSIONS.ASSET_XLSX}`
     );
     Route.get("/:id/get-by-id", "AssetController.getAssetById")
       .where("id", Route.matchers.number())
-      .middleware("auth");
+      .middleware(`auth:${PERMISSIONS.ASSET_DETAIL}`);
     Route.get("/:id/get-by-id-raw", "AssetController.getAssetByIdRaw")
       .where("id", Route.matchers.number())
-      .middleware("auth");
-    Route.put("/:id/update", "AssetController.updateAssetById").where(
-      "id",
-      Route.matchers.number()
-    );
+      .middleware(`auth:${PERMISSIONS.ASSET_DETAIL}`);
+    Route.put("/:id/update", "AssetController.updateAssetById")
+      .where("id", Route.matchers.number())
+      .middleware(`auth:${PERMISSIONS.ASSET_UPDATE}`);
     Route.get(
       "/:plate/get-by-plate",
       "AssetController.getAssetByPlate"
-    ).middleware("auth");
+    ).middleware(`auth`);
   }).prefix("/asset");
   // ==================================================================
   // ========================= ASSET HISTORY ==========================
@@ -246,7 +263,7 @@ Route.group(() => {
     Route.get(
       "/:assetId/get-asset-history-by-id",
       "AssetHistoryController.getAssetHistoryById"
-    );
+    ).middleware(`auth:${PERMISSIONS.ASSET_HISTORY}`);
   }).prefix("/asset-history");
   // ==================================================================
   // ======================== ASSET INVENTORY =========================
@@ -254,18 +271,18 @@ Route.group(() => {
     Route.post(
       "/create",
       "AssetInventoryController.createAssetInventory"
-    ).middleware("auth");
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
     Route.get(
       "/generate-xlsx",
       "AssetInventoryController.generateAssetInventoryXLSX"
-    ).middleware("auth");
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
     Route.get(
       "get-inventory-dates",
       "AssetInventoryController.getAssetInventoryDates"
-    ).middleware("auth");
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
     Route.get(
       "generate-inventory-xlsx",
       "AssetInventoryController.generateFullAssetInventoryXLSX"
-    );
+    ).middleware(`auth:${PERMISSIONS.ASSET_INVENTORY}`);
   }).prefix("/asset-inventory");
 }).prefix("/api/v1");

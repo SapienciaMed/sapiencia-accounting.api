@@ -24,15 +24,11 @@ export default class Furniture extends BaseModel {
   })
   public description: string;
 
-  @column({
+  @column.date({
     columnName: FURNITURE_TABLE.ACQUISITION_DATE,
     serializeAs: "acquisitionDate",
-    prepare: (value: DateTime) => value.toSQLDate(),
-    serialize: (value: Date) => {
-      const parsedValue = DateTime.fromJSDate(value);
-      return parsedValue
-        ? parsedValue.setLocale("zh").toFormat("yyyy/MM/dd")
-        : value;
+    serialize: (value: DateTime) => {
+      return value ? value.setLocale("zh").toFormat("yyyy/MM/dd") : value;
     },
   })
   public acquisitionDate: DateTime;
@@ -96,4 +92,30 @@ export default class Furniture extends BaseModel {
     serializeAs: "clerk",
   })
   public clerk: number;
+
+  @column.dateTime({
+    autoCreate: true,
+    columnName: FURNITURE_TABLE.CREATED_AT,
+    serializeAs: "createdAt",
+  })
+  public createdAt: DateTime;
+
+  @column.dateTime({
+    autoUpdate: true,
+    columnName: FURNITURE_TABLE.UPDATED_AT,
+    serializeAs: "updatedAt",
+  })
+  public updatedAt: DateTime;
+
+  @column({
+    columnName: FURNITURE_TABLE.USER_CREATED,
+    serializeAs: "userCreated",
+  })
+  public userCreated: string;
+
+  @column({
+    columnName: FURNITURE_TABLE.USER_MODIFIED,
+    serializeAs: "userModified",
+  })
+  public userModified: string;
 }

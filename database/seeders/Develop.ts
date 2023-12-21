@@ -150,6 +150,7 @@ export default class extends BaseSeeder {
       {
         observation: "Nothing in the observations",
         statusId: 2,
+        trackingDate: DateTime.fromISO("2023-02-19"),
         accountStatementId: 2,
       },
       {
