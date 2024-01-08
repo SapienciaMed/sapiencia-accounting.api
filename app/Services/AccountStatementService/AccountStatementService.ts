@@ -165,9 +165,9 @@ export default class AccountStatementService
     };
     const dimension = {
       top: "24px",
-      right: "50px",
-      bottom: "100px",
-      left: "50px",
+      right: "64px",
+      bottom: "80px",
+      left: "64px",
     };
     const PDF_PATH = await createPDFTemplate(
       accountStatementDesktopTemplate(accountStatementFoundMutated),

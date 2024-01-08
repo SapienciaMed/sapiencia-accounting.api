@@ -17,8 +17,9 @@ export const referralTemplate = (props: IReferralTemplateProps) =>
             <div class="ReferralDocument__container__logo">
                 <img src="data:image/png;base64,${props.logoString}" alt="" />
             </div>
-            <div class="mt-normal">
+            <div class="mt-normal flex-between">
                 <span>Medellín, ${props.expeditionDate}</span>
+                <span>130-10-01</span>
             </div>
             <div class="ReferralDocument__container__receptorInfo">
                 <span>Doctor (a)</span>
