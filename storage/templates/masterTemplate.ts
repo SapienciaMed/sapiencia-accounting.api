@@ -83,6 +83,11 @@ export const masterTemplate = (props: IMasterTemplate) =>
             .mt-large {
                 margin-top: 4rem;
             }
+            .flex-between {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
             .borderTable td {
                 border: 2px solid #000;
                 text-align: center;
